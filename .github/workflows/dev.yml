@@ -111,8 +111,6 @@ jobs:
             rm .env
             touch .env
             echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> .env
-#            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-#            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
             echo "MYSQL_DATABASE=${{ secrets.PROJECT_NAME }}" >> .env
             echo "MYSQL_USER=admin" >> .env
             echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
