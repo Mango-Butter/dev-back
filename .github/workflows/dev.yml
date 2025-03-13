@@ -118,6 +118,7 @@ jobs:
             echo "SPRING_DATASOURCE_USERNAME=admin" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
             echo "TEST_ENV_VAR=${{ secrets.TEST_ENV_VAR }}" >> .env
+            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker-compose down -v
             docker-compose up -d
