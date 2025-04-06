@@ -75,8 +75,8 @@ jobs:
             echo "TEST_ENV_VAR=${{ secrets.TEST_ENV_VAR }}" >> .env
             echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker-compose down -v
-            docker-compose up -d
+            docker compose down -v
+            docker compose up -d
 
   deploy-admin:
     if: ${{ github.event.inputs.module == 'admin' }}
