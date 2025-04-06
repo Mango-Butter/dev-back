@@ -43,7 +43,7 @@ jobs:
         run: ./gradlew :app:clean :app:build
 
       - name: Build app Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}/app:latest ./app
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest ./app
 
       - name: login to docker hub
         uses: docker/login-action@v2
@@ -52,7 +52,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push app Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}/app:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest
 
       - name: SSH and pull Docker image on EC2
         uses: appleboy/ssh-action@v0.1.5
@@ -106,7 +106,7 @@ jobs:
         run: ./gradlew :admin:clean :admin:build
 
       - name: Build admin Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}//${{ secrets.PROJECT_NAME }}/admin:latest ./admin
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}//${{ secrets.PROJECT_NAME }}-admin:latest ./admin
 
 # TODO: admin api 만들고 설정 다시
 #      - name: Log in to Docker Hub
