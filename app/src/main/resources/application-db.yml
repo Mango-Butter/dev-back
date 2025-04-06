@@ -1,0 +1,50 @@
+spring:
+  config:
+    activate:
+      on-profile: h2-test
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+---
+spring:
+  config:
+    activate:
+      on-profile: h2-dev
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql-prod
+
+  datasource:
+    url: ${MANGOBOSS_DB_URL:mysql://127.0.0.1:3306/mango}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update

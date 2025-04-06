@@ -1,3 +1,4 @@
 rootProject.name = 'dev-back'
 
 include 'storage'
+include 'app'

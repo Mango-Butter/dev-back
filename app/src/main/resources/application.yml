@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: app
+
+  profiles:
+    default: ${SPRING_PROFILES_ACTIVE:dev}
+    group:
+      test: h2-test
+      dev: h2-dev # TOBE:mysql-dev
+      prod: mysql-prod
+
+  config:
+    import: "application-db.yml" #"application-db.yaml,application-redis.yml" ? ?? ???? ??
+
+server:
+  port: 8080
