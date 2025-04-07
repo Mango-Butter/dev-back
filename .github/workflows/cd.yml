@@ -2,7 +2,9 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [ "main","dev","cicd" ]
+    branches: [ "main","dev" ]
+  pull_request:
+    branches: [ "main","dev" ]
   workflow_dispatch:
     inputs:
       module:
@@ -16,7 +18,7 @@ on:
 
 jobs:
   deploy-app:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app' || github.ref == 'refs/heads/cicd' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app') || github.ref == 'refs/heads/dev' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -79,7 +81,7 @@ jobs:
             docker compose up -d
 
   deploy-admin:
-    if: ${{ github.event.inputs.module == 'admin' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'admin' }}
     runs-on: ubuntu-latest
 
     steps:
