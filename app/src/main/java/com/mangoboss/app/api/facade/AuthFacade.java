@@ -9,16 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mangoboss.app.auth.OAuth;
 import com.mangoboss.app.auth.UserInfoGetDto;
-import com.mangoboss.app.domain.MemberService;
+import com.mangoboss.app.domain.UserService;
 import com.mangoboss.app.dto.LoginRequest;
 import com.mangoboss.app.dto.LoginResponse;
-import com.mangoboss.app.dto.MemberDto;
 import com.mangoboss.app.dto.ReissueTokenDto;
+import com.mangoboss.app.dto.UserDto;
 import com.mangoboss.app.exception.CustomErrorCode;
 import com.mangoboss.app.exception.CustomException;
 import com.mangoboss.app.util.JwtUtil;
-import com.mangoboss.storage.Member;
 import com.mangoboss.storage.Role;
+import com.mangoboss.storage.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthFacade {
 	private final JwtUtil jwtUtil;
 	private final OAuth oAuth;
-	private final MemberService memberService;
+	private final UserService userService;
 
 	@Transactional
 	public LoginResponse reissueAccessToken(ReissueTokenDto refreshToken) {
@@ -39,15 +39,15 @@ public class AuthFacade {
 		}
 
 		Long kakaoId = jwtUtil.getKakaoId(token);
-		Member member = memberService.findByKakaoIdOrThrow(kakaoId);
+		User user = userService.findByKakaoIdOrThrow(kakaoId);
 
-		MemberDto.MemberInfoDto memberInfoDto = MemberDto.MemberInfoDto.builder()
-			.kakaoId(member.getKakaoId())
-			.email(member.getEmail())
-			.role(member.getRole())
+		UserDto.UserInfoDto userInfoDto = UserDto.UserInfoDto.builder()
+			.kakaoId(user.getKakaoId())
+			.email(user.getEmail())
+			.role(user.getRole())
 			.build();
 
-		String accessToken = jwtUtil.createAccessToken(memberInfoDto);
+		String accessToken = jwtUtil.createAccessToken(userInfoDto);
 
 		return LoginResponse.builder()
 			.accessToken(accessToken)
@@ -56,25 +56,25 @@ public class AuthFacade {
 	}
 
 	public LoginResponse socialLogin(LoginRequest loginRequest) throws LoginException {
-		boolean isNewMember = false;
+		boolean isNewUser = false;
 
 		String kakaoAccessToken = oAuth.requestKakaoAccessToken(loginRequest);
 
 		UserInfoGetDto userInfoGetDto = oAuth.getUserInfoFromKakao(kakaoAccessToken);
 
-		Optional<Member> memberOptional = memberService.findByKakaoId(userInfoGetDto.getKakaoId());
+		Optional<User> userOptional = userService.findByKakaoId(userInfoGetDto.getKakaoId());
 
-		Member member;
+		User user;
 
-		if (memberOptional.isPresent()) {
-			member = memberOptional.get();
+		if (userOptional.isPresent()) {
+			user = userOptional.get();
 
 			// 기존 회원이지만, 회원가입 미완료 상태 (UNREGISTER)면 새 회원으로 판단
-			if (Role.UNREGISTER.equals(member.getRole())) {
-				isNewMember = true;
+			if (Role.UNREGISTER.equals(user.getRole())) {
+				isNewUser = true;
 			}
 		} else {
-			member = Member.builder()
+			user = User.builder()
 				.email(userInfoGetDto.getEmail())
 				.name(userInfoGetDto.getName())
 				.phone(userInfoGetDto.getPhone())
@@ -84,23 +84,23 @@ public class AuthFacade {
 				.role(Role.UNREGISTER)
 				.build();
 
-			memberService.save(member);
-			isNewMember = true;
+			userService.save(user);
+			isNewUser = true;
 		}
 
-		MemberDto.MemberInfoDto memberInfoDto = MemberDto.MemberInfoDto.builder()
-			.kakaoId(member.getKakaoId())
-			.email(member.getEmail())
-			.role(member.getRole())
+		UserDto.UserInfoDto userInfoDto = UserDto.UserInfoDto.builder()
+			.kakaoId(user.getKakaoId())
+			.email(user.getEmail())
+			.role(user.getRole())
 			.build();
 
-		String accessToken = jwtUtil.createAccessToken(memberInfoDto);
-		String refreshToken = jwtUtil.createRefreshToken(memberInfoDto);
+		String accessToken = jwtUtil.createAccessToken(userInfoDto);
+		String refreshToken = jwtUtil.createRefreshToken(userInfoDto);
 
 		return LoginResponse.builder()
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
-			.isNewMember(isNewMember)
+			.isNewUser(isNewUser)
 			.build();
 	}
 }
