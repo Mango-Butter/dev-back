@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Member {
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, unique = true)
@@ -50,7 +50,7 @@ public class Member {
 	private Role role;
 
 	@Builder
-	public Member(Long id, String email, String name, String phone, Long kakaoId, LocalDate birthday, String profileImage, Role role) {
+	public User(Long id, String email, String name, String phone, Long kakaoId, LocalDate birthday, String profileImage, Role role) {
 		this.id = id;
 		this.email = email;
 		this.name = name;

@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.mangoboss.app.dto.MemberDto;
+import com.mangoboss.app.dto.UserDto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private final MemberDto.MemberInfoDto member;
+    private final UserDto.UserInfoDto user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
-        roles.add("ROLE_" + member.getRole());
+        roles.add("ROLE_" + user.getRole());
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -35,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return String.valueOf(member.getKakaoId());
+        return String.valueOf(user.getKakaoId());
     }
 
     @Override

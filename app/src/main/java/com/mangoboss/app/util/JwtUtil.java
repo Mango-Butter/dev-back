@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.mangoboss.app.dto.MemberDto;
+import com.mangoboss.app.dto.UserDto;
 import com.mangoboss.app.exception.CustomErrorCode;
 import com.mangoboss.app.exception.CustomException;
 
@@ -48,10 +48,10 @@ public class JwtUtil {
     }
 
     // access 토큰 생성
-    public String createAccessToken(MemberDto.MemberInfoDto member) {
-        Claims claims = Jwts.claims().setSubject(String.valueOf(member.getKakaoId()));
-        claims.put("kakaoId", member.getKakaoId());
-        claims.put("role", member.getRole());
+    public String createAccessToken(UserDto.UserInfoDto user) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getKakaoId()));
+        claims.put("kakaoId", user.getKakaoId());
+        claims.put("role", user.getRole());
 
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + accessExpirationTime);
@@ -67,10 +67,10 @@ public class JwtUtil {
 
 
     // refresh token 생성
-    public String createRefreshToken(MemberDto.MemberInfoDto member) {
-        Claims claims = Jwts.claims().setSubject(String.valueOf(member.getKakaoId())); // Include user ID claim
-        claims.put("kakaoId", member.getKakaoId());
-        claims.put("role", member.getRole());
+    public String createRefreshToken(UserDto.UserInfoDto user) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getKakaoId())); // Include user ID claim
+        claims.put("kakaoId", user.getKakaoId());
+        claims.put("role", user.getRole());
 
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshExpirationTime);
