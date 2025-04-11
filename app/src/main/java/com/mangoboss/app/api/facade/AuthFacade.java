@@ -14,7 +14,6 @@ import com.mangoboss.app.domain.UserService;
 import com.mangoboss.app.dto.LoginRequest;
 import com.mangoboss.app.dto.LoginResponse;
 import com.mangoboss.app.dto.ReissueTokenDto;
-import com.mangoboss.app.dto.UserDto;
 import com.mangoboss.app.exception.CustomErrorCode;
 import com.mangoboss.app.exception.CustomException;
 import com.mangoboss.app.util.JwtUtil;
@@ -42,13 +41,7 @@ public class AuthFacade {
 		Long kakaoId = jwtUtil.getKakaoId(token);
 		User user = userService.findByKakaoIdOrThrow(kakaoId);
 
-		UserDto.UserInfoDto userInfoDto = UserDto.UserInfoDto.builder()
-			.kakaoId(user.getKakaoId())
-			.email(user.getEmail())
-			.role(user.getRole())
-			.build();
-
-		String accessToken = jwtUtil.createAccessToken(userInfoDto);
+		String accessToken = jwtUtil.createAccessToken(user.getKakaoId(), user.getRole().toString());
 
 		return LoginResponse.builder()
 			.accessToken(accessToken)
@@ -90,14 +83,8 @@ public class AuthFacade {
 			isNewUser = true;
 		}
 
-		UserDto.UserInfoDto userInfoDto = UserDto.UserInfoDto.builder()
-			.kakaoId(user.getKakaoId())
-			.email(user.getEmail())
-			.role(user.getRole())
-			.build();
-
-		String accessToken = jwtUtil.createAccessToken(userInfoDto);
-		String refreshToken = jwtUtil.createRefreshToken(userInfoDto);
+		String accessToken = jwtUtil.createAccessToken(user.getKakaoId(), user.getRole().toString());
+		String refreshToken = jwtUtil.createRefreshToken(user.getKakaoId(), user.getRole().toString());
 
 		return LoginResponse.builder()
 			.accessToken(accessToken)
