@@ -1,6 +1,7 @@
 package com.mangoboss.storage;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,24 +41,28 @@ public class User {
 	private Long kakaoId;
 
 	@Column
-	private LocalDate birthday;
+	private LocalDate birth;
 
 	@Column
-	private String profileImage;
+	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
 
+	@Column(nullable = false)
+	private LocalDateTime createdAt;
+
 	@Builder
-	public User(Long id, String email, String name, String phone, Long kakaoId, LocalDate birthday, String profileImage, Role role) {
+	public User(Long id, String email, String name, String phone, Long kakaoId, LocalDate birth, String profileImageUrl, Role role, LocalDateTime createdAt) {
 		this.id = id;
 		this.email = email;
 		this.name = name;
 		this.phone = phone;
 		this.kakaoId = kakaoId;
-		this.birthday = birthday;
-		this.profileImage = profileImage;
+		this.birth = birth;
+		this.profileImageUrl = profileImageUrl;
 		this.role = role;
+		this.createdAt = createdAt;
 	}
 }
