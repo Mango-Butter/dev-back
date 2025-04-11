@@ -92,11 +92,11 @@ public class OAuth {
 
             JsonNode profile = kakaoAccount.has("profile") ? kakaoAccount.get("profile") : null;
 
-            LocalDate birthday = null;
+            LocalDate birth = null;
             if (kakaoAccount.has("birthyear") && kakaoAccount.has("birthday")) {
                 String birthStr = kakaoAccount.get("birthyear").asText() + kakaoAccount.get("birthday").asText(); // 20010326
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-                birthday = LocalDate.parse(birthStr, formatter); // ← LocalDate로 변환
+                birth = LocalDate.parse(birthStr, formatter); // ← LocalDate로 변환
             }
 
             String rawPhone = kakaoAccount.has("phone_number") ? kakaoAccount.get("phone_number").asText() : null;
@@ -111,7 +111,7 @@ public class OAuth {
                 .email(kakaoAccount.has("email") ? kakaoAccount.get("email").asText() : null)
                 .name(kakaoAccount.has("name") ? kakaoAccount.get("name").asText() : null)
                 .picture(profile != null && profile.has("thumbnail_image_url") ? profile.get("thumbnail_image_url").asText() : null)
-                .birthday(birthday)
+                .birth(birth)
                 .phone(formattedPhone)
                 .build();
         } else {

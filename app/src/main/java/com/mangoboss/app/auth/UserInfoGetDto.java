@@ -20,7 +20,7 @@ public class UserInfoGetDto {
     private String givenName;
     @JsonProperty("family_name")
     private String familyName;
-    private LocalDate birthday;
+    private LocalDate birth;
     private String picture;
     private String locale;
     private String hd;

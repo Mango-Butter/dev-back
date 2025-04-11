@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-	UNREGISTER,
-	OWNER,
-	ALBA,
+	UNASSIGNED,
+	BOSS,
+	STAFF,
 	ADMIN
 }

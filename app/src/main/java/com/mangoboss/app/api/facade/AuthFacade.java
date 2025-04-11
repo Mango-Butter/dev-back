@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.security.auth.login.LoginException;
@@ -70,7 +71,7 @@ public class AuthFacade {
 			user = userOptional.get();
 
 			// 기존 회원이지만, 회원가입 미완료 상태 (UNREGISTER)면 새 회원으로 판단
-			if (Role.UNREGISTER.equals(user.getRole())) {
+			if (Role.UNASSIGNED.equals(user.getRole())) {
 				isNewUser = true;
 			}
 		} else {
@@ -79,9 +80,10 @@ public class AuthFacade {
 				.name(userInfoGetDto.getName())
 				.phone(userInfoGetDto.getPhone())
 				.kakaoId(userInfoGetDto.getKakaoId())
-				.birthday(userInfoGetDto.getBirthday())
-				.profileImage(userInfoGetDto.getPicture())
-				.role(Role.UNREGISTER)
+				.birth(userInfoGetDto.getBirth())
+				.profileImageUrl(userInfoGetDto.getPicture())
+				.createdAt(LocalDateTime.now())
+				.role(Role.UNASSIGNED)
 				.build();
 
 			userService.save(user);
