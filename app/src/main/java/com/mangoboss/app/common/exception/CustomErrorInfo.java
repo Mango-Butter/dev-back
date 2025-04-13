@@ -34,7 +34,7 @@ public enum CustomErrorInfo {
     private final String message;
     private final int detailStatusCode;
 
-    CustomErrorInfo(int statusCode, String message, int detailStatusCode) {
+    CustomErrorInfo(final int statusCode, final String message, final int detailStatusCode) {
         this.statusCode = statusCode;
         this.message = message;
         this.detailStatusCode = detailStatusCode;

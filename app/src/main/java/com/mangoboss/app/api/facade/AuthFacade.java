@@ -27,21 +27,21 @@ public class AuthFacade {
 	private final UserService userService;
 
 	@Transactional
-	public TokenReissueResponse reissueAccessToken(ReissueAccessTokenRequest reissueAccessTokenRequest) {
+	public TokenReissueResponse reissueAccessToken(final ReissueAccessTokenRequest reissueAccessTokenRequest) {
 		String refreshToken = reissueAccessTokenRequest.refreshToken();
 		if (!jwtUtil.validateToken(refreshToken)) {
 			throw new CustomException(CustomErrorInfo.UNAUTHORIZED);
 		}
 
 		Long kakaoId = jwtUtil.getKakaoId(refreshToken);
-		UserEntity userEntity = userService.findByKakaoIdOrThrow(kakaoId);
+		UserEntity userEntity = userService.getByKakaoIdOrThrow(kakaoId);
 
 		String accessToken = jwtUtil.createAccessToken(userEntity.getKakaoId(), userEntity.getRole().toString());
 
 		return TokenReissueResponse.create(accessToken, refreshToken);
 	}
 
-	public LoginResponse socialLogin(LoginRequest loginRequest) {
+	public LoginResponse socialLogin(final LoginRequest loginRequest) {
 		try {
 			String kakaoAccessToken = oAuth.requestKakaoAccessToken(loginRequest);
 			KakaoUserInfo kakaoUserInfo = oAuth.getUserInfoFromKakao(kakaoAccessToken);

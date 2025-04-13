@@ -1,7 +1,5 @@
 package com.mangoboss.app.api.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +21,12 @@ public class AuthController {
 	private final AuthFacade authFacade;
 
 	@PatchMapping("/reissue-token")
-	public ResponseEntity<TokenReissueResponse> reissueAccessToken(@RequestBody ReissueAccessTokenRequest reissueAccessTokenRequest) {
-		TokenReissueResponse tokenReissueResponse = authFacade.reissueAccessToken(reissueAccessTokenRequest);
-		return ResponseEntity.ok(tokenReissueResponse);
+	public TokenReissueResponse reissueAccessToken(@RequestBody ReissueAccessTokenRequest reissueAccessTokenRequest) {
+		return authFacade.reissueAccessToken(reissueAccessTokenRequest);
 	}
 
 	@PostMapping("/login/kakao")
-	public ResponseEntity<LoginResponse> socialLogin(@RequestBody LoginRequest loginRequest) {
-		LoginResponse loginResponse = authFacade.socialLogin(loginRequest);
-		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+	public LoginResponse socialLogin(@RequestBody LoginRequest loginRequest) {
+		return authFacade.socialLogin(loginRequest);
 	}
 }
