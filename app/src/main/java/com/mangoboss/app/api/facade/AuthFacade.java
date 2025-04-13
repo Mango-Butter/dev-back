@@ -34,9 +34,9 @@ public class AuthFacade {
 		}
 
 		Long kakaoId = jwtUtil.getKakaoId(refreshToken);
-		UserEntity userEntity = userService.getByKakaoIdOrThrow(kakaoId);
+		UserEntity userEntity = userService.getByKakaoId(kakaoId);
 
-		String accessToken = jwtUtil.createAccessToken(userEntity.getKakaoId(), userEntity.getRole().toString());
+		String accessToken = jwtUtil.createAccessToken(userEntity);
 
 		return TokenReissueResponse.create(accessToken, refreshToken);
 	}
@@ -55,8 +55,8 @@ public class AuthFacade {
 	}
 
 	private LoginResponse createJwtTokens(final UserEntity userEntity) {
-		String accessToken = jwtUtil.createAccessToken(userEntity.getKakaoId(), userEntity.getRole().toString());
-		String refreshToken = jwtUtil.createRefreshToken(userEntity.getKakaoId(), userEntity.getRole().toString());
+		String accessToken = jwtUtil.createAccessToken(userEntity);
+		String refreshToken = jwtUtil.createRefreshToken(userEntity);
 		return LoginResponse.builder()
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)

@@ -26,32 +26,29 @@ public class UserEntity {
 	@Column(nullable = false, unique = true)
 	private Long id;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String email;
 
-	@Column
+	@Column(nullable = false)
 	private String name;
 
-	@Column
 	private String password;
 
-	@Column
+	@Column(nullable = false)
 	private String phone;
 
 	@Column(unique = true, nullable = false)
 	private Long kakaoId;
 
-	@Column
+	@Column(nullable = false)
 	private LocalDate birth;
 
-	@Column
 	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
 
-	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
 	@Builder
