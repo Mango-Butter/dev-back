@@ -16,8 +16,8 @@ public class UserFacade {
 	private final UserService userService;
 
 	@Transactional
-	public UserInfoResponse getUserInfo(CustomUserDetails userDetails) {
-		UserEntity user = userService.findByKakaoIdOrThrow(userDetails.getKakaoId());
+	public UserInfoResponse getUserInfo(final CustomUserDetails userDetails) {
+		UserEntity user = userService.getByKakaoIdOrThrow(userDetails.getKakaoId());
 		return UserInfoResponse.fromEntity(user);
 	}
 }

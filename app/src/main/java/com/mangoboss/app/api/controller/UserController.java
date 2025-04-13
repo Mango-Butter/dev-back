@@ -1,6 +1,5 @@
 package com.mangoboss.app.api.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +16,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-
 	private final UserFacade userFacade;
 
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/me")
-	public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-		UserInfoResponse userInfo = userFacade.getUserInfo(userDetails);
-		return ResponseEntity.ok(userInfo);
+	public UserInfoResponse getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		return userFacade.getUserInfo(userDetails);
 	}
 }

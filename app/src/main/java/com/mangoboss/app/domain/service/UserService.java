@@ -21,19 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	private final UserRepository userRepository;
 
-	public UserEntity findByKakaoIdOrThrow(Long kakaoId) {
+	public UserEntity getByKakaoIdOrThrow(final Long kakaoId) {
 		return userRepository.findByKakaoId(kakaoId)
 			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
 	}
 
 	@Transactional
-	public UserEntity getOrCreateUser(KakaoUserInfo kakaoUserInfo) {
+	public UserEntity getOrCreateUser(final KakaoUserInfo kakaoUserInfo) {
 		return userRepository.findByKakaoId(kakaoUserInfo.kakaoId())
 			.orElseGet(() -> createUser(kakaoUserInfo));
 	}
 
 	@Transactional
-	public UserEntity createUser(KakaoUserInfo info) {
+	public UserEntity createUser(final KakaoUserInfo info) {
 		UserEntity userEntity = UserEntity.create(
 			info.kakaoId(),
 			info.name(),

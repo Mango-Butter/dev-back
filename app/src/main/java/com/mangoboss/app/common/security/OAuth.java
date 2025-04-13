@@ -33,7 +33,7 @@ public class OAuth {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
-    public String requestKakaoAccessToken(LoginRequest loginRequest) throws LoginException {
+    public String requestKakaoAccessToken(final LoginRequest loginRequest) throws LoginException {
         String code = loginRequest.authorizationCode();
 
         if (code == null || code.isEmpty()) {
@@ -68,7 +68,7 @@ public class OAuth {
         }
     }
 
-    public KakaoUserInfo getUserInfoFromKakao(String accessToken) {
+    public KakaoUserInfo getUserInfoFromKakao(final String accessToken) {
         String KAKAO_USERINFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
 
         HttpHeaders headers = new HttpHeaders();

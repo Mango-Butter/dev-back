@@ -17,12 +17,12 @@ public class UserRepositoryImpl implements UserRepository {
 	private final UserJpaRepository userJpaRepository;
 
 	@Override
-	public Optional<UserEntity> findByKakaoId(Long kakaoId) {
+	public Optional<UserEntity> findByKakaoId(final Long kakaoId) {
 		return userJpaRepository.findByKakaoId(kakaoId);
 	}
 
 	@Override
-	public UserEntity save(UserEntity userEntity) {
+	public UserEntity save(final UserEntity userEntity) {
 		userJpaRepository.save(userEntity);
 		return userEntity;
 	}
