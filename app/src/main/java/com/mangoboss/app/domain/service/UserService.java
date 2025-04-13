@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	private final UserRepository userRepository;
 
-	public UserEntity getByKakaoIdOrThrow(final Long kakaoId) {
+	public UserEntity getByKakaoId(final Long kakaoId) {
 		return userRepository.findByKakaoId(kakaoId)
 			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
 	}
