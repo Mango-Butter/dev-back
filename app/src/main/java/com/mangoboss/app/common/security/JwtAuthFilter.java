@@ -1,4 +1,4 @@
-package com.mangoboss.app.auth;
+package com.mangoboss.app.common.security;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,8 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.mangoboss.app.exception.CustomException;
-import com.mangoboss.app.util.JwtUtil;
+import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

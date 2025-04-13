@@ -1,4 +1,4 @@
-package com.mangoboss.app.config;
+package com.mangoboss.app.common.config;
 
 import static org.springframework.security.config.Customizer.*;
 
@@ -13,9 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.mangoboss.app.auth.CustomAccessDeniedHandler;
-import com.mangoboss.app.auth.CustomAuthenticationEntryPoint;
-import com.mangoboss.app.auth.JwtAuthFilter;
+import com.mangoboss.app.common.exception.CustomAccessDeniedHandler;
+import com.mangoboss.app.common.exception.CustomAuthenticationEntryPoint;
+import com.mangoboss.app.common.security.JwtAuthFilter;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

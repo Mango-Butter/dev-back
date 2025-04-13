@@ -1,7 +1,7 @@
-package com.mangoboss.app.exception;
+package com.mangoboss.app.common.exception;
 
-import static com.mangoboss.app.exception.CustomErrorCode.*;
-import static com.mangoboss.app.exception.CustomErrorCode.METHOD_NOT_ALLOWED;
+import static com.mangoboss.app.common.exception.CustomErrorInfo.*;
+import static com.mangoboss.app.common.exception.CustomErrorInfo.METHOD_NOT_ALLOWED;
 
 import java.time.LocalDateTime;
 
@@ -59,18 +59,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			LocalDateTime.now()
 		);
 		return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getErrorCode().getStatusCode()));
-	}
-
-	@ExceptionHandler(UserNotFoundException.class)
-	public final ResponseEntity<CustomErrorResponse> handleUserNotFoundExceptions(Exception ex, WebRequest request) {
-		String path = ((ServletWebRequest) request).getRequest().getRequestURI();
-		CustomErrorResponse errorResponse = new CustomErrorResponse(
-			HttpStatus.NOT_FOUND.value(),
-			ex.getMessage(),
-			path,
-			LocalDateTime.now()
-		);
-		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 	}
 
 	@Override

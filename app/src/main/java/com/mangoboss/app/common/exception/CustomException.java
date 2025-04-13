@@ -1,0 +1,17 @@
+package com.mangoboss.app.common.exception;
+
+import lombok.Getter;
+
+@Getter
+public class CustomException extends RuntimeException {
+    private final CustomErrorInfo customErrorInfo;
+
+    public CustomException(CustomErrorInfo customErrorInfo) {
+        super(customErrorInfo.getMessage());
+        this.customErrorInfo = customErrorInfo;
+    }
+
+    public CustomErrorInfo getErrorCode() {
+        return customErrorInfo;
+    }
+}

@@ -1,4 +1,4 @@
-package com.mangoboss.app.auth;
+package com.mangoboss.app.common.security;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mangoboss.app.dto.KakaoUserInfo;
 import com.mangoboss.app.dto.LoginRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class OAuth {
         }
     }
 
-    public UserInfoGetDto getUserInfoFromKakao(String accessToken) {
+    public KakaoUserInfo getUserInfoFromKakao(String accessToken) {
         String KAKAO_USERINFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
 
         HttpHeaders headers = new HttpHeaders();
@@ -106,14 +107,14 @@ public class OAuth {
                 formattedPhone = rawPhone.replace("+82 ", "0");
             }
 
-            return UserInfoGetDto.builder()
-                .kakaoId(body.get("id").asLong())
-                .email(kakaoAccount.has("email") ? kakaoAccount.get("email").asText() : null)
-                .name(kakaoAccount.has("name") ? kakaoAccount.get("name").asText() : null)
-                .picture(profile != null && profile.has("thumbnail_image_url") ? profile.get("thumbnail_image_url").asText() : null)
-                .birth(birth)
-                .phone(formattedPhone)
-                .build();
+            return KakaoUserInfo.create(
+                body.get("id").asLong(),
+                kakaoAccount.has("email") ? kakaoAccount.get("email").asText() : null,
+                kakaoAccount.has("name") ? kakaoAccount.get("name").asText() : null,
+                profile != null && profile.has("thumbnail_image_url") ? profile.get("thumbnail_image_url").asText() : null,
+                birth,
+                formattedPhone
+            );
         } else {
             log.error("카카오 사용자 정보 요청 실패: {}", response.getStatusCode());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "카카오 사용자 정보 요청 실패");
