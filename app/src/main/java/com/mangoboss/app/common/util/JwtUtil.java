@@ -1,4 +1,4 @@
-package com.mangoboss.app.util;
+package com.mangoboss.app.common.util;
 
 import java.security.Key;
 import java.util.Date;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.mangoboss.app.exception.CustomErrorCode;
-import com.mangoboss.app.exception.CustomException;
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -65,7 +65,6 @@ public class JwtUtil {
                 .compact();
     }
 
-
     // refresh token 생성
     public String createRefreshToken(Long kakaoId, String role) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(kakaoId));
@@ -101,16 +100,16 @@ public class JwtUtil {
                     claims.getIssuer().equals(issuer); // 시스템에서 발급
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token: {}", e.getMessage());
-            throw new CustomException(CustomErrorCode.INVALID_TOKEN);
+            throw new CustomException(CustomErrorInfo.INVALID_TOKEN);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
-            throw new CustomException(CustomErrorCode.EXPIRED_TOKEN);
+            throw new CustomException(CustomErrorInfo.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
-            throw new CustomException(CustomErrorCode.UNSUPPORTED_TOKEN);
+            throw new CustomException(CustomErrorInfo.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty.", e);
-            throw new CustomException(CustomErrorCode.ILLEGAL_ARGUMENT_TOKEN);
+            throw new CustomException(CustomErrorInfo.ILLEGAL_ARGUMENT_TOKEN);
         }
     }
 

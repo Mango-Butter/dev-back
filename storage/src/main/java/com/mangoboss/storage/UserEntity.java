@@ -10,16 +10,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class User {
+@Table(name = "\"user\"")
+public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, unique = true)
@@ -54,15 +55,30 @@ public class User {
 	private LocalDateTime createdAt;
 
 	@Builder
-	public User(Long id, String email, String name, String phone, Long kakaoId, LocalDate birth, String profileImageUrl, Role role, LocalDateTime createdAt) {
-		this.id = id;
-		this.email = email;
-		this.name = name;
-		this.phone = phone;
+	private UserEntity(final Long kakaoId, final String name, final String email, final String phone,
+		final LocalDate birth, final String profileImageUrl, final Role role, final LocalDateTime createdAt
+	) {
 		this.kakaoId = kakaoId;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
 		this.birth = birth;
 		this.profileImageUrl = profileImageUrl;
 		this.role = role;
 		this.createdAt = createdAt;
+	}
+
+	public static UserEntity create(final Long kakaoId, final String name, final String email, final String phone,
+				final LocalDate birth, final String profileImageUrl, final Role role, final LocalDateTime createdAt) {
+		return UserEntity.builder()
+			.kakaoId(kakaoId)
+			.name(name)
+			.email(email)
+			.phone(phone)
+			.birth(birth)
+			.profileImageUrl(profileImageUrl)
+			.role(role)
+			.createdAt(createdAt)
+			.build();
 	}
 }

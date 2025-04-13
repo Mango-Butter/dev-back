@@ -1,4 +1,4 @@
-package com.mangoboss.app.auth;
+package com.mangoboss.app.common.exception;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

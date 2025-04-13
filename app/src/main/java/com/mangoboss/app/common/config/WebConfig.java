@@ -1,4 +1,4 @@
-package com.mangoboss.app.config;
+package com.mangoboss.app.common.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

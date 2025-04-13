@@ -1,4 +1,4 @@
-package com.mangoboss.app.auth;
+package com.mangoboss.app.common.exception;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private final Long kakaoId;
+    @Getter
+	private final Long kakaoId;
     private final String role;
     private final Collection<? extends GrantedAuthority> authorities;
 
