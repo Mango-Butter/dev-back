@@ -11,7 +11,8 @@ public record UserInfoResponse(
 	String name,
 	String phone,
 	String profileImageUrl,
-	String role
+	String role,
+	String birth
 ) {
 	public static UserInfoResponse fromEntity(final UserEntity user) {
 		return UserInfoResponse.builder()
@@ -21,6 +22,7 @@ public record UserInfoResponse(
 			.phone(user.getPhone())
 			.profileImageUrl(user.getProfileImageUrl())
 			.role(user.getRole().toString())
+			.birth(String.valueOf(user.getBirth()))
 			.build();
 	}
 }
