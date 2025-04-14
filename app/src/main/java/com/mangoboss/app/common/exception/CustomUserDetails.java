@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
     @Getter
-	private final Long kakaoId;
+	private final Long userId;
     private final String role;
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -30,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return kakaoId.toString();
+        return userId.toString();
     }
 
     @Override

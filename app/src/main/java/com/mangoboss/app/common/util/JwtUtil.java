@@ -56,8 +56,8 @@ public class JwtUtil {
     }
 
     private String createToken(final UserEntity user, final long expirationTime) {
-        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getKakaoId()));
-        claims.put("kakaoId", user.getKakaoId());
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getUserId()));
+        claims.put("userId", user.getUserId());
         claims.put("role", user.getRole().toString());
 
         Date now = new Date();
@@ -65,7 +65,7 @@ public class JwtUtil {
 
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(user.getKakaoId().toString())
+            .setSubject(user.getUserId().toString())
             .setIssuer(issuer)
             .setIssuedAt(now)
             .setExpiration(expireDate)
@@ -73,8 +73,8 @@ public class JwtUtil {
             .compact();
     }
 
-    public Long getKakaoId(final String token) {
-        return parseClaims(token).get("kakaoId", Long.class);
+    public Long getUserId(final String token) {
+        return parseClaims(token).get("userId", Long.class);
     }
 
     public String getRole(final String token) {
