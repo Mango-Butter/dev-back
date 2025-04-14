@@ -33,8 +33,8 @@ public class AuthFacade {
 			throw new CustomException(CustomErrorInfo.UNAUTHORIZED);
 		}
 
-		Long kakaoId = jwtUtil.getKakaoId(refreshToken);
-		UserEntity userEntity = userService.getByKakaoId(kakaoId);
+		Long userId = jwtUtil.getUserId(refreshToken);
+		UserEntity userEntity = userService.getByUserId(userId);
 
 		String accessToken = jwtUtil.createAccessToken(userEntity);
 

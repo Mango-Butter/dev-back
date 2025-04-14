@@ -37,13 +37,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 // JWT 유효성 검증
                 if (jwtUtil.validateToken(token)) {
-                    Long kakaoId = jwtUtil.getKakaoId(token);
+                    Long userId = jwtUtil.getUserId(token);
                     String role = jwtUtil.getRole(token);
 
                     List<GrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                    UserDetails userDetails = new CustomUserDetails(kakaoId, role, authorities);
+                    UserDetails userDetails = new CustomUserDetails(userId, role, authorities);
 
                     UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
