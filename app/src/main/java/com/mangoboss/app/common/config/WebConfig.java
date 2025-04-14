@@ -12,15 +12,15 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedOriginPatterns(
-				"http://localhost:5173",
-				"https://dr2f24xo5uydt.cloudfront.net", // 프론트 test
-				"https://dx44qcj8tqeon.cloudfront.net", // 프론트 dev
-				"https://d3741u3vzg4n3d.cloudfront.net" // 프론트 prod
+				"*"
+				// "http://localhost:5173",
+				// "https://dr2f24xo5uydt.cloudfront.net", // 프론트 test
+				// "https://dx44qcj8tqeon.cloudfront.net", // 프론트 dev
+				// "https://d3741u3vzg4n3d.cloudfront.net" // 프론트 prod
 			)
-			.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+			.allowedMethods("*")
 			.allowedHeaders("*")
-			.exposedHeaders("Custom-Header")
-			.allowCredentials(true)
-			.maxAge(3600);
+			.exposedHeaders("*")
+			.allowCredentials(true);
 	}
 }
