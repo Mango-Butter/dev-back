@@ -3,7 +3,6 @@ package com.mangoboss.app.common.util;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,32 +18,26 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtUtil {
     private final Key key;
+    private final long accessExpirationTime;
+    private final long refreshExpirationTime;
+    private final String issuer;
 
-    @Value("${spring.jwt.secret}")
-    private String secretKey;
-
-    @Value("${spring.jwt.token.access-expiration-time}")
-    private long accessExpirationTime;
-
-    @Value("${spring.jwt.token.refresh-expiration-time}")
-    private long refreshExpirationTime;
-
-    @Value("${spring.jwt.token.issuer}")
-    private String issuer;
-
-
-    @Autowired
-    public JwtUtil(@Value("${spring.jwt.secret}") String secretKey) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+    public JwtUtil(
+        @Value("${spring.jwt.secret}") final String secretKey,
+        @Value("${spring.jwt.token.access-expiration-time}") final long accessExpirationTime,
+        @Value("${spring.jwt.token.refresh-expiration-time}") final long refreshExpirationTime,
+        @Value("${spring.jwt.token.issuer}") final String issuer
+    ) {
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        this.accessExpirationTime = accessExpirationTime;
+        this.refreshExpirationTime = refreshExpirationTime;
+        this.issuer = issuer;
     }
 
     public String createAccessToken(final UserEntity user) {
@@ -87,7 +80,7 @@ public class JwtUtil {
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             // 필수 claim 검사
             return claims.getExpiration().after(new Date()) && // 만료되지 않음
-                    claims.getIssuer().equals(issuer); // 시스템에서 발급
+                claims.getIssuer().equals(issuer); // 시스템에서 발급
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token: {}", e.getMessage());
             throw new CustomException(CustomErrorInfo.INVALID_TOKEN);

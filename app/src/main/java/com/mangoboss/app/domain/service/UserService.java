@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.util.JwtUtil;
 import com.mangoboss.app.domain.repository.UserRepository;
 import com.mangoboss.app.dto.KakaoUserInfo;
+import com.mangoboss.app.dto.LoginResponse;
 import com.mangoboss.storage.Role;
 import com.mangoboss.storage.UserEntity;
 
@@ -20,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserService {
 	private final UserRepository userRepository;
-	
+	private final JwtUtil jwtUtil;
+
+	@Transactional(readOnly = true)
 	public UserEntity getByUserId(final Long userId) {
 		return userRepository.findByUserId(userId)
 			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
@@ -45,5 +49,18 @@ public class UserService {
 			LocalDateTime.now()
 		);
 		return userRepository.save(userEntity);
+	}
+
+	@Transactional
+	public LoginResponse generateJwtForKakaoUser(final KakaoUserInfo kakaoUserInfo) {
+		UserEntity userEntity = getOrCreateUser(kakaoUserInfo);
+
+		String accessToken = jwtUtil.createAccessToken(userEntity);
+		String refreshToken = jwtUtil.createRefreshToken(userEntity);
+
+		return LoginResponse.builder()
+			.accessToken(accessToken)
+			.refreshToken(refreshToken)
+			.build();
 	}
 }
