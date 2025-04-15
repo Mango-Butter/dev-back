@@ -1,9 +1,6 @@
 package com.mangoboss.app.api.facade;
 
-import javax.security.auth.login.LoginException;
-
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.security.OAuth;
@@ -26,7 +23,6 @@ public class AuthFacade {
 	private final OAuth oAuth;
 	private final UserService userService;
 
-	@Transactional
 	public TokenReissueResponse reissueAccessToken(final ReissueAccessTokenRequest reissueAccessTokenRequest) {
 		String refreshToken = reissueAccessTokenRequest.refreshToken();
 		if (!jwtUtil.validateToken(refreshToken)) {
@@ -42,24 +38,9 @@ public class AuthFacade {
 	}
 
 	public LoginResponse socialLogin(final LoginRequest loginRequest) {
-		try {
-			String kakaoAccessToken = oAuth.requestKakaoAccessToken(loginRequest);
-			KakaoUserInfo kakaoUserInfo = oAuth.getUserInfoFromKakao(kakaoAccessToken);
-
-			UserEntity userEntity = userService.getOrCreateUser(kakaoUserInfo);
-			return createJwtTokens(userEntity);
-
-		} catch (LoginException e) {
-			throw new CustomException(CustomErrorInfo.UNAUTHORIZED);
-		}
-	}
-
-	private LoginResponse createJwtTokens(final UserEntity userEntity) {
-		String accessToken = jwtUtil.createAccessToken(userEntity);
-		String refreshToken = jwtUtil.createRefreshToken(userEntity);
-		return LoginResponse.builder()
-			.accessToken(accessToken)
-			.refreshToken(refreshToken)
-			.build();
+		String kakaoAccessToken = oAuth.requestKakaoAccessToken(loginRequest);
+		KakaoUserInfo kakaoUserInfo = oAuth.getUserInfoFromKakao(kakaoAccessToken);
+		kakaoUserInfo.validate(); // 👈 여기서 유효성 검사
+		return userService.generateJwtForKakaoUser(kakaoUserInfo);
 	}
 }
