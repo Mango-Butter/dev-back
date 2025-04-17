@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
-import com.mangoboss.app.dto.KakaoUserInfo;
+import com.mangoboss.app.dto.user.KakaoUserInfo;
 import com.mangoboss.app.dto.auth.requeset.LoginRequest;
 
 import lombok.extern.slf4j.Slf4j;

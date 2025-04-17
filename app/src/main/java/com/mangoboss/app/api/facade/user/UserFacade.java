@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.domain.service.user.UserService;
-import com.mangoboss.app.dto.UserInfoResponse;
+import com.mangoboss.app.dto.user.response.UserInfoResponse;
 import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 import com.mangoboss.storage.user.UserEntity;
 

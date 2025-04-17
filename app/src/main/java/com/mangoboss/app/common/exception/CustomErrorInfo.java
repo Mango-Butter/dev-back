@@ -13,6 +13,7 @@ public enum CustomErrorInfo {
     URL_INPUT_ERROR(400, "URL 입력 오류입니다.", 400005),
     ILLEGAL_ARGUMENT_TOKEN(400, "토큰 형식이 잘못되었습니다.", 400006),
     KAKAO_USER_INFO_INCOMPLETE(400, "카카오에서 받아오는 정보 중 일부가 누락되었습니다.", 400007),
+    INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -31,9 +32,11 @@ public enum CustomErrorInfo {
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
 
     // 409 CONFLICT
-    ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001);
+	ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
+    DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
 
     // 500 INTERNAL_SERVER_ERROR
+    BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);
 
     private final int statusCode;
     private final String message;

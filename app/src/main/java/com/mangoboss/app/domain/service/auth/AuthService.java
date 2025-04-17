@@ -4,7 +4,7 @@ import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.security.KakaoSocialLogin;
 import com.mangoboss.app.common.util.JwtUtil;
-import com.mangoboss.app.dto.KakaoUserInfo;
+import com.mangoboss.app.dto.user.KakaoUserInfo;
 import com.mangoboss.app.dto.auth.requeset.LoginRequest;
 import com.mangoboss.app.dto.auth.response.JwtResponse;
 import com.mangoboss.storage.user.UserEntity;

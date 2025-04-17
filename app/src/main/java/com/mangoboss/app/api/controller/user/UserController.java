@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mangoboss.app.api.facade.user.UserFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
-import com.mangoboss.app.dto.UserInfoResponse;
+import com.mangoboss.app.dto.user.response.UserInfoResponse;
 import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 
 import jakarta.validation.Valid;
@@ -30,8 +30,8 @@ public class UserController {
 
 	@PreAuthorize("hasRole('UNASSIGNED')")
 	@PostMapping("/sign-up")
-	public void signUp(@RequestBody @Valid SignUpRequest request,
-		@AuthenticationPrincipal CustomUserDetails userDetails) {
+	public void signUp(@AuthenticationPrincipal CustomUserDetails userDetails,
+		@RequestBody @Valid SignUpRequest request) {
 		final Long userId = userDetails.getUserId();
 		userFacade.signUp(userId, request);
 	}

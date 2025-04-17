@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.UserRepository;
-import com.mangoboss.app.dto.KakaoUserInfo;
+import com.mangoboss.app.dto.user.KakaoUserInfo;
 import com.mangoboss.storage.user.Role;
 import com.mangoboss.storage.user.UserEntity;
 

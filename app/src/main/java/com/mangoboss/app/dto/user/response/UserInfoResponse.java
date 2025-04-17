@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto;
+package com.mangoboss.app.dto.user.response;
 
 import com.mangoboss.storage.user.UserEntity;
 
