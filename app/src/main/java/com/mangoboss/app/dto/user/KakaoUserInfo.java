@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto;
+package com.mangoboss.app.dto.user;
 
 import com.mangoboss.storage.user.Role;
 import com.mangoboss.storage.user.UserEntity;
@@ -28,16 +28,16 @@ public record KakaoUserInfo(
 				.build();
 	}
 
-	public UserEntity toEntity(final Role role){
-		return UserEntity.builder()
-				.kakaoId(kakaoId)
-				.phone(phone)
-				.name(name)
-				.email(email)
-				.birth(birth)
-				.profileImageUrl(profileImageUrl)
-				.role(role)
-				.build();
+	public UserEntity toEntity(final Role role) {
+		return UserEntity.create(
+			kakaoId,
+			name,
+			email,
+			phone,
+			birth,
+			profileImageUrl,
+			role
+		);
 	}
 
 	public void validate() {

@@ -1,11 +1,10 @@
 package com.mangoboss.app.api.facade.auth;
 
 import com.mangoboss.app.domain.service.auth.AuthService;
-import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 import com.mangoboss.app.dto.auth.response.JwtResponse;
 import org.springframework.stereotype.Service;
 
-import com.mangoboss.app.dto.KakaoUserInfo;
+import com.mangoboss.app.dto.user.KakaoUserInfo;
 import com.mangoboss.app.dto.auth.requeset.RefreshTokenRequest;
 import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.auth.requeset.LoginRequest;

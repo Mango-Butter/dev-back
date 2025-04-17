@@ -64,7 +64,7 @@ public class UserEntity extends BaseTimeEntity {
 	}
 
 	public static UserEntity create(final Long kakaoId, final String name, final String email, final String phone,
-				final LocalDate birth, final String profileImageUrl, final Role role, final LocalDateTime createdAt) {
+				final LocalDate birth, final String profileImageUrl, final Role role) {
 		return UserEntity.builder()
 			.kakaoId(kakaoId)
 			.name(name)
