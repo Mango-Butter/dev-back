@@ -1,24 +1,47 @@
 package com.mangoboss.app.dto;
 
+import com.mangoboss.storage.user.Role;
+import com.mangoboss.storage.user.UserEntity;
 import java.time.LocalDate;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import lombok.Builder;
 
+@Builder
 public record KakaoUserInfo(
 	Long kakaoId,
 	String email,
 	String name,
-	String picture,
+	String profileImageUrl,
 	LocalDate birth,
 	String phone
 ) {
-	public static KakaoUserInfo create(final Long kakaoId, final String email, final String name, final String picture, final LocalDate birth, final String phone) {
-		return new KakaoUserInfo(kakaoId, email, name, picture, birth, phone);
+	public static KakaoUserInfo create(final Long kakaoId, final String email, final String name, final String profileImageUrl, final LocalDate birth, final String phone) {
+		return KakaoUserInfo.builder()
+				.kakaoId(kakaoId)
+				.email(email)
+				.name(name)
+				.profileImageUrl(profileImageUrl)
+				.birth(birth)
+				.phone(phone)
+				.build();
+	}
+
+	public UserEntity toEntity(final Role role){
+		return UserEntity.builder()
+				.kakaoId(kakaoId)
+				.phone(phone)
+				.name(name)
+				.email(email)
+				.birth(birth)
+				.profileImageUrl(profileImageUrl)
+				.role(role)
+				.build();
 	}
 
 	public void validate() {
-		if (email == null || name == null || picture == null || birth == null || phone == null)  {
+		if (email == null || name == null || profileImageUrl == null || birth == null || phone == null)  {
 			throw new CustomException(CustomErrorInfo.KAKAO_USER_INFO_INCOMPLETE);
 		}
 	}

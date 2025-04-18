@@ -1,6 +1,6 @@
 package com.mangoboss.app.dto;
 
-import com.mangoboss.storage.UserEntity;
+import com.mangoboss.storage.user.UserEntity;
 
 import lombok.Builder;
 

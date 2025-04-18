@@ -19,14 +19,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.dto.KakaoUserInfo;
-import com.mangoboss.app.dto.LoginRequest;
+import com.mangoboss.app.dto.user.requeset.LoginRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
 
 @Component
 @Slf4j
-public class OAuth {
+public class KakaoSocialLogin {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;

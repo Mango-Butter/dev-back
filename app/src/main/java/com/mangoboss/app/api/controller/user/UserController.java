@@ -1,4 +1,4 @@
-package com.mangoboss.app.api.controller;
+package com.mangoboss.app.api.controller.user;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangoboss.app.api.facade.UserFacade;
+import com.mangoboss.app.api.facade.user.UserFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.UserInfoResponse;
 

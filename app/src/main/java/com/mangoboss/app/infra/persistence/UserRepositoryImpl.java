@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.mangoboss.app.domain.repository.UserRepository;
-import com.mangoboss.storage.UserEntity;
-import com.mangoboss.storage.UserJpaRepository;
+import com.mangoboss.storage.user.UserEntity;
+import com.mangoboss.storage.user.UserJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 

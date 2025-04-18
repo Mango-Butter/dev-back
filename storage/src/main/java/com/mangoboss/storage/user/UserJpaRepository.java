@@ -1,5 +1,6 @@
-package com.mangoboss.storage;
+package com.mangoboss.storage.user;
 
+import com.mangoboss.storage.user.UserEntity;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
