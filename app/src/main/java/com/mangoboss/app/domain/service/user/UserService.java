@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserService {
 	private final UserRepository userRepository;
-	private final KakaoSocialLogin kakaoSocialLogin;
 
 	@Transactional(readOnly = true)
 	public UserEntity getByUserId(final Long userId) {
@@ -37,5 +36,14 @@ public class UserService {
 	public UserEntity createUserByKakao(final KakaoUserInfo kakaoUserInfo) {
 		final UserEntity userEntity = kakaoUserInfo.toEntity(Role.UNASSIGNED);
 		return userRepository.save(userEntity);
+	}
+
+	public void signUp(final Long userId, final Role role) {
+		final UserEntity user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
+		if (user.getRole() != Role.UNASSIGNED) {
+			throw new CustomException(CustomErrorInfo.ALREADY_SIGNED_UP);
+		}
+		user.assignRole(role);
 	}
 }

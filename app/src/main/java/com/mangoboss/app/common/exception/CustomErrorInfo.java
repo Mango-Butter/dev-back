@@ -28,9 +28,10 @@ public enum CustomErrorInfo {
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
 
     // 405 Method Not Allowed
-    METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001);
+    METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
 
     // 409 CONFLICT
+    ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001);
 
     // 500 INTERNAL_SERVER_ERROR
 
