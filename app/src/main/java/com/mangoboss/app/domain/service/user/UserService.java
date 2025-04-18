@@ -1,7 +1,5 @@
 package com.mangoboss.app.domain.service.user;
 
-import com.mangoboss.app.common.security.KakaoSocialLogin;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
