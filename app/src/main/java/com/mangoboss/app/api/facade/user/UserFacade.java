@@ -1,12 +1,12 @@
-package com.mangoboss.app.api.facade;
+package com.mangoboss.app.api.facade.user;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mangoboss.app.common.exception.CustomUserDetails;
-import com.mangoboss.app.domain.service.UserService;
+import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.UserInfoResponse;
-import com.mangoboss.storage.UserEntity;
+import com.mangoboss.storage.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 

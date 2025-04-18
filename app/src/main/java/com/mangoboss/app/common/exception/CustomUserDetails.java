@@ -1,5 +1,7 @@
 package com.mangoboss.app.common.exception;
 
+import com.mangoboss.app.common.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,9 +16,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
     @Getter
-	private final Long userId;
+    private final Long userId;
     private final String role;
     private final Collection<? extends GrantedAuthority> authorities;
+
+    public CustomUserDetails(Claims claims) {
+        Number id = (Number) claims.get(JwtUtil.CLAIM_USER_ID);
+        this.userId = id.longValue();
+        this.role = (String) claims.get(JwtUtil.CLAIM_ROLE);
+        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

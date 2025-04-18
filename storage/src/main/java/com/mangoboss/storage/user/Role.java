@@ -1,4 +1,4 @@
-package com.mangoboss.storage;
+package com.mangoboss.storage.user;
 
 import lombok.Getter;
 

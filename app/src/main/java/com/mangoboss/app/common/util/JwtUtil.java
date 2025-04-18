@@ -1,14 +1,14 @@
 package com.mangoboss.app.common.util;
 
-import java.security.Key;
+import com.mangoboss.storage.user.Role;
 import java.util.Date;
 
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
-import com.mangoboss.storage.UserEntity;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,64 +23,62 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JwtUtil {
-    private final Key key;
-    private final long accessExpirationTime;
-    private final long refreshExpirationTime;
+    public static final String BEARER_PREFIX = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_TOKEN_HEADER = "X-Refresh-Token";
+
+    public static final String CLAIM_USER_ID = "userId";
+    public static final String CLAIM_ROLE = "role";
+
+    private final SecretKey accessSecret;
+    private final SecretKey refreshSecret;
+    private final Long accessExpirationTime;
+    private final Long refreshExpirationTime;
     private final String issuer;
 
     public JwtUtil(
-        @Value("${spring.jwt.secret}") final String secretKey,
-        @Value("${spring.jwt.token.access-expiration-time}") final long accessExpirationTime,
-        @Value("${spring.jwt.token.refresh-expiration-time}") final long refreshExpirationTime,
-        @Value("${spring.jwt.token.issuer}") final String issuer
+            @Value("${spring.jwt.secret.access-secret-key}") final String accessSecretKey,
+            @Value("${spring.jwt.secret.refresh-secret-key}") final String refreshSecretKey,
+            @Value("${spring.jwt.token.access-expiration-time}") final Long accessExpirationTime,
+            @Value("${spring.jwt.token.refresh-expiration-time}") final Long refreshExpirationTime,
+            @Value("${spring.jwt.token.issuer}") final String issuer
     ) {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        this.accessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecretKey));
+        this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecretKey));
         this.accessExpirationTime = accessExpirationTime;
         this.refreshExpirationTime = refreshExpirationTime;
         this.issuer = issuer;
     }
 
-    public String createAccessToken(final UserEntity user) {
-        return createToken(user, accessExpirationTime);
+    public String generateAccessToken(final Long userId, final Role role) {
+        return generateToken(userId, role, accessSecret, accessExpirationTime);
     }
 
-    public String createRefreshToken(final UserEntity user) {
-        return createToken(user, refreshExpirationTime);
+    public String generateRefreshToken(final Long userId, final Role role) {
+        return generateToken(userId, role, refreshSecret, refreshExpirationTime);
     }
 
-    private String createToken(final UserEntity user, final long expirationTime) {
-        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getUserId()));
-        claims.put("userId", user.getUserId());
-        claims.put("role", user.getRole().toString());
-
-        Date now = new Date();
-        Date expireDate = new Date(now.getTime() + expirationTime);
+    private String generateToken(final Long userId, final Role role, final SecretKey secret, final Long expirationTime) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+        claims.put(CLAIM_USER_ID, userId);
+        claims.put(CLAIM_ROLE, role.toString());
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(user.getUserId().toString())
-            .setIssuer(issuer)
-            .setIssuedAt(now)
-            .setExpiration(expireDate)
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
-    }
-
-    public Long getUserId(final String token) {
-        return parseClaims(token).get("userId", Long.class);
-    }
-
-    public String getRole(final String token) {
-        return parseClaims(token).get("role", String.class);
+                .setClaims(claims)
+                .setIssuer(issuer)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(secret, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     // JWT 검증
     public boolean validateToken(final String token) {
         try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(accessSecret).build().parseClaimsJws(token).getBody();
             // 필수 claim 검사
             return claims.getExpiration().after(new Date()) && // 만료되지 않음
-                claims.getIssuer().equals(issuer); // 시스템에서 발급
+                    claims.getIssuer().equals(issuer); // 시스템에서 발급
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token: {}", e.getMessage());
             throw new CustomException(CustomErrorInfo.INVALID_TOKEN);
@@ -99,10 +97,13 @@ public class JwtUtil {
     // JWT Claims 추출
     public Claims parseClaims(final String accessToken) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parserBuilder()
+                    .setSigningKey(accessSecret)
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
-
 }
