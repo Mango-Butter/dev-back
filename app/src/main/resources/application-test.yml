@@ -14,7 +14,9 @@ spring:
     hibernate:
       ddl-auto: create
   jwt:
-    secret: ${JWT_SECRET}
+    secret:
+      access-secret-key: ${JWT_SECRET}
+      refresh-secret-key: ${JWT_SECRET}
     token:
       access-expiration-time: ${JWT_ACCESS_EXPIRATION:3600000}
       refresh-expiration-time: ${JWT_REFRESH_EXPIRATION:604800000}
