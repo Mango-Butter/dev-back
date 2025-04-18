@@ -75,4 +75,8 @@ public class UserEntity extends BaseTimeEntity {
 			.role(role)
 			.build();
 	}
+
+	public void assignRole(final Role newRole) {
+		this.role = newRole;
+	}
 }

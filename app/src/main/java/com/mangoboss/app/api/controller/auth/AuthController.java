@@ -1,6 +1,11 @@
 package com.mangoboss.app.api.controller.auth;
 
+import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 import com.mangoboss.app.dto.auth.response.JwtResponse;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,4 +32,13 @@ public class AuthController {
     public JwtResponse socialLogin(@RequestBody LoginRequest loginRequest) {
         return authFacade.socialLogin(loginRequest);
     }
+
+    @PreAuthorize("hasRole('UNASSIGNED')")
+    @PostMapping("/sign-up")
+    public void signUp(@RequestBody SignUpRequest request,
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        final Long userId = userDetails.getUserId();
+        authFacade.signUp(userId, request);
+    }
+
 }
