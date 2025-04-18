@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.UserInfoResponse;
+import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 import com.mangoboss.storage.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,9 @@ public class UserFacade {
 	public UserInfoResponse getUserInfo(final CustomUserDetails userDetails) {
 		UserEntity user = userService.getByUserId(userDetails.getUserId());
 		return UserInfoResponse.fromEntity(user);
+	}
+
+	public void signUp(final Long userId, final SignUpRequest request) {
+		userService.signUp(userId, request.role());
 	}
 }

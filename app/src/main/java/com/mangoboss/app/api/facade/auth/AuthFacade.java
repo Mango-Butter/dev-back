@@ -31,8 +31,4 @@ public class AuthFacade {
 		final UserEntity user = userService.getOrCreateUser(kakaoUserInfo);
 		return authService.generateToken(user);
 	}
-
-	public void signUp(final Long userId, final SignUpRequest request) {
-		userService.signUp(userId, request.role());
-	}
 }

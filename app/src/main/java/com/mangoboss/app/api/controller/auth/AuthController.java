@@ -33,12 +33,4 @@ public class AuthController {
         return authFacade.socialLogin(loginRequest);
     }
 
-    @PreAuthorize("hasRole('UNASSIGNED')")
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody SignUpRequest request,
-        @AuthenticationPrincipal CustomUserDetails userDetails) {
-        final Long userId = userDetails.getUserId();
-        authFacade.signUp(userId, request);
-    }
-
 }
