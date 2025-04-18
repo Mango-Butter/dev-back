@@ -1,14 +1,14 @@
 package com.mangoboss.app.api.controller.auth;
 
-import com.mangoboss.app.dto.user.response.JwtResponse;
+import com.mangoboss.app.dto.auth.response.JwtResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mangoboss.app.api.facade.auth.AuthFacade;
-import com.mangoboss.app.dto.user.requeset.LoginRequest;
-import com.mangoboss.app.dto.user.requeset.RefreshTokenRequest;
+import com.mangoboss.app.dto.auth.requeset.LoginRequest;
+import com.mangoboss.app.dto.auth.requeset.RefreshTokenRequest;
 
 import lombok.RequiredArgsConstructor;
 

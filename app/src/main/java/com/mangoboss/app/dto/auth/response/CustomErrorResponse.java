@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.user.response;
+package com.mangoboss.app.dto.auth.response;
 
 import java.time.LocalDateTime;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.user.requeset;
+package com.mangoboss.app.dto.auth.requeset;
 
 import lombok.Builder;
 

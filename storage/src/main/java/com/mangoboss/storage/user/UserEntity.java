@@ -1,5 +1,6 @@
 package com.mangoboss.storage.user;
 
+import com.mangoboss.storage.BaseTimeEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -20,10 +21,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "\"user\"")
-public class UserEntity {
+public class UserEntity extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private Long userId;
 
 	@Column(unique = true, nullable = false)
@@ -49,8 +50,6 @@ public class UserEntity {
 	@Column(nullable = false)
 	private Role role;
 
-	private LocalDateTime createdAt;
-
 	@Builder
 	private UserEntity(final Long kakaoId, final String name, final String email, final String phone,
 		final LocalDate birth, final String profileImageUrl, final Role role, final LocalDateTime createdAt
@@ -62,7 +61,6 @@ public class UserEntity {
 		this.birth = birth;
 		this.profileImageUrl = profileImageUrl;
 		this.role = role;
-		this.createdAt = createdAt;
 	}
 
 	public static UserEntity create(final Long kakaoId, final String name, final String email, final String phone,
@@ -75,7 +73,6 @@ public class UserEntity {
 			.birth(birth)
 			.profileImageUrl(profileImageUrl)
 			.role(role)
-			.createdAt(createdAt)
 			.build();
 	}
 }
