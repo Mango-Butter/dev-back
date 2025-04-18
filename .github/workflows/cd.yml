@@ -97,6 +97,7 @@ jobs:
             echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
+            docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest
             docker compose up -d
 
   deploy-admin:
