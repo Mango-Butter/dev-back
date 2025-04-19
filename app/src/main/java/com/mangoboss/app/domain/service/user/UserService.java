@@ -21,9 +21,8 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	public UserEntity getByUserId(final Long userId) {
-		return userRepository.findByUserId(userId)
-			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
+	public UserEntity getUserById(final Long userId) {
+		return userRepository.getById(userId);
 	}
 
 	public UserEntity getOrCreateUser(final KakaoUserInfo kakaoUserInfo) {
@@ -37,8 +36,7 @@ public class UserService {
 	}
 
 	public void signUp(final Long userId, final Role role) {
-		final UserEntity user = userRepository.findByUserId(userId)
-			.orElseThrow(() -> new CustomException(CustomErrorInfo.USER_NOT_FOUND));
+		final UserEntity user = userRepository.getById(userId);
 		if (user.getRole() != Role.UNASSIGNED) {
 			throw new CustomException(CustomErrorInfo.ALREADY_SIGNED_UP);
 		}
