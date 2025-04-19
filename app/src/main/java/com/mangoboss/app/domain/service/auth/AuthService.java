@@ -34,8 +34,8 @@ public class AuthService {
     }
 
     public JwtResponse generateToken(final UserEntity user){
-        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), user.getRole());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), user.getRole());
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getRole());
         return JwtResponse.builder()
                 .grantType(JwtUtil.BEARER_PREFIX)
                 .accessToken(accessToken)

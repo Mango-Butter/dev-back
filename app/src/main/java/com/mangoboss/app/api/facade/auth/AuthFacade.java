@@ -22,7 +22,7 @@ public class AuthFacade {
 	public JwtResponse reissueAccessToken(final RefreshTokenRequest refreshTokenRequest) {
 		final String refreshToken = refreshTokenRequest.refreshToken();
 		final Long userId = authService.validateAndExtractIdFromRefreshToken(refreshToken);
-		final UserEntity user = userService.getByUserId(userId);
+		final UserEntity user = userService.getUserById(userId);
 		return authService.generateToken(user);
 	}
 

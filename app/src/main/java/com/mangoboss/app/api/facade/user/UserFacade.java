@@ -18,7 +18,7 @@ public class UserFacade {
 
 	@Transactional
 	public UserInfoResponse getUserInfo(final CustomUserDetails userDetails) {
-		UserEntity user = userService.getByUserId(userDetails.getUserId());
+		UserEntity user = userService.getUserById(userDetails.getUserId());
 		return UserInfoResponse.fromEntity(user);
 	}
 

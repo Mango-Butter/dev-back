@@ -16,7 +16,7 @@ public record UserInfoResponse(
 ) {
 	public static UserInfoResponse fromEntity(final UserEntity user) {
 		return UserInfoResponse.builder()
-			.userId(user.getUserId())
+			.userId(user.getId())
 			.email(user.getEmail())
 			.name(user.getName())
 			.phone(user.getPhone())

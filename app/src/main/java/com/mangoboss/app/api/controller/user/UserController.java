@@ -13,6 +13,7 @@ import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.UserInfoResponse;
 import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,7 +30,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('UNASSIGNED')")
 	@PostMapping("/sign-up")
-	public void signUp(@RequestBody SignUpRequest request,
+	public void signUp(@RequestBody @Valid SignUpRequest request,
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		final Long userId = userDetails.getUserId();
 		userFacade.signUp(userId, request);
