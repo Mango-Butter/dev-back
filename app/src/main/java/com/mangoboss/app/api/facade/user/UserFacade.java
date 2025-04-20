@@ -1,5 +1,7 @@
 package com.mangoboss.app.api.facade.user;
 
+import com.mangoboss.app.domain.service.auth.AuthService;
+import com.mangoboss.app.dto.auth.response.JwtResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,15 +16,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserFacade {
-	private final UserService userService;
+    private final UserService userService;
+    private final AuthService authService;
 
-	@Transactional
-	public UserInfoResponse getUserInfo(final CustomUserDetails userDetails) {
-		UserEntity user = userService.getUserById(userDetails.getUserId());
-		return UserInfoResponse.fromEntity(user);
-	}
+    @Transactional
+    public UserInfoResponse getUserInfo(final CustomUserDetails userDetails) {
+        UserEntity user = userService.getUserById(userDetails.getUserId());
+        return UserInfoResponse.fromEntity(user);
+    }
 
-	public void signUp(final Long userId, final SignUpRequest request) {
-		userService.signUp(userId, request.role());
-	}
+    public JwtResponse signUp(final Long userId, final SignUpRequest request) {
+        final UserEntity user = userService.getUserById(userId);
+        userService.signUp(user, request.role());
+        return authService.generateToken(user);
+    }
 }

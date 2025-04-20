@@ -18,28 +18,27 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class UserService {
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Transactional(readOnly = true)
-	public UserEntity getUserById(final Long userId) {
-		return userRepository.getById(userId);
-	}
+    @Transactional(readOnly = true)
+    public UserEntity getUserById(final Long userId) {
+        return userRepository.getById(userId);
+    }
 
-	public UserEntity getOrCreateUser(final KakaoUserInfo kakaoUserInfo) {
-		return userRepository.findByKakaoId(kakaoUserInfo.kakaoId())
-			.orElseGet(() -> createUserByKakao(kakaoUserInfo));
-	}
+    public UserEntity getOrCreateUser(final KakaoUserInfo kakaoUserInfo) {
+        return userRepository.findByKakaoId(kakaoUserInfo.kakaoId())
+                .orElseGet(() -> createUserByKakao(kakaoUserInfo));
+    }
 
-	public UserEntity createUserByKakao(final KakaoUserInfo kakaoUserInfo) {
-		final UserEntity userEntity = kakaoUserInfo.toEntity(Role.UNASSIGNED);
-		return userRepository.save(userEntity);
-	}
+    public UserEntity createUserByKakao(final KakaoUserInfo kakaoUserInfo) {
+        final UserEntity userEntity = kakaoUserInfo.toEntity(Role.UNASSIGNED);
+        return userRepository.save(userEntity);
+    }
 
-	public void signUp(final Long userId, final Role role) {
-		final UserEntity user = userRepository.getById(userId);
-		if (user.getRole() != Role.UNASSIGNED) {
-			throw new CustomException(CustomErrorInfo.ALREADY_SIGNED_UP);
-		}
-		user.assignRole(role);
-	}
+    public void signUp(final UserEntity user, final Role role) {
+        if (user.getRole() != Role.UNASSIGNED) {
+            throw new CustomException(CustomErrorInfo.ALREADY_SIGNED_UP);
+        }
+        user.assignRole(role);
+    }
 }
