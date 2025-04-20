@@ -11,7 +11,13 @@ import org.springframework.stereotype.Repository;
 public class StaffRepositoryImpl implements StaffRepository {
     private final StaffJpaRepository staffJpaRepository;
 
-    public StaffEntity save(final StaffEntity staff){
+    @Override
+    public StaffEntity save(final StaffEntity staff) {
         return staffJpaRepository.save(staff);
+    }
+
+    @Override
+    public Boolean existsByUserIdAndStoreId(final Long userId, final Long storeId) {
+        return staffJpaRepository.existsByUserIdAndStoreId(userId, storeId);
     }
 }

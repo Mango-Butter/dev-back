@@ -4,4 +4,6 @@ import com.mangoboss.storage.staff.StaffEntity;
 
 public interface StaffRepository {
     StaffEntity save(StaffEntity staff);
+
+    Boolean existsByUserIdAndStoreId(Long userId, Long storeId);
 }
