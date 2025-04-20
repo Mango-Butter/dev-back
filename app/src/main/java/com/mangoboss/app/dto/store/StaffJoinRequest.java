@@ -7,7 +7,5 @@ public record StaffJoinRequest (
         @NotBlank
         String inviteCode
 ){
-        public UUID toUuid(){
-                return UUID.fromString(inviteCode);
-        }
+
 }
