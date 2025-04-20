@@ -95,6 +95,7 @@ jobs:
             echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> .env
             echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
             echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo "BUSINESS_API_KEY=${{ secrets.BUSINESS_API_KEY }}" >> .env
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
             docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest

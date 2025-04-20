@@ -20,6 +20,7 @@ jobs:
       JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
       KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
       KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+      BUSINESS_API_KEY: ${{ secrets.BUSINESS_API_KEY }}
 
     steps:
       - name: Checkout repository
