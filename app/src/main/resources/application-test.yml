@@ -15,12 +15,12 @@ spring:
       ddl-auto: create
   jwt:
     secret:
-      access-secret-key: ${JWT_SECRET}
-      refresh-secret-key: ${JWT_SECRET}
+      access-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdasdasdsadsadsa}
+      refresh-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdadsadassaasds}
     token:
       access-expiration-time: ${JWT_ACCESS_EXPIRATION:3600000}
       refresh-expiration-time: ${JWT_REFRESH_EXPIRATION:604800000}
-      issuer: ${JWT_ISSUER:test-issuer}
+      issuer: ${JWT_ISSUER:jwtissuerkeydefaultfortest}
 
 
   security:
@@ -28,9 +28,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
+            client-id: ${KAKAO_CLIENT_ID:kakaoclientiddefaultfortest}
             authorization-grant-type: authorization_code
-            redirect-uri: ${KAKAO_REDIRECT_URI}
+            redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:8080/oauth2/callback/kakao}
             scope:
               - profile_nickname
               - account_email
@@ -43,13 +43,3 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.stat: DEBUG
-
-    com.zaxxer.hikari: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
-    org.springframework.jdbc.core.JdbcTemplate: DEBUG
-    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
