@@ -44,6 +44,7 @@ public class UserEntity extends BaseTimeEntity {
 	@Column(nullable = false)
 	private LocalDate birth;
 
+	@Column(nullable = false)
 	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)

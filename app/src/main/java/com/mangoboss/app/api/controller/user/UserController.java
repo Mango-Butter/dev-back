@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.controller.user;
 
+import com.mangoboss.app.dto.auth.response.JwtResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,19 +21,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-	private final UserFacade userFacade;
+    private final UserFacade userFacade;
 
-	@PreAuthorize("isAuthenticated()")
-	@GetMapping("/me")
-	public UserInfoResponse getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-		return userFacade.getUserInfo(userDetails);
-	}
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
+    public UserInfoResponse getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return userFacade.getUserInfo(userDetails);
+    }
 
-	@PreAuthorize("hasRole('UNASSIGNED')")
-	@PostMapping("/sign-up")
-	public void signUp(@AuthenticationPrincipal CustomUserDetails userDetails,
-		@RequestBody @Valid SignUpRequest request) {
-		final Long userId = userDetails.getUserId();
-		userFacade.signUp(userId, request);
-	}
+    @PreAuthorize("hasRole('UNASSIGNED')")
+    @PostMapping("/sign-up")
+    public JwtResponse signUp(@AuthenticationPrincipal CustomUserDetails userDetails,
+                              @RequestBody @Valid SignUpRequest request) {
+        final Long userId = userDetails.getUserId();
+        return userFacade.signUp(userId, request);
+    }
 }
