@@ -1,4 +1,4 @@
-package com.mangoboss.app.api.facade.store.boss;
+package com.mangoboss.app.api.facade.store;
 
 import org.springframework.stereotype.Service;
 
