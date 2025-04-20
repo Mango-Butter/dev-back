@@ -35,6 +35,7 @@ public enum CustomErrorInfo {
     // 409 CONFLICT
     ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
     DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
+    ALREADY_JOIN_STAFF(409,"이미 매장에 가입한 알바생입니다.",409003),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);
