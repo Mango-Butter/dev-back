@@ -27,12 +27,13 @@ public enum CustomErrorInfo {
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
+    INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
 
     // 409 CONFLICT
-	ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
+    ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
     DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
 
     // 500 INTERNAL_SERVER_ERROR
