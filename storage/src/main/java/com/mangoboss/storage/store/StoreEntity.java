@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -85,7 +84,7 @@ public class StoreEntity extends BaseTimeEntity {
 
     public static StoreEntity create(final UserEntity boss, final String name, final String address,
             final String businessNumber, final StoreType storeType, final String inviteCode,
-            final String chatLink, final Time workingTimeUnit, final Double gpsLatitude, final Double gpsLongitude, final String qrCode
+            final Double gpsLatitude, final Double gpsLongitude, final String qrCode
     ) {
         return StoreEntity.builder()
                 .boss(boss)
@@ -94,8 +93,6 @@ public class StoreEntity extends BaseTimeEntity {
                 .businessNumber(businessNumber)
                 .storeType(storeType)
                 .inviteCode(inviteCode)
-                .chatLink(chatLink)
-                .workingTimeUnit(workingTimeUnit)
                 .attendanceMethod(AttendanceMethod.QR)
                 .gpsRangeMeters(50)
                 .gpsLatitude(gpsLatitude)
