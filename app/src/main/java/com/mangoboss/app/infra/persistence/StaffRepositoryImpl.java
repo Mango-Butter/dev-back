@@ -1,5 +1,7 @@
 package com.mangoboss.app.infra.persistence;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StaffRepository;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.staff.StaffJpaRepository;
@@ -19,5 +21,11 @@ public class StaffRepositoryImpl implements StaffRepository {
     @Override
     public Boolean existsByUserIdAndStoreId(final Long userId, final Long storeId) {
         return staffJpaRepository.existsByUserIdAndStoreId(userId, storeId);
+    }
+
+    @Override
+    public StaffEntity getByIdAndStoreId(final Long staffId, final Long storeId) {
+        return staffJpaRepository.findByIdAndStoreId(staffId,storeId)
+                .orElseThrow(()->new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
     }
 }

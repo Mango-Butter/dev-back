@@ -22,6 +22,11 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
+    @Transactional(readOnly = true)
+    public StaffEntity getStaffBelongsToStore(final Long storeId, final Long staffId){
+        return staffRepository.getByIdAndStoreId(staffId, storeId);
+    }
+
     private void isAlreadyJoin(final UserEntity user, final StoreEntity store) {
         if (staffRepository.existsByUserIdAndStoreId(user.getId(), store.getId())) {
             throw new CustomException(CustomErrorInfo.ALREADY_JOIN_STAFF);

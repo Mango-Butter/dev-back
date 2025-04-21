@@ -2,7 +2,6 @@ package com.mangoboss.app.domain.service.store;
 
 import java.security.SecureRandom;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +28,13 @@ public class StoreService {
     private final ExternalBusinessApiClient externalBusinessApiClient;
 
     @Transactional(readOnly = true)
+    public void isBossOfStore(final Long storeId, final Long userId){
+        if(!storeRepository.existsByIdAndBossId(storeId,userId)){
+            throw new CustomException(CustomErrorInfo.NOT_STORE_BOSS);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public boolean isDuplicatedBusinessNumber(final String businessNumber) {
         return storeRepository.existsByBusinessNumber(businessNumber);
     }
@@ -44,8 +50,14 @@ public class StoreService {
         }
     }
 
+    @Transactional(readOnly = true)
     public StoreEntity getStoreByInviteCode(final String inviteCode) {
         return storeRepository.getByInviteCode(inviteCode);
+    }
+
+    @Transactional(readOnly = true)
+    public StoreEntity getStoreById(final Long storeId){
+        return storeRepository.getById(storeId);
     }
 
     public StoreEntity createStore(final StoreCreateRequest request, final UserEntity boss) {

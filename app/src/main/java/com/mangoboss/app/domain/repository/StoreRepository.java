@@ -9,7 +9,11 @@ public interface StoreRepository {
 
     boolean existsByAttendanceQrCode(String qrCode);
 
+    boolean existsByIdAndBossId(Long storeId, Long userId);
+
     StoreEntity save(StoreEntity storeEntity);
 
     StoreEntity getByInviteCode(String inviteCode);
+
+    StoreEntity getById(Long id);
 }

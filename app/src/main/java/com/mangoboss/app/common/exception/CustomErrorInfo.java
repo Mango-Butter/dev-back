@@ -23,11 +23,14 @@ public enum CustomErrorInfo {
     UNSUPPORTED_TOKEN(401, "지원되지 않는 토큰입니다.", 401005),
 
     // 403 FORBIDDEN
+    NOT_STORE_BOSS(403,"이 매장의 사장이 아닙니다.",403001),
 
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
     INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
+    STAFF_NOT_FOUND(404,"해당하는 알바생이 없습니다.",404004),
+    STORE_NOT_FOUND(404,"해당하는 매장이 없습니다.",404005),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),

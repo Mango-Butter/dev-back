@@ -32,6 +32,11 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     @Override
+    public boolean existsByIdAndBossId(final Long storeId, final Long userId) {
+        return storeJpaRepository.existsByIdAndBossId(storeId, userId);
+    }
+
+    @Override
     public StoreEntity save(final StoreEntity storeEntity) {
         return storeJpaRepository.save(storeEntity);
     }
@@ -40,6 +45,12 @@ public class StoreRepositoryImpl implements StoreRepository {
     public StoreEntity getByInviteCode(final String inviteCode) {
         return storeJpaRepository.findByInviteCode(inviteCode)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.INVITE_CODE_NOT_FOUND));
+    }
+
+    @Override
+    public StoreEntity getById(final Long id) {
+        return storeJpaRepository.findById(id)
+                .orElseThrow(()->new CustomException(CustomErrorInfo.STORE_NOT_FOUND));
     }
 
 }
