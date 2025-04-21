@@ -6,4 +6,6 @@ public interface StaffRepository {
     StaffEntity save(StaffEntity staff);
 
     Boolean existsByUserIdAndStoreId(Long userId, Long storeId);
+
+    StaffEntity getByIdAndStoreId(Long staffId, Long storeId);
 }
