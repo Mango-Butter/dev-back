@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +43,16 @@ public class ScheduleService {
 
     public void createSchedule(final ScheduleEntity schedule) {
         scheduleRepository.save(schedule);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<ScheduleEntity> getDailySchedules(final Long storeId, final LocalDate date){
+        return scheduleRepository.findAllByStoreIdAndWorkDate(storeId, date);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RegularGroupEntity> getRegularGroupsForStaff(final Long staffId){
+        return regularGroupRepository.findAllByStaffId(staffId);
     }
 }
