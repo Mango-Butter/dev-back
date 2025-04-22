@@ -4,6 +4,7 @@ import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.staff.request.RegularGroupCreateRequest;
+import com.mangoboss.app.dto.staff.response.RegularGroupResponse;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,11 @@ public class StaffStaffFacade {
 
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
         requestList.forEach(request -> scheduleService.createRegularGroup(request.toEntity(staff)));
+    }
+
+    public List<RegularGroupResponse> getRegularGroupsForStaff(final Long storeId, final Long staffId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return scheduleService.getRegularGroupsForStaff(staffId)
+                .stream().map(RegularGroupResponse::fromEntity).toList();
     }
 }

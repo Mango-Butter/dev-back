@@ -2,12 +2,16 @@ package com.mangoboss.app.api.controller.schedule;
 
 import com.mangoboss.app.api.facade.schedule.BossScheduleFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.schedule.request.ScheduleCreateRequest;
+import com.mangoboss.app.dto.schedule.response.ScheduleDailyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +26,12 @@ public class BossScheduleController {
                                @PathVariable Long storeId, @RequestBody @Valid ScheduleCreateRequest request) {
         final Long userId = userDetails.getUserId();
         bossScheduleFacade.createSchedule(storeId, userId, request);
+    }
+
+    @GetMapping("/daily")
+    public ListWrapperResponse<ScheduleDailyResponse> getDailySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                       @PathVariable Long storeId, @RequestParam LocalDate date) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossScheduleFacade.getDailySchedule(storeId, userId, date));
     }
 }

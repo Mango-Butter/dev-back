@@ -6,6 +6,8 @@ import com.mangoboss.storage.schedule.RegularGroupJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class RegularGroupRepositoryImpl implements RegularGroupRepository {
@@ -14,5 +16,10 @@ public class RegularGroupRepositoryImpl implements RegularGroupRepository {
     @Override
     public RegularGroupEntity save(final RegularGroupEntity repeatGroup){
         return regularGroupJpaRepository.save(repeatGroup);
+    }
+
+    @Override
+    public List<RegularGroupEntity> findAllByStaffId(final Long staffId) {
+        return regularGroupJpaRepository.findAllByStaffId(staffId);
     }
 }
