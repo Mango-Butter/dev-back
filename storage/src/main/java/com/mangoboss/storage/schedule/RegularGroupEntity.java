@@ -35,30 +35,30 @@ public class RegularGroupEntity {
     private LocalTime endTime;
 
     @Column(nullable = false)
-    private LocalDate repeatStartDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDate repeatEndDate;
+    private LocalDate endDate;
 
     @Builder
     private RegularGroupEntity(final DayOfWeek dayOfWeek, final LocalTime startTime, final LocalTime endTime,
-                               final LocalDate repeatStartDate, final LocalDate repeatEndDate, final StaffEntity staff) {
+                               final LocalDate startDate, final LocalDate endDate, final StaffEntity staff) {
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.repeatStartDate = repeatStartDate;
-        this.repeatEndDate = repeatEndDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.staff = staff;
     }
 
     public static RegularGroupEntity create(final DayOfWeek dayOfWeek, final LocalTime startTime, final LocalTime endTime,
-                                            final LocalDate repeatStartDate, final LocalDate repeatEndDate, final StaffEntity staff) {
+                                            final LocalDate startDate, final LocalDate endDate, final StaffEntity staff) {
         return RegularGroupEntity.builder()
                 .dayOfWeek(dayOfWeek)
                 .startTime(startTime)
                 .endTime(endTime)
-                .repeatStartDate(repeatStartDate)
-                .repeatEndDate(repeatEndDate)
+                .startDate(startDate)
+                .endDate(endDate)
                 .staff(staff)
                 .build();
     }
