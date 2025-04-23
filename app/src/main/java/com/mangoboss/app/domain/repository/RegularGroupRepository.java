@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RegularGroupRepository {
 
-    RegularGroupEntity save(RegularGroupEntity repeatGroup);
+    RegularGroupEntity save(RegularGroupEntity regularGroup);
 
     List<RegularGroupEntity> findAllByStaffId(Long storeId);
 }

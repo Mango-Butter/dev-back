@@ -14,6 +14,8 @@ public enum CustomErrorInfo {
     ILLEGAL_ARGUMENT_TOKEN(400, "토큰 형식이 잘못되었습니다.", 400006),
     KAKAO_USER_INFO_INCOMPLETE(400, "카카오에서 받아오는 정보 중 일부가 누락되었습니다.", 400007),
     INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
+    INVALID_SCHEDULE_TIME(400,"스케줄의 시간이 유효하지 않습니다.",400009),
+    INVALID_REGULAR_DATE(400,"반복 날짜가 유효하지 않습니다.",400010),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

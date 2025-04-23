@@ -15,10 +15,10 @@ public record RegularGroupCreateRequest(
         DayOfWeek dayOfWeek,
 
         @NonNull
-        LocalDate repeatStartDate,
+        LocalDate startDate,
 
         @NonNull
-        LocalDate repeatEndDate,
+        LocalDate endDate,
 
         @NonNull
         LocalTime startTime,
@@ -28,6 +28,6 @@ public record RegularGroupCreateRequest(
 ){
     public RegularGroupEntity toEntity(final StaffEntity staff){
         return RegularGroupEntity.create(
-                dayOfWeek, startTime, endTime, repeatStartDate, repeatEndDate, staff);
+                dayOfWeek, startTime, endTime, startDate, endDate, staff);
     }
 }

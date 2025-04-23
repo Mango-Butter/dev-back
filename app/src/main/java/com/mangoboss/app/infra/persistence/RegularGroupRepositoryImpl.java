@@ -14,8 +14,8 @@ public class RegularGroupRepositoryImpl implements RegularGroupRepository {
     private final RegularGroupJpaRepository regularGroupJpaRepository;
 
     @Override
-    public RegularGroupEntity save(final RegularGroupEntity repeatGroup){
-        return regularGroupJpaRepository.save(repeatGroup);
+    public RegularGroupEntity save(final RegularGroupEntity regularGroup){
+        return regularGroupJpaRepository.save(regularGroup);
     }
 
     @Override

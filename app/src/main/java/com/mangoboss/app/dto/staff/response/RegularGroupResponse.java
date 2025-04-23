@@ -13,8 +13,8 @@ public record RegularGroupResponse(
         DayOfWeek dayOfWeek,
         LocalTime startTime,
         LocalTime endTime,
-        LocalDate repeatStartDate,
-        LocalDate repeatEndDate
+        LocalDate startDate,
+        LocalDate endDate
 ) {
     public static RegularGroupResponse fromEntity(final RegularGroupEntity regularGroup) {
         return RegularGroupResponse.builder()
@@ -22,8 +22,8 @@ public record RegularGroupResponse(
                 .dayOfWeek(regularGroup.getDayOfWeek())
                 .startTime(regularGroup.getStartTime())
                 .endTime(regularGroup.getEndTime())
-                .repeatStartDate(regularGroup.getRepeatStartDate())
-                .repeatEndDate(regularGroup.getRepeatEndDate())
+                .startDate(regularGroup.getStartDate())
+                .endDate(regularGroup.getEndDate())
                 .build();
     }
 }
