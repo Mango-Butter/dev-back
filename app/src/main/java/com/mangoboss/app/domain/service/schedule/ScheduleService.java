@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,10 +47,11 @@ public class ScheduleService {
     }
 
     private void createRegularSchedules(final RegularGroupEntity regularGroup) {
-        LocalDate current = regularGroup.getStartDate();
-        while (current.getDayOfWeek() != regularGroup.getDayOfWeek()) {
-            current = current.plusDays(1);
-        }
+        final DayOfWeek start = regularGroup.getStartDate().getDayOfWeek();
+        final DayOfWeek target = regularGroup.getDayOfWeek();
+        int daysToAdd = (target.getValue() - start.getValue() + 7) % 7;
+        LocalDate current = regularGroup.getStartDate().plusDays(daysToAdd);
+
         while (!current.isAfter(regularGroup.getEndDate())) {
             ScheduleEntity schedule = ScheduleEntity.create(current, LocalDateTime.of(current, regularGroup.getStartTime()),
                     LocalDateTime.of(current, regularGroup.getEndTime()), regularGroup.getStaff(), regularGroup);
