@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,5 +54,19 @@ class StaffServiceTest {
         Assertions.assertThatThrownBy(()-> staffService.createStaff(user,store))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.ALREADY_JOIN_STAFF.getMessage());
+    }
+
+    @Test
+    void store예_속해있는_staff를_얻을_수_있다(){
+        //given
+        Long staffId = 1L;
+        Long storeId = 1L;
+        StaffEntity staff = mock(StaffEntity.class);
+        when(staffRepository.getByIdAndStoreId(any(Long.class), any(Long.class))).thenReturn(staff);
+
+        //when
+        StaffEntity result = staffService.getStaffBelongsToStore(staffId,storeId);
+        //then
+        assertThat(result).isEqualTo(staff);
     }
 }
