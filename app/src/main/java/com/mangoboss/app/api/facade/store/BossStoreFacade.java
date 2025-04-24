@@ -1,5 +1,9 @@
 package com.mangoboss.app.api.facade.store;
 
+import com.mangoboss.app.dto.ListWrapperResponse;
+import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
+import com.mangoboss.app.dto.store.response.StoreInfoResponse;
+import com.mangoboss.app.dto.store.response.StoreListResponse;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.domain.service.store.StoreService;
@@ -11,6 +15,8 @@ import com.mangoboss.storage.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +34,24 @@ public class BossStoreFacade {
 
 	public void validateBusinessNumber(final String businessNumber) {
 		storeService.validateBusinessNumber(businessNumber);
+	}
+
+	public ListWrapperResponse<StoreListResponse> getMyStores(final Long userId) {
+		final List<StoreEntity> stores = storeService.getStoresByBossId(userId);
+		final List<StoreListResponse> responses = stores.stream()
+				.map(StoreListResponse::fromEntity)
+				.toList();
+		return ListWrapperResponse.of(responses);
+	}
+
+	public StoreInfoResponse getStoreInfo(final Long userId, final Long storeId) {
+		storeService.isBossOfStore(userId, storeId);
+		final StoreEntity store = storeService.getStoreInfo(storeId);
+		return StoreInfoResponse.fromEntity(store);
+	}
+
+	public void updateStoreInfo(final Long userId, final Long storeId, final StoreUpdateRequest request) {
+		storeService.isBossOfStore(userId, storeId);
+		storeService.updateStoreInfo(userId, request);
 	}
 }

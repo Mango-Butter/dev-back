@@ -2,8 +2,8 @@ package com.mangoboss.app.api.controller.store;
 
 import com.mangoboss.app.api.facade.store.StaffStoreFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
-import com.mangoboss.app.dto.store.StaffJoinRequest;
-import com.mangoboss.app.dto.store.StaffJoinResponse;
+import com.mangoboss.app.dto.store.request.StaffJoinRequest;
+import com.mangoboss.app.dto.store.response.StaffJoinResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
