@@ -3,6 +3,7 @@ package com.mangoboss.app.api.facade.store;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 import com.mangoboss.app.dto.store.response.StoreInfoResponse;
+import com.mangoboss.app.dto.store.response.StoreInviteCodeResponse;
 import com.mangoboss.app.dto.store.response.StoreListResponse;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +54,11 @@ public class BossStoreFacade {
 	public void updateStoreInfo(final Long userId, final Long storeId, final StoreUpdateRequest request) {
 		storeService.isBossOfStore(userId, storeId);
 		storeService.updateStoreInfo(userId, request);
+	}
+
+	public StoreInviteCodeResponse reissueInviteCode(final Long userId, final Long storeId) {
+		storeService.isBossOfStore(userId, storeId);
+		final String newInviteCode = storeService.reissueInviteCode(storeId);
+		return StoreInviteCodeResponse.of(newInviteCode);
 	}
 }
