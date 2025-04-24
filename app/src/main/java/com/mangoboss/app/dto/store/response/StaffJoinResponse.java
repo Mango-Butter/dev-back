@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.store;
+package com.mangoboss.app.dto.store.response;
 
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.Builder;

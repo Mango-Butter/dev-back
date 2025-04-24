@@ -2,6 +2,8 @@ package com.mangoboss.app.domain.repository;
 
 import com.mangoboss.storage.store.StoreEntity;
 
+import java.util.List;
+
 public interface StoreRepository {
     boolean existsByBusinessNumber(String businessNumber);
 
@@ -16,4 +18,6 @@ public interface StoreRepository {
     StoreEntity getByInviteCode(String inviteCode);
 
     StoreEntity getById(Long id);
+
+    List<StoreEntity> findAllByBossId(Long bossId);
 }

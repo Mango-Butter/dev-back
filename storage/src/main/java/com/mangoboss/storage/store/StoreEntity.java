@@ -100,4 +100,9 @@ public class StoreEntity extends BaseTimeEntity {
                 .qrCode(qrCode)
                 .build();
     }
+
+    public void updateInfo(final String address, final String chatLink) {
+        this.address = address;
+        this.chatLink = chatLink;
+    }
 }

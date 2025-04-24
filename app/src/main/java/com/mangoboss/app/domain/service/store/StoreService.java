@@ -1,7 +1,9 @@
 package com.mangoboss.app.domain.service.store;
 
 import java.security.SecureRandom;
+import java.util.List;
 
+import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,5 +93,21 @@ public class StoreService {
             sb.append(CHAR_POOL.charAt(random.nextInt(CHAR_POOL.length())));
         }
         return sb.toString();
+    }
+
+    @Transactional(readOnly = true)
+    public List<StoreEntity> getStoresByBossId(final Long bossId) {
+        return storeRepository.findAllByBossId(bossId);
+    }
+
+    @Transactional(readOnly = true)
+    public StoreEntity getStoreInfo(final Long storeId) {
+        return storeRepository.getById(storeId);
+    }
+
+    @Transactional
+    public void updateStoreInfo(final Long storeId, final StoreUpdateRequest request) {
+        final StoreEntity store = getStoreInfo(storeId);
+        store.updateInfo(request.address(), request.chatLink());
     }
 }

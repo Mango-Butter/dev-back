@@ -1,7 +1,6 @@
-package com.mangoboss.app.dto.store;
+package com.mangoboss.app.dto.store.request;
 
 import jakarta.validation.constraints.NotBlank;
-import java.util.UUID;
 
 public record StaffJoinRequest (
         @NotBlank
