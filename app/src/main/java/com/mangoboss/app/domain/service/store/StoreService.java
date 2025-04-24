@@ -105,9 +105,22 @@ public class StoreService {
         return storeRepository.getById(storeId);
     }
 
-    @Transactional
     public void updateStoreInfo(final Long storeId, final StoreUpdateRequest request) {
         final StoreEntity store = getStoreInfo(storeId);
-        store.updateInfo(request.address(), request.chatLink());
+        validateBusinessNumber(request.businessNumber());
+        store.updateInfo(
+                request.name(),
+                request.businessNumber(),
+                request.storeType(),
+                request.address(),
+                request.chatLink()
+        );
+    }
+
+    public String reissueInviteCode(final Long storeId) {
+        final StoreEntity store = storeRepository.getById(storeId);
+        final String newInviteCode = generateInviteCode();
+        store.updateInviteCode(newInviteCode);
+        return newInviteCode;
     }
 }

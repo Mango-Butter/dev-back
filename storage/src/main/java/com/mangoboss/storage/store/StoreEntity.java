@@ -101,8 +101,16 @@ public class StoreEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateInfo(final String address, final String chatLink) {
+    public void updateInfo(final String name, final String businessNumber, final StoreType storeType,
+                           final String address, final String chatLink) {
+        this.name = name;
+        this.businessNumber = businessNumber;
+        this.storeType = storeType;
         this.address = address;
         this.chatLink = chatLink;
+    }
+
+    public void updateInviteCode(final String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }
