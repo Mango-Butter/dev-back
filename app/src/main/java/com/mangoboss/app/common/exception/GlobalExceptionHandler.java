@@ -4,6 +4,7 @@ import static com.mangoboss.app.common.exception.CustomErrorInfo.*;
 import static com.mangoboss.app.common.exception.CustomErrorInfo.METHOD_NOT_ALLOWED;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,10 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.mangoboss.app.dto.auth.response.CustomErrorResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(AccessDeniedException.class)
@@ -68,13 +72,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		HttpStatusCode status,
 		WebRequest request
 	) {
-		String path = ((ServletWebRequest) request).getRequest().getRequestURI();
-		CustomErrorResponse errorResponse = new CustomErrorResponse(
+		final String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+
+		// 에러 메시지를 필드 기준으로 추출
+		final String errorMessage = ex.getBindingResult()
+			.getFieldErrors()
+			.stream()
+			.map(error -> error.getField() + " 필드는 " + error.getDefaultMessage())
+			.collect(Collectors.joining(", "));
+
+		final CustomErrorResponse errorResponse = new CustomErrorResponse(
 			HttpStatus.BAD_REQUEST.value(),
-			"Validation failed: " + ex.getBindingResult().toString(),
+			errorMessage,
 			path,
 			LocalDateTime.now()
 		);
+
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
@@ -116,9 +129,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<CustomErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
 		String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+		log.error("Exception at {}: {}", path, ex.getMessage(), ex);
 		CustomErrorResponse customErrorResponse = new CustomErrorResponse(
 			HttpStatus.INTERNAL_SERVER_ERROR.value(),
-			ex.getMessage(),
+			"서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
 			path,
 			LocalDateTime.now()
 		);
