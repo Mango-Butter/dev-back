@@ -34,26 +34,18 @@ class StoreServiceTest {
         Long storeId = 1L;
         StoreEntity store = mock(StoreEntity.class);
         StoreUpdateRequest request = StoreUpdateRequest.builder()
-                .name("망고카페")
-                .businessNumber("1234567890")
                 .address("서울시 강남구")
                 .storeType(StoreType.CAFE)
-                .chatLink("http://open.kakao.com/mango")
                 .build();
         when(storeRepository.getById(storeId)).thenReturn(store);
-        when(externalBusinessApiClient.checkBusinessNumberValid(request.businessNumber())).thenReturn(true);
-        when(storeRepository.existsByBusinessNumber(request.businessNumber())).thenReturn(false);
 
         // when
         storeService.updateStoreInfo(storeId, request);
 
         // then
         verify(store).updateInfo(
-                request.name(),
-                request.businessNumber(),
-                request.storeType(),
                 request.address(),
-                request.chatLink()
+                request.storeType()
         );
     }
 

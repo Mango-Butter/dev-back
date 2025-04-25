@@ -42,8 +42,6 @@ public class StoreEntity extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String inviteCode;
 
-    private String chatLink;
-
     private Time workingTimeUnit;
 
     //여기서부터 출퇴근 인증방식
@@ -64,7 +62,7 @@ public class StoreEntity extends BaseTimeEntity {
 
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
-                        final StoreType storeType, final String inviteCode, final String chatLink, final Time workingTimeUnit,
+                        final StoreType storeType, final String inviteCode, final Time workingTimeUnit,
                         final AttendanceMethod attendanceMethod, final Integer gpsRangeMeters,
                         final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
         this.boss = boss;
@@ -73,7 +71,6 @@ public class StoreEntity extends BaseTimeEntity {
         this.businessNumber = businessNumber;
         this.storeType = storeType;
         this.inviteCode = inviteCode;
-        this.chatLink = chatLink;
         this.workingTimeUnit = workingTimeUnit;
         this.attendanceMethod = attendanceMethod;
         this.gpsRangeMeters = gpsRangeMeters;
@@ -101,13 +98,9 @@ public class StoreEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateInfo(final String name, final String businessNumber, final StoreType storeType,
-                           final String address, final String chatLink) {
-        this.name = name;
-        this.businessNumber = businessNumber;
-        this.storeType = storeType;
+    public void updateInfo(final String address, final StoreType storeType) {
         this.address = address;
-        this.chatLink = chatLink;
+        this.storeType = storeType;
     }
 
     public void updateInviteCode(final String inviteCode) {
