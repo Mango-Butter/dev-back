@@ -8,16 +8,8 @@ import lombok.Builder;
 @Builder
 public record StoreUpdateRequest(
         @NotBlank
-        String name,
-
-        @NotBlank
-        String businessNumber,
-
-        @NotBlank
         String address,
 
         @NotNull
-        StoreType storeType,
-
-        String chatLink
+        StoreType storeType
 ) {}

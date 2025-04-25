@@ -10,8 +10,7 @@ public record StoreInfoResponse(
         String businessNumber,
         StoreType storeType,
         String address,
-        String inviteCode,
-        String chatLink
+        String inviteCode
 ) {
     public static StoreInfoResponse fromEntity(final StoreEntity store) {
         return StoreInfoResponse.builder()
@@ -20,7 +19,6 @@ public record StoreInfoResponse(
                 .storeType(store.getStoreType())
                 .address(store.getAddress())
                 .inviteCode(store.getInviteCode())
-                .chatLink(store.getChatLink())
                 .build();
     }
 }

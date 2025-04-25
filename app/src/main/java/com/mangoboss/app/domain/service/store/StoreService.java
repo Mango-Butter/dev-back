@@ -107,14 +107,7 @@ public class StoreService {
 
     public void updateStoreInfo(final Long storeId, final StoreUpdateRequest request) {
         final StoreEntity store = getStoreInfo(storeId);
-        validateBusinessNumber(request.businessNumber());
-        store.updateInfo(
-                request.name(),
-                request.businessNumber(),
-                request.storeType(),
-                request.address(),
-                request.chatLink()
-        );
+        store.updateInfo(request.address(), request.storeType());
     }
 
     public String reissueInviteCode(final Long storeId) {
