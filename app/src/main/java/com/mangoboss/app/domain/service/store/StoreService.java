@@ -3,7 +3,7 @@ package com.mangoboss.app.domain.service.store;
 import java.security.SecureRandom;
 import java.util.List;
 
-import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
+import com.mangoboss.storage.store.StoreType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,14 +100,9 @@ public class StoreService {
         return storeRepository.findAllByBossId(bossId);
     }
 
-    @Transactional(readOnly = true)
-    public StoreEntity getStoreInfo(final Long storeId) {
-        return storeRepository.getById(storeId);
-    }
-
-    public void updateStoreInfo(final Long storeId, final StoreUpdateRequest request) {
-        final StoreEntity store = getStoreInfo(storeId);
-        store.updateInfo(request.address(), request.storeType());
+    public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType) {
+        final StoreEntity store = getStoreById(storeId);
+        store.updateInfo(address, storeType);
     }
 
     public String reissueInviteCode(final Long storeId) {

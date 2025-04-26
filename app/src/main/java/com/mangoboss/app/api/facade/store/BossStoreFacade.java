@@ -37,23 +37,22 @@ public class BossStoreFacade {
 		storeService.validateBusinessNumber(businessNumber);
 	}
 
-	public ListWrapperResponse<StoreListResponse> getMyStores(final Long userId) {
+	public List<StoreListResponse> getMyStores(final Long userId) {
 		final List<StoreEntity> stores = storeService.getStoresByBossId(userId);
-		final List<StoreListResponse> responses = stores.stream()
+		return stores.stream()
 				.map(StoreListResponse::fromEntity)
 				.toList();
-		return ListWrapperResponse.of(responses);
 	}
 
 	public StoreInfoResponse getStoreInfo(final Long userId, final Long storeId) {
 		storeService.isBossOfStore(userId, storeId);
-		final StoreEntity store = storeService.getStoreInfo(storeId);
+		final StoreEntity store = storeService.getStoreById(storeId);
 		return StoreInfoResponse.fromEntity(store);
 	}
 
 	public void updateStoreInfo(final Long userId, final Long storeId, final StoreUpdateRequest request) {
 		storeService.isBossOfStore(userId, storeId);
-		storeService.updateStoreInfo(userId, request);
+		storeService.updateStoreInfo(storeId, request.address(), request.storeType());
 	}
 
 	public StoreInviteCodeResponse reissueInviteCode(final Long userId, final Long storeId) {

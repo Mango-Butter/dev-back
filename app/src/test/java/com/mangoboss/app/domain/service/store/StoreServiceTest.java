@@ -40,7 +40,7 @@ class StoreServiceTest {
         when(storeRepository.getById(storeId)).thenReturn(store);
 
         // when
-        storeService.updateStoreInfo(storeId, request);
+        storeService.updateStoreInfo(storeId, request.address(), request.storeType());
 
         // then
         verify(store).updateInfo(
