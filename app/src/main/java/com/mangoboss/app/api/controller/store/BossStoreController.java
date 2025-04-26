@@ -40,7 +40,7 @@ public class BossStoreController {
     @GetMapping
     public ListWrapperResponse<StoreListResponse> getMyStores(@AuthenticationPrincipal CustomUserDetails userDetails) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.getMyStores(userId);
+        return ListWrapperResponse.of(bossStoreFacade.getMyStores(userId));
     }
 
     @GetMapping("/{storeId}/store-info")
