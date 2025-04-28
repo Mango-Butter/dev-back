@@ -1,17 +1,15 @@
 package com.mangoboss.app.dto.store.response;
 
-import com.mangoboss.storage.store.StoreEntity;
+import com.mangoboss.storage.store.AttendanceMethod;
 import lombok.Builder;
 
 @Builder
 public record AttendanceSettingsResponse(
-		Boolean useQr,
-		Boolean useGps
+		AttendanceMethod attendanceMethod
 ) {
-	public static AttendanceSettingsResponse fromEntity(final StoreEntity store) {
+	public static AttendanceSettingsResponse of(AttendanceMethod attendanceMethod) {
 		return AttendanceSettingsResponse.builder()
-				.useQr(store.getUseQr())
-				.useGps(store.getUseGps())
+				.attendanceMethod(attendanceMethod)
 				.build();
 	}
 }

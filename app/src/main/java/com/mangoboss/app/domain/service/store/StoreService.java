@@ -120,27 +120,13 @@ public class StoreService {
         return newQrCode;
     }
 
-    public void updateGpsSettings(final Long storeId, final String address, final Double latitude, final Double longitude, final Integer gpsRangeMeters) {
+    public StoreEntity updateGpsSettings(final Long storeId, final String address, final Double latitude, final Double longitude, final Integer gpsRangeMeters) {
         final StoreEntity store = getStoreById(storeId);
-        store.updateGpsSettings(address, latitude, longitude, gpsRangeMeters);
+        return store.updateGpsSettings(address, latitude, longitude, gpsRangeMeters);
     }
 
-    public void updateAttendanceSettings(final Long storeId, final Boolean useQr, final Boolean useGps) {
+    public StoreEntity updateAttendanceSettings(final Long storeId, final AttendanceMethod method) {
         final StoreEntity store = getStoreById(storeId);
-        final AttendanceMethod method = resolveAttendanceMethod(useQr, useGps);
-        store.updateAttendanceMethod(useQr, useGps, method);
-    }
-
-    private AttendanceMethod resolveAttendanceMethod(final Boolean useQr, final Boolean useGps) {
-        if (Boolean.TRUE.equals(useQr) && Boolean.TRUE.equals(useGps)) {
-            return AttendanceMethod.BOTH;
-        }
-        if (Boolean.TRUE.equals(useQr)) {
-            return AttendanceMethod.QR;
-        }
-        if (Boolean.TRUE.equals(useGps)) {
-            return AttendanceMethod.GPS;
-        }
-        throw new CustomException(CustomErrorInfo.ATTENDANCE_METHOD_NONE_SELECTED);
+        return store.updateAttendanceMethod(method);
     }
 }
