@@ -1,10 +1,10 @@
 package com.mangoboss.app.api.controller.store;
 
+import com.mangoboss.app.dto.store.response.*;
+import com.mangoboss.app.dto.store.request.GpsRegisterRequest;
+import com.mangoboss.app.dto.store.request.AttendanceMethodUpdateRequest;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
-import com.mangoboss.app.dto.store.response.StoreInfoResponse;
-import com.mangoboss.app.dto.store.response.StoreInviteCodeResponse;
-import com.mangoboss.app.dto.store.response.StoreListResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,6 @@ import com.mangoboss.app.api.facade.store.BossStoreFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.store.request.BusinessNumberRequest;
 import com.mangoboss.app.dto.store.request.StoreCreateRequest;
-import com.mangoboss.app.dto.store.response.StoreCreateResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +62,49 @@ public class BossStoreController {
                                                      @PathVariable final Long storeId) {
         final Long userId = userDetails.getUserId();
         return bossStoreFacade.reissueInviteCode(userId, storeId);
+    }
+
+    @GetMapping("/{storeId}/attendance-settings")
+    public AttendanceSettingsResponse getAttendanceSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                            @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.getAttendanceSettings(userId, storeId);
+    }
+
+    @PostMapping("/{storeId}/attendance-settings")
+    public AttendanceSettingsResponse updateAttendanceSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                               @PathVariable Long storeId,
+                                                               @RequestBody @Valid AttendanceMethodUpdateRequest request) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.updateAttendanceSettings(userId, storeId, request);
+    }
+
+    @GetMapping("/{storeId}/attendance-settings/qr")
+    public QrCodeResponse getQrSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.getQrSettings(userId, storeId);
+    }
+
+    @PostMapping("/{storeId}/attendance-settings/qr")
+    public QrCodeResponse regenerateQrCode(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.regenerateQrCode(userId, storeId);
+    }
+
+    @GetMapping("/{storeId}/attendance-settings/gps")
+    public GpsSettingsResponse getGpsSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.getGpsSettings(userId, storeId);
+    }
+
+    @PostMapping("/{storeId}/attendance-settings/gps")
+    public GpsSettingsResponse updateGps(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @PathVariable Long storeId,
+                                         @RequestBody @Valid GpsRegisterRequest request) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.updateGpsSettings(userId, storeId, request);
     }
 }

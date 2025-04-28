@@ -37,6 +37,7 @@ public class StoreEntity extends BaseTimeEntity {
     private String businessNumber;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StoreType storeType;
 
     @Column(nullable = false, unique = true)
@@ -45,9 +46,15 @@ public class StoreEntity extends BaseTimeEntity {
     private Time workingTimeUnit;
 
     //여기서부터 출퇴근 인증방식
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AttendanceMethod attendanceMethod;
+    @Enumerated(EnumType.STRING)
+    private AttendanceMethod attendanceMethod; // QR / GPS / BOTH
+
+    @Column(nullable = false)
+    private Boolean useQr;
+
+    @Column(nullable = false)
+    private Boolean useGps;
 
     private Integer gpsRangeMeters;
 
@@ -63,7 +70,7 @@ public class StoreEntity extends BaseTimeEntity {
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
                         final StoreType storeType, final String inviteCode, final Time workingTimeUnit,
-                        final AttendanceMethod attendanceMethod, final Integer gpsRangeMeters,
+                        final AttendanceMethod attendanceMethod, final Boolean useQr, final Boolean useGps, final Integer gpsRangeMeters,
                         final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
         this.boss = boss;
         this.name = name;
@@ -73,6 +80,8 @@ public class StoreEntity extends BaseTimeEntity {
         this.inviteCode = inviteCode;
         this.workingTimeUnit = workingTimeUnit;
         this.attendanceMethod = attendanceMethod;
+        this.useQr = useQr;
+        this.useGps = useGps;
         this.gpsRangeMeters = gpsRangeMeters;
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
@@ -90,7 +99,9 @@ public class StoreEntity extends BaseTimeEntity {
                 .businessNumber(businessNumber)
                 .storeType(storeType)
                 .inviteCode(inviteCode)
-                .attendanceMethod(AttendanceMethod.QR)
+                .attendanceMethod(AttendanceMethod.QR) // 기본값
+                .useQr(true) // 기본값
+                .useGps(false) // 기본값
                 .gpsRangeMeters(50)
                 .gpsLatitude(gpsLatitude)
                 .gpsLongitude(gpsLongitude)
@@ -105,5 +116,23 @@ public class StoreEntity extends BaseTimeEntity {
 
     public void updateInviteCode(final String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+
+    public void updateAttendanceMethod(final Boolean useQr, final Boolean useGps, final AttendanceMethod method) {
+        this.useQr = useQr;
+        this.useGps = useGps;
+        this.attendanceMethod = method;
+    }
+
+    public void updateQrCode(final String newQrCode) {
+        this.qrCode = newQrCode;
+    }
+
+    public void updateGpsSettings(final String address, final Double gpsLatitude,
+                                  final Double gpsLongitude, final Integer gpsRangeMeters) {
+        this.address = address;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
+        this.gpsRangeMeters = gpsRangeMeters;
     }
 }
