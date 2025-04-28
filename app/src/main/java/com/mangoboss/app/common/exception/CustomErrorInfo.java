@@ -16,6 +16,7 @@ public enum CustomErrorInfo {
     INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
     INVALID_SCHEDULE_TIME(400,"스케줄의 시간이 유효하지 않습니다.",400009),
     INVALID_REGULAR_DATE(400,"반복 날짜가 유효하지 않습니다.",400010),
+    ATTENDANCE_METHOD_NONE_SELECTED(400, "출퇴근 방식을 하나 이상 선택해주세요.", 400011),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

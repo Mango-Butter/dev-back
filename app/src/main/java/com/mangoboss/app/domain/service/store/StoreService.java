@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.List;
 
 import com.mangoboss.storage.store.StoreType;
+import com.mangoboss.storage.store.AttendanceMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,5 +111,36 @@ public class StoreService {
         final String newInviteCode = generateInviteCode();
         store.updateInviteCode(newInviteCode);
         return newInviteCode;
+    }
+
+    public String regenerateQrCode(final Long storeId) {
+        final StoreEntity store = getStoreById(storeId);
+        final String newQrCode = generateQrCode();
+        store.updateQrCode(newQrCode);
+        return newQrCode;
+    }
+
+    public void updateGpsSettings(final Long storeId, final String address, final Double latitude, final Double longitude, final Integer gpsRangeMeters) {
+        final StoreEntity store = getStoreById(storeId);
+        store.updateGpsSettings(address, latitude, longitude, gpsRangeMeters);
+    }
+
+    public void updateAttendanceSettings(final Long storeId, final Boolean useQr, final Boolean useGps) {
+        final StoreEntity store = getStoreById(storeId);
+        final AttendanceMethod method = resolveAttendanceMethod(useQr, useGps);
+        store.updateAttendanceMethod(useQr, useGps, method);
+    }
+
+    private AttendanceMethod resolveAttendanceMethod(final Boolean useQr, final Boolean useGps) {
+        if (Boolean.TRUE.equals(useQr) && Boolean.TRUE.equals(useGps)) {
+            return AttendanceMethod.BOTH;
+        }
+        if (Boolean.TRUE.equals(useQr)) {
+            return AttendanceMethod.QR;
+        }
+        if (Boolean.TRUE.equals(useGps)) {
+            return AttendanceMethod.GPS;
+        }
+        throw new CustomException(CustomErrorInfo.ATTENDANCE_METHOD_NONE_SELECTED);
     }
 }
