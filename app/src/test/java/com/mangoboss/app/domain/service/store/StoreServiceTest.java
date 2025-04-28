@@ -4,13 +4,11 @@ import com.mangoboss.app.ExternalBusinessApiClient;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StoreRepository;
-import com.mangoboss.app.dto.store.request.AttendanceMethodUpdateRequest;
 import com.mangoboss.app.dto.store.request.GpsRegisterRequest;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 import com.mangoboss.storage.store.AttendanceMethod;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.store.StoreType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -98,28 +96,17 @@ class StoreServiceTest {
     void 출퇴근_방식_설정에_성공한다() {
         // given
         Long storeId = 1L;
-        AttendanceMethodUpdateRequest request = new AttendanceMethodUpdateRequest(true, false); // QR만 사용
+        AttendanceMethod method = AttendanceMethod.QR;
         StoreEntity store = mock(StoreEntity.class);
         when(storeRepository.getById(storeId)).thenReturn(store);
+        when(store.updateAttendanceMethod(method)).thenReturn(store);
 
         // when
-        storeService.updateAttendanceSettings(storeId, request.useQr(), request.useGps());
+        StoreEntity updatedStore = storeService.updateAttendanceSettings(storeId, method);
 
         // then
-        verify(store).updateAttendanceMethod(true, false, AttendanceMethod.QR);
-    }
-
-    @Test
-    void 출퇴근_방식을_모두_false로_설정하면_예외를_던진다() {
-        // given
-        Long storeId = 1L;
-        AttendanceMethodUpdateRequest request = new AttendanceMethodUpdateRequest(false, false);
-
-        // when
-        // then
-        Assertions.assertThatThrownBy(() -> storeService.updateAttendanceSettings(storeId, request.useQr(), request.useGps()))
-                .isInstanceOf(CustomException.class)
-                .hasMessage(CustomErrorInfo.ATTENDANCE_METHOD_NONE_SELECTED.getMessage());
+        verify(store).updateAttendanceMethod(method);
+        assertThat(updatedStore).isSameAs(store);
     }
 
     @Test
@@ -144,11 +131,13 @@ class StoreServiceTest {
         GpsRegisterRequest request = new GpsRegisterRequest("경기도 수원시", 37.1234, 127.5678, 100);
         StoreEntity store = mock(StoreEntity.class);
         when(storeRepository.getById(storeId)).thenReturn(store);
+        when(store.updateGpsSettings(request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters())).thenReturn(store);
 
         // when
-        storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
+        StoreEntity updatedStore = storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
 
         // then
         verify(store).updateGpsSettings(request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
+        assertThat(updatedStore).isSameAs(store);
     }
 }

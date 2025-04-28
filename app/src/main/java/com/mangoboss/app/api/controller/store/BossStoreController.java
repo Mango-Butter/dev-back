@@ -2,7 +2,7 @@ package com.mangoboss.app.api.controller.store;
 
 import com.mangoboss.app.dto.store.response.*;
 import com.mangoboss.app.dto.store.request.GpsRegisterRequest;
-import com.mangoboss.app.dto.store.request.AttendanceMethodUpdateRequest;
+import com.mangoboss.app.dto.store.request.AttendanceSettingsRequest;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,7 +74,7 @@ public class BossStoreController {
     @PostMapping("/{storeId}/attendance-settings")
     public AttendanceSettingsResponse updateAttendanceSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                @PathVariable Long storeId,
-                                                               @RequestBody @Valid AttendanceMethodUpdateRequest request) {
+                                                               @RequestBody @Valid AttendanceSettingsRequest request) {
         final Long userId = userDetails.getUserId();
         return bossStoreFacade.updateAttendanceSettings(userId, storeId, request);
     }

@@ -1,10 +1,9 @@
 package com.mangoboss.app.api.facade.store;
 
-import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.response.*;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 
-import com.mangoboss.app.dto.store.request.AttendanceMethodUpdateRequest;
+import com.mangoboss.app.dto.store.request.AttendanceSettingsRequest;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.domain.service.store.StoreService;
@@ -64,7 +63,7 @@ public class BossStoreFacade {
 	public AttendanceSettingsResponse getAttendanceSettings(final Long userId, final Long storeId) {
 		storeService.isBossOfStore(userId, storeId);
 		final StoreEntity store = storeService.getStoreById(storeId);
-		return AttendanceSettingsResponse.fromEntity(store);
+		return AttendanceSettingsResponse.of(store.getAttendanceMethod());
 	}
 
 	public QrCodeResponse getQrSettings(final Long userId, final Long storeId) {
@@ -79,11 +78,10 @@ public class BossStoreFacade {
 		return GpsSettingsResponse.fromEntity(store);
 	}
 
-	public AttendanceSettingsResponse updateAttendanceSettings(final Long userId, final Long storeId, final AttendanceMethodUpdateRequest request) {
+	public AttendanceSettingsResponse updateAttendanceSettings(final Long userId, final Long storeId, final AttendanceSettingsRequest request) {
 		storeService.isBossOfStore(userId, storeId);
-		storeService.updateAttendanceSettings(storeId, request.useQr(), request.useGps());
-		final StoreEntity store = storeService.getStoreById(storeId);
-		return AttendanceSettingsResponse.fromEntity(store);
+		final StoreEntity store = storeService.updateAttendanceSettings(storeId, request.attendanceMethod());
+		return AttendanceSettingsResponse.of(store.getAttendanceMethod());
 	}
 
 	public QrCodeResponse regenerateQrCode(final Long userId, final Long storeId) {
@@ -94,8 +92,7 @@ public class BossStoreFacade {
 
 	public GpsSettingsResponse updateGpsSettings(final Long userId, final Long storeId, final GpsRegisterRequest request) {
 		storeService.isBossOfStore(userId, storeId);
-		storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
-		final StoreEntity store = storeService.getStoreById(storeId);
+		final StoreEntity store = storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
 		return GpsSettingsResponse.fromEntity(store);
 	}
 }

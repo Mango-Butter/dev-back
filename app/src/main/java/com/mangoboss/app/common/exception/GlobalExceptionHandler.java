@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -89,6 +90,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		);
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(
+			HttpMessageNotReadableException ex,
+			HttpHeaders headers,
+			HttpStatusCode status,
+			WebRequest request
+	) {
+		String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+		CustomErrorResponse response = new CustomErrorResponse(
+				HttpStatus.BAD_REQUEST.value(),
+				"요청 바디를 읽을 수 없습니다. 필수 항목 누락 또는 형식 오류.",
+				path,
+				LocalDateTime.now()
+		);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 
 	@Override

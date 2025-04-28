@@ -50,12 +50,6 @@ public class StoreEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AttendanceMethod attendanceMethod; // QR / GPS / BOTH
 
-    @Column(nullable = false)
-    private Boolean useQr;
-
-    @Column(nullable = false)
-    private Boolean useGps;
-
     private Integer gpsRangeMeters;
 
     @Column(nullable = false)
@@ -70,7 +64,7 @@ public class StoreEntity extends BaseTimeEntity {
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
                         final StoreType storeType, final String inviteCode, final Time workingTimeUnit,
-                        final AttendanceMethod attendanceMethod, final Boolean useQr, final Boolean useGps, final Integer gpsRangeMeters,
+                        final AttendanceMethod attendanceMethod, final Integer gpsRangeMeters,
                         final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
         this.boss = boss;
         this.name = name;
@@ -80,8 +74,6 @@ public class StoreEntity extends BaseTimeEntity {
         this.inviteCode = inviteCode;
         this.workingTimeUnit = workingTimeUnit;
         this.attendanceMethod = attendanceMethod;
-        this.useQr = useQr;
-        this.useGps = useGps;
         this.gpsRangeMeters = gpsRangeMeters;
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
@@ -100,8 +92,6 @@ public class StoreEntity extends BaseTimeEntity {
                 .storeType(storeType)
                 .inviteCode(inviteCode)
                 .attendanceMethod(AttendanceMethod.QR) // 기본값
-                .useQr(true) // 기본값
-                .useGps(false) // 기본값
                 .gpsRangeMeters(50)
                 .gpsLatitude(gpsLatitude)
                 .gpsLongitude(gpsLongitude)
@@ -118,21 +108,20 @@ public class StoreEntity extends BaseTimeEntity {
         this.inviteCode = inviteCode;
     }
 
-    public void updateAttendanceMethod(final Boolean useQr, final Boolean useGps, final AttendanceMethod method) {
-        this.useQr = useQr;
-        this.useGps = useGps;
+    public StoreEntity updateAttendanceMethod(final AttendanceMethod method) {
         this.attendanceMethod = method;
+        return this;
     }
 
     public void updateQrCode(final String newQrCode) {
         this.qrCode = newQrCode;
     }
 
-    public void updateGpsSettings(final String address, final Double gpsLatitude,
-                                  final Double gpsLongitude, final Integer gpsRangeMeters) {
+    public StoreEntity updateGpsSettings(final String address, final Double gpsLatitude, final Double gpsLongitude, final Integer gpsRangeMeters) {
         this.address = address;
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
         this.gpsRangeMeters = gpsRangeMeters;
+        return this;
     }
 }
