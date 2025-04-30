@@ -32,4 +32,8 @@ public class StaffService {
             throw new CustomException(CustomErrorInfo.ALREADY_JOIN_STAFF);
         }
     }
+
+    public StaffEntity getByUserAndStore(final UserEntity user, final StoreEntity store) {
+        return staffRepository.getByUserAndStore(user, store);
+    }
 }

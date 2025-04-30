@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,17 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<RegularGroupEntity> getRegularGroupsForStaff(final Long staffId) {
         return regularGroupRepository.findAllByStaffId(staffId);
+    }
+
+    @Transactional(readOnly = true)
+    public ScheduleEntity getScheduleById(final Long scheduleId) {
+        return scheduleRepository.getScheduleById(scheduleId);
+    }
+
+    @Transactional(readOnly = true)
+    public void validateScheduleBelongsToStaff(final ScheduleEntity schedule, final StaffEntity staff) {
+        if (!schedule.getStaff().equals(staff)) {
+            throw new CustomException(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF);
+        }
     }
 }

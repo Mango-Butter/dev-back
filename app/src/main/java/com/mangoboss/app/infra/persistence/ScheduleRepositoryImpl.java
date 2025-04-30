@@ -1,6 +1,8 @@
 package com.mangoboss.app.infra.persistence;
 
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.schedule.ScheduleJpaRepository;
@@ -23,5 +25,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public List<ScheduleEntity> findAllByStoreIdAndWorkDate(final Long storeId, final LocalDate date){
         return scheduleJpaRepository.findAllByStoreIdAndWorkDate(storeId, date);
+    }
+
+    @Override
+    public ScheduleEntity getScheduleById(final Long scheduleId) {
+        return scheduleJpaRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.SCHEDULE_NOT_FOUND));
     }
 }

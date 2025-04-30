@@ -45,6 +45,9 @@ public class StoreEntity extends BaseTimeEntity {
 
     private Time workingTimeUnit;
 
+    @Column(nullable = false)
+    private Integer payrollDeductionUnitMinutes; // 급여 차감 단위 (ex. 10분 단위)
+
     //여기서부터 출퇴근 인증방식
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -65,7 +68,8 @@ public class StoreEntity extends BaseTimeEntity {
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
                         final StoreType storeType, final String inviteCode, final Time workingTimeUnit,
                         final AttendanceMethod attendanceMethod, final Integer gpsRangeMeters,
-                        final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
+                        final Double gpsLatitude, final Double gpsLongitude, final String qrCode,
+                        final Integer payrollDeductionUnitMinutes) {
         this.boss = boss;
         this.name = name;
         this.address = address;
@@ -78,6 +82,7 @@ public class StoreEntity extends BaseTimeEntity {
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
         this.qrCode = qrCode;
+        this.payrollDeductionUnitMinutes = payrollDeductionUnitMinutes;
     }
 
     public static StoreEntity create(final UserEntity boss, final String name, final String address,
@@ -96,6 +101,7 @@ public class StoreEntity extends BaseTimeEntity {
                 .gpsLatitude(gpsLatitude)
                 .gpsLongitude(gpsLongitude)
                 .qrCode(qrCode)
+                .payrollDeductionUnitMinutes(10) // 기본값: 10분 단위
                 .build();
     }
 
