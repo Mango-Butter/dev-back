@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -79,6 +80,35 @@ class ScheduleServiceTest {
     }
 
     @Test
+    void 스케줄_시작시간이_현재시간_이후면_스케줄을_삭제할_수_있다() {
+        //given
+        Long scheduleId = 1L;
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+        when(schedule.getStartTime()).thenReturn(LocalDateTime.now().plusDays(2));
+
+        //when
+        scheduleService.deleteScheduleById(scheduleId);
+
+        //then
+        verify(scheduleRepository, times(1)).delete(schedule);
+    }
+
+    @Test
+    void 스케줄_시작날짜가_현재시간_이전이면_에러를_던진다() {
+        //given
+        Long scheduleId = 1L;
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+        when(schedule.getStartTime()).thenReturn(LocalDateTime.now().minusMinutes(1));
+
+        //then
+        assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.SCHEDULE_ALREADY_STARTED_CANNOT_DELETE.getMessage());
+    }
+
+    @Test
     void 고정_근무를_만들고_고정_스케줄들을_만들_수_있다() {
         //given
         List<RegularGroupEntity> regularGroups = List.of(RegularGroupEntity.builder()
@@ -117,5 +147,39 @@ class ScheduleServiceTest {
         assertThatThrownBy(() -> scheduleService.validateDateOrder(startDate, endDate, startTime, endTime))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.INVALID_REGULAR_DATE.getMessage());
+    }
+
+    @Test
+    void 고정근무_시작날짜가_오늘_이후이면_고정근무_자체를_삭제한다() {
+        //given
+        Long groupId = 1L;
+        RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
+        when(regularGroup.getStartDate()).thenReturn(LocalDate.now().plusDays(2));
+        when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
+
+        //when
+        scheduleService.terminateRegularGroup(groupId);
+
+        //then
+        verify(scheduleRepository).deleteAllByRegularGroupIdAndWorkDateAfter(eq(groupId), any());
+        verify(regularGroupRepository).delete(regularGroup);
+        verify(regularGroup, never()).terminate(any());
+    }
+
+    @Test
+    void 고정근무_시작날짜가_오늘_이전이면_고정근무_종료날짜가_내일이_된다() {
+        //given
+        Long groupId = 1L;
+        RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
+        when(regularGroup.getStartDate()).thenReturn(LocalDate.now().minusDays(2));
+        when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
+
+        //when
+        scheduleService.terminateRegularGroup(groupId);
+
+        //then
+        verify(scheduleRepository).deleteAllByRegularGroupIdAndWorkDateAfter(eq(groupId), any());
+        verify(regularGroupRepository, never()).delete(regularGroup);
+        verify(regularGroup).terminate(eq(LocalDate.now()));
     }
 }
