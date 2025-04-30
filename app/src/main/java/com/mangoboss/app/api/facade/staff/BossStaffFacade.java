@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StaffStaffFacade {
+public class BossStaffFacade {
     private final ScheduleService scheduleService;
     private final StaffService staffService;
     private final StoreService storeService;
@@ -23,7 +23,7 @@ public class StaffStaffFacade {
         storeService.isBossOfStore(storeId, bossId);
         requestList.forEach(request ->
                 scheduleService.validateDateOrder(
-                request.startDate(), request.endDate(), request.startTime(), request.endTime())
+                        request.startDate(), request.endDate(), request.startTime(), request.endTime())
         );
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
         final List<RegularGroupEntity> regularGroups = requestList.stream().map(request -> request.toEntity(staff)).toList();
@@ -34,5 +34,10 @@ public class StaffStaffFacade {
         storeService.isBossOfStore(storeId, bossId);
         return scheduleService.getRegularGroupsForStaff(staffId)
                 .stream().map(RegularGroupResponse::fromEntity).toList();
+    }
+
+    public void terminateRegularGroup(final Long storeId, final Long bossId, final Long regularGroupId) {
+        storeService.isBossOfStore(storeId, bossId);
+        scheduleService.terminateRegularGroup(regularGroupId);
     }
 }

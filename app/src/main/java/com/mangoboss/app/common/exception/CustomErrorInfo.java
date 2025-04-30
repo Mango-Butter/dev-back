@@ -34,6 +34,8 @@ public enum CustomErrorInfo {
     INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
     STAFF_NOT_FOUND(404,"해당하는 알바생이 없습니다.",404004),
     STORE_NOT_FOUND(404,"해당하는 매장이 없습니다.",404005),
+    SCHEDULE_NOT_FOUND(404,"해당하는 스케줄이 없습니다.",404006),
+    REGULAR_GROUP_NOT_FOUND(404,"해당하는 고정 근무 그룹이 없습니다.",404007),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
@@ -42,6 +44,7 @@ public enum CustomErrorInfo {
     ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
     DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
     ALREADY_JOIN_STAFF(409,"이미 매장에 가입한 알바생입니다.",409003),
+    SCHEDULE_ALREADY_STARTED_CANNOT_DELETE(409,"스케줄이 시작되어 삭제할 수 없습니다.",409004),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);

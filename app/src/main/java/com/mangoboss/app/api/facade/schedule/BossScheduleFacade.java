@@ -32,4 +32,9 @@ public class BossScheduleFacade {
         List<ScheduleEntity> schedules = scheduleService.getDailySchedules(storeId, date);
         return schedules.stream().map(ScheduleDailyResponse::fromEntity).toList();
     }
+
+    public void deleteSchedule(final Long storeId, final Long bossId, final Long scheduleId) {
+        storeService.isBossOfStore(storeId, bossId);
+        scheduleService.deleteScheduleById(scheduleId);
+    }
 }

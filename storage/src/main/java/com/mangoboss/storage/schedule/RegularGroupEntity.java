@@ -62,4 +62,8 @@ public class RegularGroupEntity {
                 .staff(staff)
                 .build();
     }
+
+    public void terminate(final LocalDate nowDate) {
+        this.endDate = nowDate.isBefore(this.endDate) ? nowDate : this.endDate;
+    }
 }

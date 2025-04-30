@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.staff;
 
 
-import com.mangoboss.app.api.facade.staff.StaffStaffFacade;
+import com.mangoboss.app.api.facade.staff.BossStaffFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.staff.request.RegularGroupCreateRequest;
@@ -18,22 +18,29 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/boss/stores/{storeId}/staffs/{staffId}")
 @PreAuthorize("hasRole('BOSS')")
-public class StaffStaffController {
-    private final StaffStaffFacade staffStaffFacade;
+public class BossStaffController {
+    private final BossStaffFacade bossStaffFacade;
 
-    @PostMapping("/schedules/regular")
+    @PostMapping("/regular")
     public void createRegularSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                       @PathVariable Long storeId, @PathVariable Long staffId,
                                       @RequestBody @Valid List<RegularGroupCreateRequest> requestList) {
         final Long userId = userDetails.getUserId();
-        staffStaffFacade.createRegularSchedules(storeId, staffId, userId, requestList);
+        bossStaffFacade.createRegularSchedules(storeId, staffId, userId, requestList);
     }
 
-    @GetMapping("schedules/regular")
+    @GetMapping("/regular")
     public ListWrapperResponse<RegularGroupResponse> getRegularGroups(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                         @PathVariable Long storeId, @PathVariable Long staffId){
+                                                                      @PathVariable Long storeId, @PathVariable Long staffId) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(
-                staffStaffFacade.getRegularGroupsForStaff(storeId,staffId,userId));
+                bossStaffFacade.getRegularGroupsForStaff(storeId, staffId, userId));
+    }
+
+    @DeleteMapping("/regular/{regularId}")
+    public void terminateRegularGroup(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @PathVariable Long storeId, @PathVariable Long staffId, @PathVariable Long regularId) {
+        final Long userId = userDetails.getUserId();
+        bossStaffFacade.terminateRegularGroup(storeId, userId, regularId);
     }
 }
