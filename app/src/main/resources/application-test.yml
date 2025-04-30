@@ -13,6 +13,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  sql:
+    init:
+      mode: never
   jwt:
     secret:
       access-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdasdasdsadsadsa}
