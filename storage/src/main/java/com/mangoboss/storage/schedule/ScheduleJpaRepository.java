@@ -14,4 +14,6 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
             "AND s.workDate = :date " +
             "ORDER BY s.startTime ASC ")
     List<ScheduleEntity> findAllByStoreIdAndWorkDate(Long storeId, LocalDate date);
+
+    void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
 }

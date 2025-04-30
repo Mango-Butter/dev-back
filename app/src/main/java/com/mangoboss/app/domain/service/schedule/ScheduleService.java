@@ -75,4 +75,25 @@ public class ScheduleService {
     public List<RegularGroupEntity> getRegularGroupsForStaff(final Long staffId) {
         return regularGroupRepository.findAllByStaffId(staffId);
     }
+
+    public void deleteScheduleById(final Long scheduleId) {
+        final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
+        if (schedule.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_STARTED_CANNOT_DELETE);
+        }
+        scheduleRepository.delete(schedule);
+    }
+
+    public void terminateRegularGroup(final Long regularGroupId) {
+        final RegularGroupEntity regularGroup = regularGroupRepository.getById(regularGroupId);
+        LocalDate nowDate = LocalDate.now();
+        LocalDate tomorrow = nowDate.plusDays(1);
+
+        scheduleRepository.deleteAllByRegularGroupIdAndWorkDateAfter(regularGroupId, tomorrow);
+        if (regularGroup.getStartDate().isAfter(nowDate)) {
+            regularGroupRepository.delete(regularGroup);
+            return;
+        }
+        regularGroup.terminate(nowDate);
+    }
 }

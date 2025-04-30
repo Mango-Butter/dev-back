@@ -34,4 +34,11 @@ public class BossScheduleController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossScheduleFacade.getDailySchedule(storeId, userId, date));
     }
+
+    @DeleteMapping("/{scheduleId}")
+    public void deleteSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                               @PathVariable Long storeId, @PathVariable Long scheduleId) {
+        final Long userId = userDetails.getUserId();
+        bossScheduleFacade.deleteSchedule(storeId, userId, scheduleId);
+    }
 }

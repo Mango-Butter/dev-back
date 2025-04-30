@@ -10,4 +10,10 @@ public interface ScheduleRepository {
     ScheduleEntity save(ScheduleEntity schedule);
 
     List<ScheduleEntity> findAllByStoreIdAndWorkDate(Long storeId, LocalDate date);
+
+    void delete(ScheduleEntity schedule);
+
+    ScheduleEntity getById(Long id);
+
+    void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
 }
