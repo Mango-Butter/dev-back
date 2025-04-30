@@ -43,8 +43,6 @@ public class StoreEntity extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String inviteCode;
 
-    private Time workingTimeUnit;
-
     //여기서부터 출퇴근 인증방식
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -63,7 +61,7 @@ public class StoreEntity extends BaseTimeEntity {
 
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
-                        final StoreType storeType, final String inviteCode, final Time workingTimeUnit,
+                        final StoreType storeType, final String inviteCode,
                         final AttendanceMethod attendanceMethod, final Integer gpsRangeMeters,
                         final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
         this.boss = boss;
@@ -72,7 +70,6 @@ public class StoreEntity extends BaseTimeEntity {
         this.businessNumber = businessNumber;
         this.storeType = storeType;
         this.inviteCode = inviteCode;
-        this.workingTimeUnit = workingTimeUnit;
         this.attendanceMethod = attendanceMethod;
         this.gpsRangeMeters = gpsRangeMeters;
         this.gpsLatitude = gpsLatitude;
@@ -81,8 +78,8 @@ public class StoreEntity extends BaseTimeEntity {
     }
 
     public static StoreEntity create(final UserEntity boss, final String name, final String address,
-            final String businessNumber, final StoreType storeType, final String inviteCode,
-            final Double gpsLatitude, final Double gpsLongitude, final String qrCode
+                                     final String businessNumber, final StoreType storeType, final String inviteCode,
+                                     final Double gpsLatitude, final Double gpsLongitude, final String qrCode
     ) {
         return StoreEntity.builder()
                 .boss(boss)
