@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Long> {
 
@@ -16,4 +17,6 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
     List<ScheduleEntity> findAllByStoreIdAndWorkDate(Long storeId, LocalDate date);
 
     void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
+
+    Optional<ScheduleEntity> findByIdAndStaffId(Long scheduleId, Long staffId);
 }

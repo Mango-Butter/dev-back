@@ -28,4 +28,10 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
         return attendanceJpaRepository.findById(attendanceId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND));
     }
+
+    @Override
+    public AttendanceEntity getByScheduleId(Long scheduleId) {
+        return attendanceJpaRepository.findByScheduleId(scheduleId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.NOT_CLOCKED_IN_YET));
+    }
 }

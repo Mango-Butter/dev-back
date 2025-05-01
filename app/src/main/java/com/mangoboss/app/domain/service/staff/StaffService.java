@@ -40,7 +40,13 @@ public class StaffService {
         return staffRepository.findAllByStoreId(storeId);
     }
 
-    public StaffEntity getByUserAndStore(final UserEntity user, final StoreEntity store) {
-        return staffRepository.getByUserAndStore(user, store);
+    @Transactional(readOnly = true)
+    public StaffEntity getByUserIdAndStoreId(final Long userId, final Long storeId) {
+        return staffRepository.getByUserIdAndStoreId(userId, storeId);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getVerifiedStaffId(final Long userId, final Long storeId) {
+        return staffRepository.getByUserIdAndStoreId(userId, storeId).getId();
     }
 }

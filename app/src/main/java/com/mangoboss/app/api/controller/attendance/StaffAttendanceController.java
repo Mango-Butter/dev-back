@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.attendance;
 
-import com.mangoboss.app.dto.attendance.base.ClockInBaseRequest;
-import com.mangoboss.app.dto.attendance.base.ClockOutBaseRequest;
+import com.mangoboss.app.dto.attendance.base.AttendanceBaseRequest;
+import com.mangoboss.app.dto.attendance.response.ClockInResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,17 +20,17 @@ public class StaffAttendanceController {
 	private final AttendanceFacade attendanceFacade;
 
 	@PostMapping("/clock-in")
-	public void clockIn(@AuthenticationPrincipal CustomUserDetails userDetails,
-						@PathVariable Long storeId,
-						@RequestBody @Valid ClockInBaseRequest request) {
+	public ClockInResponse clockIn(@AuthenticationPrincipal CustomUserDetails userDetails,
+								   @PathVariable Long storeId,
+								   @RequestBody @Valid AttendanceBaseRequest request) {
 		final Long userId = userDetails.getUserId();
-		attendanceFacade.clockIn(userId, storeId, request);
+		return attendanceFacade.clockIn(userId, storeId, request);
 	}
 
 	@PostMapping("/clock-out")
 	public void clockOut(@AuthenticationPrincipal CustomUserDetails userDetails,
 						 @PathVariable Long storeId,
-						 @RequestBody @Valid ClockOutBaseRequest request) {
+						 @RequestBody @Valid AttendanceBaseRequest request) {
 		final Long userId = userDetails.getUserId();
 		attendanceFacade.clockOut(userId, storeId, request);
 	}

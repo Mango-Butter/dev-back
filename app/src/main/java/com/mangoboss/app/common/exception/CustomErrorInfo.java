@@ -16,14 +16,12 @@ public enum CustomErrorInfo {
     INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
     INVALID_SCHEDULE_TIME(400,"스케줄의 시간이 유효하지 않습니다.",400009),
     INVALID_REGULAR_DATE(400,"반복 날짜가 유효하지 않습니다.",400010),
-    ATTENDANCE_METHOD_NONE_SELECTED(400, "출퇴근 방식을 하나 이상 선택해주세요.", 400011),
     INVALID_QR_CODE(400, "유효하지 않은 QR 코드입니다.", 400011),
     INVALID_GPS_TIME(400, "위치 정보 유효 시간이 지났습니다.", 400012),
     GPS_OUT_OF_RANGE(400, "출근 반경을 벗어났습니다.", 400013),
     INVALID_ATTENDANCE_REQUEST_TYPE(400, "출근 방식에 맞지 않는 요청 형식입니다. 매장의 출근 방식에 따라 필요한 필드를 확인해주세요.", 40014),
-    ATTENDANCE_METHOD_CHANGED(400, "출근 인증 방식이 변경되었습니다. 새로고침 후 다시 시도해주세요.", 400015),
-    INVALID_ATTENDANCE_METHOD(400, "유효하지 않은 출퇴근 인증 방식입니다.", 400016),
-    SCHEDULE_ALREADY_ENDED(400, "근무 시간이 이미 종료되어 출근할 수 없습니다.", 400017),
+    SCHEDULE_ALREADY_ENDED(400, "근무 시간이 이미 종료되어 출근할 수 없습니다.", 400015),
+    NOT_CLOCKED_IN_YET(400, "아직 출근하지 않았습니다. 먼저 출근을 해주세요.", 400016),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

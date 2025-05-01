@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public interface GpsRequest {
+public interface GpsRequest extends AttendanceBaseRequest {
     @NotNull
     Double latitude();
 
