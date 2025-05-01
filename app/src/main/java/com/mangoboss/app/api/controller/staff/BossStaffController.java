@@ -45,7 +45,7 @@ public class BossStaffController {
         bossStaffFacade.terminateRegularGroup(storeId, userId, regularId);
     }
 
-    @GetMapping
+    @GetMapping("/brief")
     public ListWrapperResponse<StaffSimpleResponse> getStaffsForStore(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                       @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
