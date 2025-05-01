@@ -6,6 +6,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.schedule.ScheduleJpaRepository;
+import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -41,5 +42,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public void deleteAllByRegularGroupIdAndWorkDateAfter(final Long regularGroupId, final LocalDate date) {
         scheduleJpaRepository.deleteAllByRegularGroupIdAndWorkDateAfter(regularGroupId, date);
+    }
+
+    @Override
+    public ScheduleEntity getByIdAndStaffId(final Long scheduleId, final Long staffId) {
+        return scheduleJpaRepository.findByIdAndStaffId(scheduleId, staffId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF));
     }
 }

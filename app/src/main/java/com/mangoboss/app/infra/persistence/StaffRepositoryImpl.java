@@ -5,8 +5,6 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StaffRepository;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.staff.StaffJpaRepository;
-import com.mangoboss.storage.store.StoreEntity;
-import com.mangoboss.storage.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,8 +37,8 @@ public class StaffRepositoryImpl implements StaffRepository {
     }
 
     @Override
-    public StaffEntity getByUserAndStore(final UserEntity user, final StoreEntity store) {
-        return staffJpaRepository.findByUserAndStore(user, store)
+    public StaffEntity getByUserIdAndStoreId(final Long userId, final Long storeId) {
+        return staffJpaRepository.findByUserIdAndStoreId(userId, storeId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
     }
 }

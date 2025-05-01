@@ -1,7 +1,5 @@
 package com.mangoboss.storage.staff;
 
-import com.mangoboss.storage.store.StoreEntity;
-import com.mangoboss.storage.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,5 +12,5 @@ public interface StaffJpaRepository extends JpaRepository<StaffEntity, Long> {
 
     List<StaffEntity> findAllByStoreId(Long storeId);
 
-    Optional<StaffEntity> findByUserAndStore(UserEntity user, StoreEntity store);
+    Optional<StaffEntity> findByUserIdAndStoreId(Long userId, Long storeId);
 }

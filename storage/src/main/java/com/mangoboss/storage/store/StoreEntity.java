@@ -3,8 +3,6 @@ package com.mangoboss.storage.store;
 import com.mangoboss.storage.user.UserEntity;
 import jakarta.persistence.*;
 
-import java.sql.Time;
-
 import com.mangoboss.storage.BaseTimeEntity;
 
 import lombok.AccessLevel;
@@ -43,12 +41,6 @@ public class StoreEntity extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String inviteCode;
 
-    @Column(nullable = false)
-    private Integer payrollDeductionUnitMinutes; // 급여 차감 단위 (분)
-
-    @Column(nullable = false)
-    private Integer overtimeLimitMinutes; // 초과 근무 허용 시간 (분)
-
     //여기서부터 출퇴근 인증방식
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -68,8 +60,7 @@ public class StoreEntity extends BaseTimeEntity {
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
                         final StoreType storeType, final String inviteCode, final AttendanceMethod attendanceMethod,
-                        final Integer gpsRangeMeters, final Double gpsLatitude, final Double gpsLongitude, final String qrCode,
-                        final Integer payrollDeductionUnitMinutes, final Integer overtimeLimitMinutes) { // 추가
+                        final Integer gpsRangeMeters, final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
         this.boss = boss;
         this.name = name;
         this.address = address;
@@ -81,8 +72,6 @@ public class StoreEntity extends BaseTimeEntity {
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
         this.qrCode = qrCode;
-        this.payrollDeductionUnitMinutes = payrollDeductionUnitMinutes;
-        this.overtimeLimitMinutes = overtimeLimitMinutes;
     }
 
     public static StoreEntity create(final UserEntity boss, final String name, final String address,
@@ -100,8 +89,6 @@ public class StoreEntity extends BaseTimeEntity {
                 .gpsLatitude(gpsLatitude)
                 .gpsLongitude(gpsLongitude)
                 .qrCode(qrCode)
-                .payrollDeductionUnitMinutes(10) // 기본값: 10분 단위
-                .overtimeLimitMinutes(30)        // 기본값: 최대 30분
                 .build();
     }
 
