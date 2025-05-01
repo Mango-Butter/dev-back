@@ -39,4 +39,8 @@ public class StaffService {
     public List<StaffEntity> getStaffsForStore(final Long storeId){
         return staffRepository.findAllByStoreId(storeId);
     }
+
+    public StaffEntity getByUserAndStore(final UserEntity user, final StoreEntity store) {
+        return staffRepository.getByUserAndStore(user, store);
+    }
 }

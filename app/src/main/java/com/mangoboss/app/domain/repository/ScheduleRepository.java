@@ -1,7 +1,6 @@
 package com.mangoboss.app.domain.repository;
 
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
