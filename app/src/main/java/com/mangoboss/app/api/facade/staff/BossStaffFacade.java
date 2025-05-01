@@ -5,6 +5,7 @@ import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.staff.request.RegularGroupCreateRequest;
 import com.mangoboss.app.dto.staff.response.RegularGroupResponse;
+import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +40,11 @@ public class BossStaffFacade {
     public void terminateRegularGroup(final Long storeId, final Long bossId, final Long regularGroupId) {
         storeService.isBossOfStore(storeId, bossId);
         scheduleService.terminateRegularGroup(regularGroupId);
+    }
+
+    public List<StaffSimpleResponse> getStaffsForStore(final Long storeId, final Long boosId) {
+        storeService.isBossOfStore(storeId, boosId);
+        List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
+        return staffs.stream().map(StaffSimpleResponse::fromEntity).toList();
     }
 }
