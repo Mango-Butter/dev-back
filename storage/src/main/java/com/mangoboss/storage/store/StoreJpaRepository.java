@@ -14,6 +14,7 @@ public interface StoreJpaRepository extends JpaRepository<StoreEntity, Long> {
 
     Optional<StoreEntity> findByInviteCode(String inviteCode);
 
-    boolean existsByIdAndBossId(Long storeId, Long userId);
+    boolean existsByIdAndBossId(Long id, Long userId);
+
     List<StoreEntity> findAllByBossId(Long bossId);
 }

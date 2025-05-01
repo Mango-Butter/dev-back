@@ -7,5 +7,5 @@ import com.mangoboss.storage.user.UserEntity;
 public interface UserRepository {
 	Optional<UserEntity> findByKakaoId(Long kakaoId);
 	UserEntity save(UserEntity userEntity);
-	UserEntity getById(Long userId);
+	UserEntity getById(Long id);
 }
