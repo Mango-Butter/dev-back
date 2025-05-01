@@ -8,6 +8,8 @@ import com.mangoboss.storage.staff.StaffJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class StaffRepositoryImpl implements StaffRepository {
@@ -27,5 +29,10 @@ public class StaffRepositoryImpl implements StaffRepository {
     public StaffEntity getByIdAndStoreId(final Long staffId, final Long storeId) {
         return staffJpaRepository.findByIdAndStoreId(staffId,storeId)
                 .orElseThrow(()->new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
+    }
+
+    @Override
+    public List<StaffEntity> findAllByStoreId(Long storeId) {
+        return staffJpaRepository.findAllByStoreId(storeId);
     }
 }
