@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import com.mangoboss.app.api.facade.attendance.AttendanceFacade;
+import com.mangoboss.app.api.facade.attendance.StaffAttendanceFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('STAFF')")
 public class StaffAttendanceController {
-	private final AttendanceFacade attendanceFacade;
+	private final StaffAttendanceFacade attendanceFacade;
 
 	@PostMapping("/clock-in")
 	public ClockInResponse clockIn(@AuthenticationPrincipal CustomUserDetails userDetails,

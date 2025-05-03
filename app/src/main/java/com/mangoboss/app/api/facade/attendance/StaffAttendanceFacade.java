@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AttendanceFacade {
+public class StaffAttendanceFacade {
 	private final AttendanceStrategyContext attendanceStrategyContext;
 
 	private final StaffService staffService;
