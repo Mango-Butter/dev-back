@@ -24,7 +24,7 @@ public class BossScheduleFacade {
         storeService.isBossOfStore(storeId, bossId);
         scheduleService.validateTimeOrder(request.startTime(), request.endTime());
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
-        scheduleService.createSchedule(request.toEntity(staff));
+        scheduleService.createSchedule(request.toEntity(staff, storeId));
     }
 
     public List<ScheduleDailyResponse> getDailySchedule(final Long storeId, final Long bossId, final LocalDate date) {

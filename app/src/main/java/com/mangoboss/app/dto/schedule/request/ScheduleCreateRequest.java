@@ -24,7 +24,7 @@ public record ScheduleCreateRequest(
         @NonNull
         LocalTime endTime
 ) {
-    public ScheduleEntity toEntity(final StaffEntity staff) {
-        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, startTime), LocalDateTime.of(workDate, endTime), staff, null);
+    public ScheduleEntity toEntity(final StaffEntity staff, final Long storeId) {
+        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, startTime), LocalDateTime.of(workDate, endTime), staff, null, storeId);
     }
 }

@@ -28,7 +28,7 @@ public class BossStaffFacade {
         );
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
         final List<RegularGroupEntity> regularGroups = requestList.stream().map(request -> request.toEntity(staff)).toList();
-        scheduleService.createRegularGroupAndSchedules(regularGroups);
+        scheduleService.createRegularGroupAndSchedules(regularGroups, storeId);
     }
 
     public List<RegularGroupResponse> getRegularGroupsForStaff(final Long storeId, final Long staffId, final Long bossId) {
