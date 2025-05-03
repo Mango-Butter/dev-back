@@ -10,6 +10,7 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.staff.StaffEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -111,12 +112,14 @@ class ScheduleServiceTest {
     @Test
     void 고정_근무를_만들고_고정_스케줄들을_만들_수_있다() {
         //given
+        Long storeId = 1L;
         List<RegularGroupEntity> regularGroups = List.of(RegularGroupEntity.builder()
                 .dayOfWeek(DayOfWeek.TUESDAY)
                 .startDate(LocalDate.of(2025, 3, 1))
                 .endDate(LocalDate.of(2025, 3, 31))
                 .startTime(LocalTime.of(9, 0))
                 .endTime(LocalTime.of(11, 30))
+                .staff(mock(StaffEntity.class))
                 .build());
         when(regularGroupRepository.save(any(RegularGroupEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -124,7 +127,7 @@ class ScheduleServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         //when
-        scheduleService.createRegularGroupAndSchedules(regularGroups);
+        scheduleService.createRegularGroupAndSchedules(regularGroups, storeId);
         //then
         verify(scheduleRepository, atLeastOnce()).save(scheduleCaptor.capture());
 

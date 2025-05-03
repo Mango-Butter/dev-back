@@ -39,24 +39,29 @@ public class ScheduleEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
+    @Column(nullable = false)
+    private Long storeId;
+
     @Builder
     private ScheduleEntity(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
-                           final StaffEntity staff, final RegularGroupEntity regularGroup) {
+                           final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId) {
         this.workDate = workDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.staff = staff;
         this.regularGroup = regularGroup;
+        this.storeId = storeId;
     }
 
     public static ScheduleEntity create(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
-                                        final StaffEntity staff, final RegularGroupEntity regularGroup){
+                                        final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId){
         return ScheduleEntity.builder()
                 .workDate(workDate)
                 .startTime(startTime)
                 .endTime(endTime)
                 .staff(staff)
                 .regularGroup(regularGroup)
+                .storeId(storeId)
                 .build();
     }
 }

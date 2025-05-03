@@ -5,8 +5,12 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.AttendanceJpaRepository;
+import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,5 +37,10 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     public AttendanceEntity getByScheduleId(Long scheduleId) {
         return attendanceJpaRepository.findByScheduleId(scheduleId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.NOT_CLOCKED_IN_YET));
+    }
+
+    @Override
+    public List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate endDate) {
+        return attendanceJpaRepository.findWorkDotProjections(storeId, start, endDate);
     }
 }

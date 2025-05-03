@@ -39,14 +39,14 @@ public class ScheduleService {
         validateTimeOrder(startTime, endTime);
     }
 
-    public void createRegularGroupAndSchedules(final List<RegularGroupEntity> regularGroups) {
+    public void createRegularGroupAndSchedules(final List<RegularGroupEntity> regularGroups, final Long storeId) {
         regularGroups.forEach(regularGroup -> {
             regularGroupRepository.save(regularGroup);
-            createRegularSchedules(regularGroup);
+            createRegularSchedules(regularGroup, storeId);
         });
     }
 
-    private void createRegularSchedules(final RegularGroupEntity regularGroup) {
+    private void createRegularSchedules(final RegularGroupEntity regularGroup, final Long storeId) {
         final DayOfWeek start = regularGroup.getStartDate().getDayOfWeek();
         final DayOfWeek target = regularGroup.getDayOfWeek();
         int daysToAdd = (target.getValue() - start.getValue() + 7) % 7;
@@ -54,7 +54,7 @@ public class ScheduleService {
 
         while (!current.isAfter(regularGroup.getEndDate())) {
             ScheduleEntity schedule = ScheduleEntity.create(current, LocalDateTime.of(current, regularGroup.getStartTime()),
-                    LocalDateTime.of(current, regularGroup.getEndTime()), regularGroup.getStaff(), regularGroup);
+                    LocalDateTime.of(current, regularGroup.getEndTime()), regularGroup.getStaff(), regularGroup, storeId);
 
             scheduleRepository.save(schedule);
             current = current.plusWeeks(1);

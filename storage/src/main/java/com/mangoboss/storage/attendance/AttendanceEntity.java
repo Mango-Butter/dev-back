@@ -20,11 +20,10 @@ public class AttendanceEntity extends BaseTimeEntity {
 	@Column(name = "attendance_id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "schedule_id", nullable = false)
 	private ScheduleEntity schedule;
 
-	@Column(nullable = false)
 	private LocalDateTime clockInTime;
 
 	private LocalDateTime clockOutTime;
