@@ -1,6 +1,7 @@
 package com.mangoboss.storage.schedule;
 
 import com.mangoboss.storage.BaseTimeEntity;
+import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import jakarta.persistence.*;
 
@@ -41,6 +42,9 @@ public class ScheduleEntity extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long storeId;
+
+    @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
+    private AttendanceEntity attendance;
 
     @Builder
     private ScheduleEntity(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
