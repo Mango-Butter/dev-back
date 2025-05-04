@@ -40,7 +40,7 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     }
 
     @Override
-    public List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate endDate) {
-        return attendanceJpaRepository.findWorkDotProjections(storeId, start, endDate);
+    public List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate end) {
+        return attendanceJpaRepository.findWorkDotProjections(storeId, start, end);
     }
 }

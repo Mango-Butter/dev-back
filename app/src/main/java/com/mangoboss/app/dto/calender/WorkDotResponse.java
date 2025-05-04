@@ -11,7 +11,7 @@ public record WorkDotResponse(
         Integer normalCount,
         Integer lateCount,
         Integer absentCount,
-        Integer totalScheduleCount
+        Integer preScheduleCount
 ) {
     public static WorkDotResponse of(final WorkDotProjection workDotProjection) {
         return WorkDotResponse.builder()
@@ -19,7 +19,7 @@ public record WorkDotResponse(
                 .normalCount(workDotProjection.getNormalCount())
                 .lateCount(workDotProjection.getLateCount())
                 .absentCount(workDotProjection.getAbsentCount())
-                .totalScheduleCount(workDotProjection.getTotalScheduleCount())
+                .preScheduleCount(workDotProjection.getPreScheduleCount())
                 .build();
     }
 }

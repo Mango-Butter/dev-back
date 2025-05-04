@@ -7,5 +7,5 @@ public interface WorkDotProjection {
     Integer getNormalCount();
     Integer getLateCount();
     Integer getAbsentCount();
-    Integer getTotalScheduleCount();
+    Integer getPreScheduleCount();
 }
