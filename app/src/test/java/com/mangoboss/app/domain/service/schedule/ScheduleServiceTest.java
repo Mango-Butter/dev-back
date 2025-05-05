@@ -8,7 +8,6 @@ import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
-import com.mangoboss.app.domain.service.attendance.AttendanceService;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
@@ -42,7 +41,7 @@ class ScheduleServiceTest {
     @Captor
     private ArgumentCaptor<ScheduleEntity> scheduleCaptor;
 
-    private final LocalDateTime fixedNow = LocalDateTime.of(2025, 5, 2, 10, 0);
+    private final LocalDateTime fixedNow = LocalDateTime.of(2025, 1, 1, 9, 0);
     private final Clock fixedClock = Clock.fixed(fixedNow.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
 
     @BeforeEach
@@ -92,7 +91,7 @@ class ScheduleServiceTest {
 
         //when
         //then
-        assertThatNoException().isThrownBy(() -> scheduleService.validateTimeOrder(startTime, endTime));
+        assertThatNoException().isThrownBy(() -> scheduleService.validateTime(startTime, endTime));
     }
 
     @Test
@@ -103,7 +102,7 @@ class ScheduleServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.validateTimeOrder(startTime, endTime))
+        assertThatThrownBy(() -> scheduleService.validateTime(startTime, endTime))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.INVALID_SCHEDULE_TIME.getMessage());
     }
@@ -124,7 +123,7 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void 스케줄_시작날짜가_현재시간_이전이면_에러를_던진다() {
+    void 삭제할_스케줄_시작날짜가_현재시간_이전이면_에러를_던진다() {
         //given
         Long scheduleId = 1L;
         ScheduleEntity schedule = mock(ScheduleEntity.class);
@@ -134,7 +133,50 @@ class ScheduleServiceTest {
         //then
         assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))
                 .isInstanceOf(CustomException.class)
-                .hasMessage(CustomErrorInfo.SCHEDULE_ALREADY_STARTED_CANNOT_DELETE.getMessage());
+                .hasMessage(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE.getMessage());
+    }
+
+    @Test
+    void 스케줄_수정을_하면_고정근무에서_제외된다() {
+        //given
+        Long scheduleId = 1L;
+        LocalDate workDate = fixedNow.toLocalDate().plusDays(1);
+        LocalDateTime startTime = fixedNow;
+        LocalDateTime endTime = fixedNow.plusHours(2);
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .workDate(workDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .regularGroup(mock(RegularGroupEntity.class))
+                .build();
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+
+        //when
+        scheduleService.updateSchedule(scheduleId, workDate.plusDays(3), startTime, endTime);
+        //then
+        assertThat(schedule.getRegularGroup()).isNull();
+    }
+
+    @Test
+    void 이미_지난_스케줄을_수정하려고_하면_에러를_던진다() {
+        //given
+        Long scheduleId = 1L;
+        LocalDate workDate = fixedNow.toLocalDate();
+        LocalDateTime startTime = fixedNow.minusMinutes(1);
+        LocalDateTime endTime = fixedNow.plusHours(2);
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .workDate(workDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .regularGroup(mock(RegularGroupEntity.class))
+                .build();
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+
+        //when
+        //then
+        assertThatThrownBy(() -> scheduleService.updateSchedule(scheduleId, fixedNow.toLocalDate().plusDays(1), startTime, endTime))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE.getMessage());
     }
 
     @Test
@@ -170,12 +212,71 @@ class ScheduleServiceTest {
         //given
         LocalDate startDate = LocalDate.of(2025, 3, 31);
         LocalDate endDate = LocalDate.of(2025, 2, 28);
-        LocalTime startTime = LocalTime.of(16, 30, 0);
-        LocalTime endTime = LocalTime.of(16, 0, 0);
+        LocalTime startTime = LocalTime.of(9, 0, 0);
+        LocalTime endTime = LocalTime.of(15, 0, 0);
+
 
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.validateDateOrder(startDate, endDate, startTime, endTime))
+        assertThatThrownBy(() -> scheduleService.validateDate(startDate, endDate, startTime, endTime))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.INVALID_REGULAR_DATE.getMessage());
+    }
+
+    @Test
+    void 고정_근무_유효성_검사에서_시작날짜가_내일이후라면_유효하다() {
+        //given
+        LocalDate startDate = fixedNow.toLocalDate().plusDays(1);
+        LocalDate endDate = fixedNow.toLocalDate().plusDays(20);
+        LocalTime startTime = LocalTime.of(9, 0, 0);
+        LocalTime endTime = LocalTime.of(15, 0, 0);
+
+        //when
+        //then
+        assertThatNoException().isThrownBy(() -> scheduleService.validateDate(startDate, endDate, startTime, endTime));
+    }
+
+    @Test
+    void 고정_근무_유효성_검사에서_시작날짜가_오늘이전이면_에러를_던진다() {
+        //given
+        LocalDate startDate = fixedNow.toLocalDate();
+        LocalDate endDate = fixedNow.toLocalDate().plusDays(20);
+        LocalTime startTime = LocalTime.of(9, 0, 0);
+        LocalTime endTime = LocalTime.of(15, 0, 0);
+
+        //when
+        //then
+        assertThatThrownBy(() -> scheduleService.validateDate(startDate, endDate, startTime, endTime))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.INVALID_REGULAR_DATE.getMessage());
+    }
+
+    @Test
+    void 고정_근무_유효성_검사에서_고정_근무_기간이_1년보다_적으면_유효하다() {
+        //given
+        LocalDate startDate = fixedNow.toLocalDate().plusDays(1);
+        LocalDate endDate = startDate.plusYears(1);
+        LocalTime startTime = LocalTime.of(9, 0, 0);
+        LocalTime endTime = LocalTime.of(15, 0, 0);
+
+
+        //when
+        //then
+        assertThatNoException().isThrownBy(() -> scheduleService.validateDate(startDate, endDate, startTime, endTime));
+    }
+
+    @Test
+    void 고정_근무_유효성_검사에서_고정_근무_기간이_1년을_초과하면_에러를_던진다() {
+        //given
+        LocalDate startDate = fixedNow.toLocalDate().plusDays(1);
+        LocalDate endDate = startDate.plusYears(1).plusDays(1);
+        LocalTime startTime = LocalTime.of(9, 0, 0);
+        LocalTime endTime = LocalTime.of(15, 0, 0);
+
+
+        //when
+        //then
+        assertThatThrownBy(() -> scheduleService.validateDate(startDate, endDate, startTime, endTime))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.INVALID_REGULAR_DATE.getMessage());
     }

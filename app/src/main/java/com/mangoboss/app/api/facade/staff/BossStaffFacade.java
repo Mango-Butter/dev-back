@@ -22,8 +22,7 @@ public class BossStaffFacade {
 
     public void createRegularSchedules(final Long storeId, final Long staffId, final Long bossId, final List<RegularGroupCreateRequest> requestList) {
         storeService.isBossOfStore(storeId, bossId);
-        requestList.forEach(request ->
-                scheduleService.validateDateOrder(
+        requestList.forEach(request -> scheduleService.validateDate(
                         request.startDate(), request.endDate(), request.startTime(), request.endTime())
         );
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
