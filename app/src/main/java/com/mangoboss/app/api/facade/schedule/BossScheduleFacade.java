@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +23,7 @@ public class BossScheduleFacade {
 
     public void createSchedule(final Long storeId, final Long bossId, final ScheduleCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
-        scheduleService.validateTimeOrder(request.startTime(), request.endTime());
+        scheduleService.validateTime(request.startTime(), request.endTime());
         scheduleService.validateScheduleCreatable(request.toStartDateTime());
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
         scheduleService.createSchedule(request.toEntity(staff, storeId));
@@ -44,7 +43,7 @@ public class BossScheduleFacade {
 
     public void updateSchedule(final Long storeId, final Long scheduleId, final Long bossId, final ScheduleUpdateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
-        scheduleService.validateTimeOrder(request.startTime(), request.endTime());
+        scheduleService.validateTime(request.startTime(), request.endTime());
         scheduleService.validateScheduleCreatable(request.toStartDateTime());
         scheduleService.updateSchedule(scheduleId, request.workDate(), request.toStartDateTime(), request.toEndDateTime());
     }

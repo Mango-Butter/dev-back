@@ -24,18 +24,20 @@ public class ScheduleService {
     private final RegularGroupRepository regularGroupRepository;
     private final Clock clock;
 
-    public void validateTimeOrder(final LocalTime startTime, final LocalTime endTime) {
+    public void validateTime(final LocalTime startTime, final LocalTime endTime) {
         if (startTime.isAfter(endTime)) {
             throw new CustomException(CustomErrorInfo.INVALID_SCHEDULE_TIME);
         }
     }
 
-    public void validateDateOrder(final LocalDate startDate, final LocalDate endDate,
-                                  final LocalTime startTime, final LocalTime endTime) {
-        if (startDate.isAfter(endDate)) {
+    public void validateDate(final LocalDate startDate, final LocalDate endDate,
+                             final LocalTime startTime, final LocalTime endTime) {
+        final LocalDate now = LocalDate.now(clock);
+        if (startDate.isBefore(now.plusDays(1)) || startDate.isAfter(endDate)
+                || endDate.isAfter(startDate.plusYears(1))) {
             throw new CustomException(CustomErrorInfo.INVALID_REGULAR_DATE);
         }
-        validateTimeOrder(startTime, endTime);
+        validateTime(startTime, endTime);
     }
 
     public void validateScheduleCreatable(final LocalDateTime startTime) {
@@ -114,7 +116,7 @@ public class ScheduleService {
         final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
 
         final LocalDateTime now = LocalDateTime.now(clock);
-        if(now.isAfter(schedule.getStartTime())){
+        if (now.isAfter(schedule.getStartTime())) {
             throw new CustomException(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE);
         }
         schedule.update(workDate, starTime, endTime);
