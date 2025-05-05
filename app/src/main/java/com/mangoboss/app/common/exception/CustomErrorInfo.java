@@ -22,7 +22,6 @@ public enum CustomErrorInfo {
     INVALID_ATTENDANCE_REQUEST_TYPE(400, "출근 방식에 맞지 않는 요청 형식입니다. 매장의 출근 방식에 따라 필요한 필드를 확인해주세요.", 40014),
     SCHEDULE_ALREADY_ENDED(400, "근무 시간이 이미 종료되어 출근할 수 없습니다.", 400015),
     NOT_CLOCKED_IN_YET(400, "아직 출근하지 않았습니다. 먼저 출근을 해주세요.", 400016),
-    EARLY_CLOCK_IN(400, "근무시작 10분 전부터 출근할 수 있습니다.", 400017),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -54,9 +53,11 @@ public enum CustomErrorInfo {
     ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
     DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
     ALREADY_JOIN_STAFF(409,"이미 매장에 가입한 알바생입니다.",409003),
-    SCHEDULE_ALREADY_STARTED_CANNOT_DELETE(409,"스케줄이 시작되어 삭제할 수 없습니다.",409004),
-    ALREADY_CLOCKED_IN(409, "이미 출근 처리된 스케줄입니다.", 409005),
-    ALREADY_CLOCKED_OUT(409, "이미 퇴근 처리된 스케줄입니다.", 409006),
+    ALREADY_CLOCKED_IN(409, "이미 출근 처리된 스케줄입니다.", 409004),
+    ALREADY_CLOCKED_OUT(409, "이미 퇴근 처리된 스케줄입니다.", 409005),
+    EARLY_CLOCK_IN(409, "근무시작 10분 전부터 출근할 수 있습니다.", 409006),
+    SCHEDULE_CREATION_TIME_EXCEEDED(409, "30분후의 스케줄부터 등록 가능합니다.", 409007),
+    CANNOT_MODIFY_PAST_SCHEDULE(409, "과거 스케줄은 수정 불가", 409008),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);

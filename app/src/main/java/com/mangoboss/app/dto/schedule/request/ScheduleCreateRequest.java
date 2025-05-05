@@ -27,4 +27,8 @@ public record ScheduleCreateRequest(
     public ScheduleEntity toEntity(final StaffEntity staff, final Long storeId) {
         return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, startTime), LocalDateTime.of(workDate, endTime), staff, null, storeId);
     }
+
+    public LocalDateTime toStartDateTime() {
+        return LocalDateTime.of(workDate, startTime);
+    }
 }

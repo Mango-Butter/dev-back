@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -22,8 +19,10 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class ScheduleService {
+    private static final int SCHEDULE_CREATE_LIMIT_MINUTES = 30;
     private final ScheduleRepository scheduleRepository;
     private final RegularGroupRepository regularGroupRepository;
+    private final Clock clock;
 
     public void validateTimeOrder(final LocalTime startTime, final LocalTime endTime) {
         if (startTime.isAfter(endTime)) {
@@ -37,6 +36,13 @@ public class ScheduleService {
             throw new CustomException(CustomErrorInfo.INVALID_REGULAR_DATE);
         }
         validateTimeOrder(startTime, endTime);
+    }
+
+    public void validateScheduleCreatable(final LocalDateTime startTime) {
+        final LocalDateTime limitTime = LocalDateTime.now(clock).plusMinutes(SCHEDULE_CREATE_LIMIT_MINUTES);
+        if (!startTime.isAfter(limitTime)) {
+            throw new CustomException(CustomErrorInfo.SCHEDULE_CREATION_TIME_EXCEEDED);
+        }
     }
 
     public void createRegularGroupAndSchedules(final List<RegularGroupEntity> regularGroups, final Long storeId) {
@@ -77,15 +83,17 @@ public class ScheduleService {
 
     public void deleteScheduleById(final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
-        if (schedule.getStartTime().isBefore(LocalDateTime.now())) {
-            throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_STARTED_CANNOT_DELETE);
+
+        final LocalDateTime now = LocalDateTime.now(clock);
+        if (now.isAfter(schedule.getStartTime())) {
+            throw new CustomException(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE);
         }
         scheduleRepository.delete(schedule);
     }
 
     public void terminateRegularGroup(final Long regularGroupId) {
         final RegularGroupEntity regularGroup = regularGroupRepository.getById(regularGroupId);
-        LocalDate nowDate = LocalDate.now();
+        LocalDate nowDate = LocalDate.now(clock);
         LocalDate tomorrow = nowDate.plusDays(1);
 
         scheduleRepository.deleteAllByRegularGroupIdAndWorkDateAfter(regularGroupId, tomorrow);
@@ -99,5 +107,16 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<ScheduleEntity> getSchedulesByStaffIdAndDate(final Long storeId, final LocalDate date) {
         return scheduleRepository.findAllByStaffIdAndWorkDate(storeId, date);
+    }
+
+    public void updateSchedule(final Long scheduleId, final LocalDate workDate,
+                               final LocalDateTime starTime, final LocalDateTime endTime) {
+        final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
+
+        final LocalDateTime now = LocalDateTime.now(clock);
+        if(now.isAfter(schedule.getStartTime())){
+            throw new CustomException(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE);
+        }
+        schedule.update(workDate, starTime, endTime);
     }
 }

@@ -4,6 +4,7 @@ import com.mangoboss.app.api.facade.schedule.BossScheduleFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.schedule.request.ScheduleCreateRequest;
+import com.mangoboss.app.dto.schedule.request.ScheduleUpdateRequest;
 import com.mangoboss.app.dto.schedule.response.ScheduleDailyResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,12 @@ public class BossScheduleController {
                                @PathVariable Long storeId, @PathVariable Long scheduleId) {
         final Long userId = userDetails.getUserId();
         bossScheduleFacade.deleteSchedule(storeId, userId, scheduleId);
+    }
+
+    @PutMapping("/{scheduleId}")
+    public void updateSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                               @PathVariable Long storeId, @PathVariable Long scheduleId, @RequestBody @Valid ScheduleUpdateRequest request) {
+        final Long userId = userDetails.getUserId();
+        bossScheduleFacade.updateSchedule(storeId, scheduleId, userId, request);
     }
 }
