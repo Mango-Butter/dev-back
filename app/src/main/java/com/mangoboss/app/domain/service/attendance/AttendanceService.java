@@ -108,14 +108,10 @@ public class AttendanceService {
 
     @Transactional(readOnly = true)
     public ScheduleEntity getScheduleWithAttendance(final Long scheduleId) {
-        final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
-        if (schedule.getAttendance() == null) {
-            throw new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND);
-        }
-        return schedule;
+        return scheduleRepository.getByIdAndAttendanceIsNotNull(scheduleId);
     }
 
-
+    @Transactional(readOnly = true)
     public List<WorkDotProjection> getWorkDots(final Long storeId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findWorkDotProjections(storeId, start, end);
     }

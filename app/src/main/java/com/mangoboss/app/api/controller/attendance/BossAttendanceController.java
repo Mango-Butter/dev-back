@@ -9,17 +9,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/boss/stores/{storeId}/attendances")
+@RequestMapping("/api/boss/stores/{storeId}/schedules")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('BOSS')")
 public class BossAttendanceController {
     private final BossAttendanceFacade bossAttendanceFacade;
 
-    @GetMapping("/{attendanceId}")
+    @GetMapping("/{scheduleId}/attendance")
     public AttendanceDetailResponse getAttendanceDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @PathVariable Long storeId,
-                                                        @PathVariable Long attendanceId){
+                                                        @PathVariable Long scheduleId){
         final Long userId = userDetails.getUserId();
-        return bossAttendanceFacade.getAttendanceDetail(storeId, userId, attendanceId);
+        return bossAttendanceFacade.getAttendanceDetail(storeId, userId, scheduleId);
     }
 }

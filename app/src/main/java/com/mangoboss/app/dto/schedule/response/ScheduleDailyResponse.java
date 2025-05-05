@@ -2,9 +2,9 @@ package com.mangoboss.app.dto.schedule.response;
 
 import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import lombok.Builder;
 
+// todo 삭제해야 함
 @Builder
 public record ScheduleDailyResponse (
         StaffSimpleResponse staff,

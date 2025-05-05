@@ -3,7 +3,7 @@ package com.mangoboss.app.api.facade.calender;
 import com.mangoboss.app.domain.service.attendance.AttendanceService;
 import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.store.StoreService;
-import com.mangoboss.app.dto.calender.WorkDailyResponse;
+import com.mangoboss.app.dto.calender.WorkWithStaffResponse;
 import com.mangoboss.app.dto.calender.WorkDotResponse;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
@@ -26,9 +26,9 @@ public class BossCalenderFacade {
         return workDotProjections.stream().map(WorkDotResponse::of).toList();
     }
 
-    public List<WorkDailyResponse> getDailyWorks(final Long storeId, final Long bossId, final LocalDate date) {
+    public List<WorkWithStaffResponse> getDailyWorks(final Long storeId, final Long bossId, final LocalDate date) {
         storeService.isBossOfStore(storeId, bossId);
         List<ScheduleEntity> schedules = scheduleService.getDailySchedules(storeId, date);
-        return schedules.stream().map(WorkDailyResponse::of).toList();
+        return schedules.stream().map(WorkWithStaffResponse::of).toList();
     }
 }

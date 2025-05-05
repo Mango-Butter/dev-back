@@ -28,6 +28,7 @@ public class BossScheduleController {
         bossScheduleFacade.createSchedule(storeId, userId, request);
     }
 
+    //todo 프론트 변경하면 삭제해야 함
     @GetMapping("/daily")
     public ListWrapperResponse<ScheduleDailyResponse> getDailySchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                        @PathVariable Long storeId, @RequestParam LocalDate date) {

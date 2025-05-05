@@ -7,19 +7,19 @@ import com.mangoboss.storage.schedule.ScheduleEntity;
 import lombok.Builder;
 
 @Builder
-public record WorkDailyResponse(
+public record WorkWithStaffResponse(
         StaffSimpleResponse staff,
         ScheduleSimpleResponse schedule,
         AttendanceSimpleResponse attendance
 ) {
-    public static WorkDailyResponse of(final ScheduleEntity schedule) {
+    public static WorkWithStaffResponse of(final ScheduleEntity schedule) {
         if(schedule.getAttendance() == null){
-            return WorkDailyResponse.builder()
+            return WorkWithStaffResponse.builder()
                     .staff(StaffSimpleResponse.fromEntity(schedule.getStaff()))
                     .schedule(ScheduleSimpleResponse.fromEntity(schedule))
                     .build();
         }
-        return WorkDailyResponse.builder()
+        return WorkWithStaffResponse.builder()
                 .staff(StaffSimpleResponse.fromEntity(schedule.getStaff()))
                 .schedule(ScheduleSimpleResponse.fromEntity(schedule))
                 .attendance(AttendanceSimpleResponse.fromEntity(schedule.getAttendance()))

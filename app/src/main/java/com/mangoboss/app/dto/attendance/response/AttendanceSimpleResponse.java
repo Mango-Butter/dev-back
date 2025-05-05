@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AttendanceSimpleResponse(
-        Long attendanceId,
         LocalDateTime clockInTime,
         LocalDateTime clockOutTime,
         ClockInStatus clockInStatus,
@@ -17,7 +16,6 @@ public record AttendanceSimpleResponse(
 ) {
     public static AttendanceSimpleResponse fromEntity(final AttendanceEntity attendance) {
         return AttendanceSimpleResponse.builder()
-                .attendanceId(attendance.getId())
                 .clockInTime(attendance.getClockInTime())
                 .clockOutTime(attendance.getClockOutTime())
                 .clockInStatus(attendance.getClockInStatus())
