@@ -27,7 +27,7 @@ public class ScheduleEntity extends BaseTimeEntity {
     @JoinColumn(name = "staff_id")
     private StaffEntity staff;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regular_group_id")
     private RegularGroupEntity regularGroup;
 
@@ -58,7 +58,7 @@ public class ScheduleEntity extends BaseTimeEntity {
     }
 
     public static ScheduleEntity create(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
-                                        final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId){
+                                        final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId) {
         return ScheduleEntity.builder()
                 .workDate(workDate)
                 .startTime(startTime)
@@ -67,5 +67,13 @@ public class ScheduleEntity extends BaseTimeEntity {
                 .regularGroup(regularGroup)
                 .storeId(storeId)
                 .build();
+    }
+
+    public ScheduleEntity update(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime) {
+        this.workDate = workDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.regularGroup = null;
+        return this;
     }
 }

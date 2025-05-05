@@ -8,9 +8,11 @@ import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
+import com.mangoboss.app.domain.service.attendance.AttendanceService;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,10 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -43,6 +42,14 @@ class ScheduleServiceTest {
     @Captor
     private ArgumentCaptor<ScheduleEntity> scheduleCaptor;
 
+    private final LocalDateTime fixedNow = LocalDateTime.of(2025, 5, 2, 10, 0);
+    private final Clock fixedClock = Clock.fixed(fixedNow.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+
+    @BeforeEach
+    void setUp() {
+        scheduleService = new ScheduleService(scheduleRepository, regularGroupRepository, fixedClock);
+    }
+
     @Test
     void 단순_스케줄을_만들_수_있다() {
         //given
@@ -54,6 +61,27 @@ class ScheduleServiceTest {
 
         //then
         verify(scheduleRepository, times(1)).save(schedule);
+    }
+
+    @Test
+    void 현재시각으로부터_30분_후의_스케줄만_만들_수_있도록_유효성을_검사한다() {
+        //given
+        LocalDateTime startTime = fixedNow.plusMinutes(31);
+        //when
+        //then
+        assertThatNoException().isThrownBy(() -> scheduleService.validateScheduleCreatable(startTime));
+    }
+
+    @Test
+    void 현재시각으로부터_30분_이내의_스케줄을_만들면_에러를_던진다() {
+        //given
+        LocalDateTime startTime = fixedNow.plusMinutes(30);
+
+        //when
+        //then
+        assertThatThrownBy(() -> scheduleService.validateScheduleCreatable(startTime))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.SCHEDULE_CREATION_TIME_EXCEEDED.getMessage());
     }
 
     @Test
@@ -86,7 +114,7 @@ class ScheduleServiceTest {
         Long scheduleId = 1L;
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
-        when(schedule.getStartTime()).thenReturn(LocalDateTime.now().plusDays(2));
+        when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).plusDays(2));
 
         //when
         scheduleService.deleteScheduleById(scheduleId);
@@ -101,7 +129,7 @@ class ScheduleServiceTest {
         Long scheduleId = 1L;
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
-        when(schedule.getStartTime()).thenReturn(LocalDateTime.now().minusMinutes(1));
+        when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).minusMinutes(1));
 
         //then
         assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))
@@ -157,7 +185,7 @@ class ScheduleServiceTest {
         //given
         Long groupId = 1L;
         RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
-        when(regularGroup.getStartDate()).thenReturn(LocalDate.now().plusDays(2));
+        when(regularGroup.getStartDate()).thenReturn(LocalDate.now(fixedClock).plusDays(2));
         when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
 
         //when
@@ -174,7 +202,7 @@ class ScheduleServiceTest {
         //given
         Long groupId = 1L;
         RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
-        when(regularGroup.getStartDate()).thenReturn(LocalDate.now().minusDays(2));
+        when(regularGroup.getStartDate()).thenReturn(LocalDate.now(fixedClock).minusDays(2));
         when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
 
         //when
@@ -183,6 +211,6 @@ class ScheduleServiceTest {
         //then
         verify(scheduleRepository).deleteAllByRegularGroupIdAndWorkDateAfter(eq(groupId), any());
         verify(regularGroupRepository, never()).delete(regularGroup);
-        verify(regularGroup).terminate(eq(LocalDate.now()));
+        verify(regularGroup).terminate(eq(LocalDate.now(fixedClock)));
     }
 }
