@@ -3,7 +3,7 @@ package com.mangoboss.app.api.controller.calender;
 import com.mangoboss.app.api.facade.calender.BossCalenderFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
-import com.mangoboss.app.dto.calender.WorkDailyResponse;
+import com.mangoboss.app.dto.calender.WorkWithStaffResponse;
 import com.mangoboss.app.dto.calender.WorkDotResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +27,8 @@ public class BossCalenderController {
     }
 
     @GetMapping("/daily")
-    public ListWrapperResponse<WorkDailyResponse> getDailyWork(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                               @PathVariable Long storeId, @RequestParam LocalDate date) {
+    public ListWrapperResponse<WorkWithStaffResponse> getDailyWork(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                   @PathVariable Long storeId, @RequestParam LocalDate date) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossCalenderFacade.getDailyWorks(storeId, userId, date));
     }

@@ -1,6 +1,5 @@
 package com.mangoboss.app.dto.attendance.response;
 
-import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
@@ -12,22 +11,20 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AttendanceDetailResponse(
-        StaffSimpleResponse staff,
-        Long attendanceId,
+        Long scheduleId,
+        LocalDate workDate,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
         LocalDateTime clockInTime,
         LocalDateTime clockOutTime,
         ClockInStatus clockInStatus,
-        ClockOutStatus clockOutStatus,
-        LocalDate workDate,
-        LocalDateTime startTime,
-        LocalDateTime endTime
+        ClockOutStatus clockOutStatus
 ) {
-    public static AttendanceDetailResponse fromEntity(final AttendanceEntity attendance) {
-        final ScheduleEntity schedule = attendance.getSchedule();
+    public static AttendanceDetailResponse of(final ScheduleEntity schedule) {
+        final AttendanceEntity attendance = schedule.getAttendance();
 
         return AttendanceDetailResponse.builder()
-                .staff(StaffSimpleResponse.fromEntity(schedule.getStaff()))
-                .attendanceId(attendance.getId())
+                .scheduleId(schedule.getId())
                 .clockInTime(attendance.getClockInTime())
                 .clockOutTime(attendance.getClockOutTime())
                 .clockInStatus(attendance.getClockInStatus())

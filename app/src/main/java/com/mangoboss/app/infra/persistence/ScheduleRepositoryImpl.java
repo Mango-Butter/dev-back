@@ -6,7 +6,6 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.schedule.ScheduleJpaRepository;
-import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -48,5 +47,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     public ScheduleEntity getByIdAndStaffId(final Long scheduleId, final Long staffId) {
         return scheduleJpaRepository.findByIdAndStaffId(scheduleId, staffId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF));
+    }
+
+    @Override
+    public ScheduleEntity getByIdAndAttendanceIsNotNull(final Long scheduleId) {
+        return scheduleJpaRepository.findByIdAndAttendanceIsNotNull(scheduleId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND));
+    }
+
+    @Override
+    public List<ScheduleEntity> findAllByStaffIdAndWorkDate(final Long staffId, final LocalDate date) {
+        return scheduleJpaRepository.findAllByStaffIdAndWorkDate(staffId, date);
     }
 }

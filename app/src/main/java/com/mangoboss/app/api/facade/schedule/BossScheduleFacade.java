@@ -27,6 +27,7 @@ public class BossScheduleFacade {
         scheduleService.createSchedule(request.toEntity(staff, storeId));
     }
 
+    // todo 삭제해야 함
     public List<ScheduleDailyResponse> getDailySchedule(final Long storeId, final Long bossId, final LocalDate date) {
         storeService.isBossOfStore(storeId, bossId);
         List<ScheduleEntity> schedules = scheduleService.getDailySchedules(storeId, date);

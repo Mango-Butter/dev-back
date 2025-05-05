@@ -17,4 +17,8 @@ public interface ScheduleRepository {
     void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
 
     ScheduleEntity getByIdAndStaffId(Long scheduleId, Long staffId);
+
+    ScheduleEntity getByIdAndAttendanceIsNotNull(Long scheduleId);
+
+    List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
 }

@@ -18,5 +18,9 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
 
     void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
 
-    Optional<ScheduleEntity> findByIdAndStaffId(Long scheduleId, Long staffId);
+    Optional<ScheduleEntity> findByIdAndStaffId(Long id, Long staffId);
+
+    Optional<ScheduleEntity> findByIdAndAttendanceIsNotNull(Long id);
+
+    List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
 }
