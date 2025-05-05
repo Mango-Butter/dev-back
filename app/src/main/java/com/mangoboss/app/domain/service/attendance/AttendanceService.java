@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mangoboss.app.domain.repository.AttendanceRepository;
+import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
@@ -27,37 +27,51 @@ import org.springframework.transaction.annotation.Transactional;
 public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
+    private final ScheduleRepository scheduleRepository;
     private final Clock clock;
 
-    private static final long OVERTIME_THRESHOLD_MINUTES = 10;
+    private static final long OVERTIME_THRESHOLD_MINUTES = 10;  //todo 설정 이후에는 삭제해야 함.
+    private static final long CLOCK_IN_ALLOWED_MINUTES_BEFORE = 10;
 
-    public AttendanceEntity recordClockIn(final ScheduleEntity schedule) {
+    public AttendanceEntity recordClockIn(final Long staffId, final Long scheduleId) {
+        final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock);
-        validateNotAlreadyClockedIn(schedule.getId());
+
+        validateNotAlreadyClockedIn(schedule);
         validateScheduleNotEnded(schedule.getEndTime(), now);
-        final LocalDateTime clockInTime = getClockInTime(schedule.getStartTime(), now);
-        final ClockInStatus clockInStatus = getClockInStatus(schedule.getStartTime(), clockInTime);
+        final LocalDateTime clockInTime = verifyClockInTime(schedule.getStartTime(), now);
+        final ClockInStatus clockInStatus = determineClockInStatus(schedule.getStartTime(), clockInTime);
+
         final AttendanceEntity attendance = AttendanceEntity.create(schedule, clockInTime, clockInStatus);
         return attendanceRepository.save(attendance);
     }
 
-    public void recordClockOut(final AttendanceEntity attendance) {
+    public void recordClockOut(final Long staffId, final Long scheduleId) {
+        final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock);
+        validateClockedIn(schedule);
+        final AttendanceEntity attendance = schedule.getAttendance();
+
         validateNotAlreadyClockedOut(attendance);
-        final LocalDateTime scheduledEndTime = attendance.getSchedule().getEndTime();
-        final ClockOutStatus clockOutStatus = getClockOutStatus(scheduledEndTime, now);
+        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), now);
 
         attendance.recordClockOut(now, clockOutStatus);
     }
 
-    private void validateNotAlreadyClockedIn(final Long scheduleId) {
-        if (attendanceRepository.existsByScheduleId(scheduleId)) {
+    private void validateClockedIn(final ScheduleEntity schedule) {
+        if (schedule.getAttendance() == null) {
+            throw new CustomException(CustomErrorInfo.NOT_CLOCKED_IN_YET);
+        }
+    }
+
+    private void validateNotAlreadyClockedIn(final ScheduleEntity schedule) {
+        if (schedule.getAttendance() != null) {
             throw new CustomException(CustomErrorInfo.ALREADY_CLOCKED_IN);
         }
     }
 
     private void validateScheduleNotEnded(final LocalDateTime endTime, final LocalDateTime now) {
-        if (!isBeforeTime(now, endTime)) {
+        if (now.isAfter(endTime)) {
             throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_ENDED);
         }
     }
@@ -68,14 +82,12 @@ public class AttendanceService {
         }
     }
 
-    private ClockInStatus getClockInStatus(final LocalDateTime scheduledStartTime, final LocalDateTime clockInTime) {
-        return isBeforeTime(clockInTime, scheduledStartTime)
-                ? ClockInStatus.NORMAL
-                : ClockInStatus.LATE;
+    private ClockInStatus determineClockInStatus(final LocalDateTime scheduledStartTime, final LocalDateTime clockInTime) {
+        return clockInTime.isBefore(scheduledStartTime) ? ClockInStatus.NORMAL : ClockInStatus.LATE;
     }
 
-    private ClockOutStatus getClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
-        if (isBeforeTime(clockOutTime, scheduledEndTime)) {
+    private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
+        if (clockOutTime.isBefore(scheduledEndTime)) {
             return ClockOutStatus.EARLY_LEAVE;
         }
 
@@ -87,34 +99,25 @@ public class AttendanceService {
         return ClockOutStatus.NORMAL;
     }
 
-    private LocalDateTime getClockInTime(final LocalDateTime scheduleStartTime, final LocalDateTime now) {
-        return isBeforeTime(now, scheduleStartTime) ? scheduleStartTime : now;
-    }
-
-    private boolean isBeforeTime(final LocalDateTime checked, final LocalDateTime reference) {
-        return checked.isBefore(reference);
-    }
-
-    @Transactional(readOnly = true)
-    public AttendanceEntity getAttendanceById(final Long attendanceId) {
-        return attendanceRepository.getById(attendanceId);
-    }
-
-    @Transactional(readOnly = true)
-    public AttendanceEntity getAttendanceByScheduleId(final Long scheduleId) {
-        return attendanceRepository.getByScheduleId(scheduleId);
-    }
-
-    @Transactional(readOnly = true)
-    public void validateAttendanceBelongsToStaff(final AttendanceEntity attendance, final StaffEntity staff) {
-        if (!attendance.getSchedule().getStaff().equals(staff)) {
-            throw new CustomException(CustomErrorInfo.ATTENDANCE_NOT_BELONG_TO_STAFF);
+    private LocalDateTime verifyClockInTime(final LocalDateTime scheduleStartTime, final LocalDateTime now) {
+        if (now.isBefore(scheduleStartTime.minusMinutes(CLOCK_IN_ALLOWED_MINUTES_BEFORE))) {
+            throw new CustomException(CustomErrorInfo.EARLY_CLOCK_IN);
         }
+        return now.isBefore(scheduleStartTime) ? scheduleStartTime : now;
     }
+
+    @Transactional(readOnly = true)
+    public ScheduleEntity getScheduleWithAttendance(final Long scheduleId) {
+        final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
+        if (schedule.getAttendance() == null) {
+            throw new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND);
+        }
+        return schedule;
+    }
+
 
     public List<WorkDotProjection> getWorkDots(final Long storeId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findWorkDotProjections(storeId, start, end);
     }
-
 }
 

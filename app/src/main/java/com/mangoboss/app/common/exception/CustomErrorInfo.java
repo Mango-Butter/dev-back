@@ -22,6 +22,7 @@ public enum CustomErrorInfo {
     INVALID_ATTENDANCE_REQUEST_TYPE(400, "출근 방식에 맞지 않는 요청 형식입니다. 매장의 출근 방식에 따라 필요한 필드를 확인해주세요.", 40014),
     SCHEDULE_ALREADY_ENDED(400, "근무 시간이 이미 종료되어 출근할 수 없습니다.", 400015),
     NOT_CLOCKED_IN_YET(400, "아직 출근하지 않았습니다. 먼저 출근을 해주세요.", 400016),
+    EARLY_CLOCK_IN(400, "근무시작 10분 전부터 출근할 수 있습니다.", 400017),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

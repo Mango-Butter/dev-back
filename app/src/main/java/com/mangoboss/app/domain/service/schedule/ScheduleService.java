@@ -66,6 +66,7 @@ public class ScheduleService {
     }
 
 
+    // todo 삭제해야 함
     @Transactional(readOnly = true)
     public List<ScheduleEntity> getDailySchedules(final Long storeId, final LocalDate date) {
         return scheduleRepository.findAllByStoreIdAndWorkDate(storeId, date);
@@ -95,10 +96,5 @@ public class ScheduleService {
             return;
         }
         regularGroup.terminate(nowDate);
-    }
-
-    @Transactional(readOnly = true)
-    public ScheduleEntity getVerifiedScheduleByStaff(final Long scheduleId, final Long staffId) {
-        return scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
     }
 }

@@ -7,13 +7,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AttendanceRepository {
-    boolean existsByScheduleId(Long scheduleId);
 
     AttendanceEntity save(AttendanceEntity attendance);
 
     AttendanceEntity getById(Long id);
-
-    AttendanceEntity getByScheduleId(Long scheduleId);
 
     List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate endDate);
 }
