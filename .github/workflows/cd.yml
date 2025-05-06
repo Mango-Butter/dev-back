@@ -96,6 +96,16 @@ jobs:
             echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
             echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
             echo "BUSINESS_API_KEY=${{ secrets.BUSINESS_API_KEY }}" >> .env
+            echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
+            echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+            echo "AWS_S3_CONTRACT_BUCKET=${{ secrets.AWS_S3_CONTRACT_BUCKET }}" >> .env
+            echo "AWS_KMS_KEY_ID=${{ secrets.AWS_KMS_KEY_ID }}" >> .env
+            echo "AES_SECRET_KEY=${{ secrets.AES_SECRET_KEY }}" >> .env
+            echo "PDF_FONT_PATH=${{ secrets.PDF_FONT_PATH }}" >> .env
+            echo "VIEW_EXPIRATION_MINUTES=${{ secrets.VIEW_EXPIRATION_MINUTES }}" >> .env
+            echo "DOWNLOAD_EXPIRATION_MINUTES=${{ secrets.DOWNLOAD_EXPIRATION_MINUTES }}" >> .env
+            echo "CONTRACT_TEMPLATE_PATH=${{ secrets.CONTRACT_TEMPLATE_PATH }}" >> .env
+            
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
             docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest
