@@ -6,6 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record StoreListResponse(
+        Long storeId,
         String storeName,
         String businessNumber,
         StoreType storeType,
@@ -14,6 +15,7 @@ public record StoreListResponse(
 ) {
     public static StoreListResponse fromEntity(final StoreEntity entity) {
         return StoreListResponse.builder()
+                .storeId(entity.getId())
                 .storeName(entity.getName())
                 .businessNumber(entity.getBusinessNumber())
                 .storeType(entity.getStoreType())
