@@ -22,7 +22,7 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
                    SUM(CASE WHEN a.clockInStatus = 'LATE'
                     THEN 1 ELSE 0 END) AS lateCount,
                    SUM(CASE WHEN a.clockInStatus = 'ABSENT' THEN 1 ELSE 0 END) AS absentCount,
-                   COUNT(s.id) AS preScheduleCount
+                   COUNT(s.id)-COUNT(a.id) AS preScheduleCount
                FROM ScheduleEntity s
                LEFT JOIN AttendanceEntity a ON a.schedule.id = s.id
                WHERE s.storeId = :storeId AND s.workDate BETWEEN :start AND :end
