@@ -13,4 +13,6 @@ public interface AttendanceRepository {
     AttendanceEntity getById(Long id);
 
     List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate endDate);
+
+    AttendanceEntity getByScheduleId(Long scheduleId);
 }

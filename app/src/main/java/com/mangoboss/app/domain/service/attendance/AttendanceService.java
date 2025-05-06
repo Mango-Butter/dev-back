@@ -1,9 +1,6 @@
 package com.mangoboss.app.domain.service.attendance;
 
-import java.time.Clock;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 
 import com.mangoboss.app.domain.repository.AttendanceRepository;
@@ -13,6 +10,7 @@ import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.staff.StaffEntity;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
@@ -42,7 +40,7 @@ public class AttendanceService {
         final LocalDateTime clockInTime = verifyClockInTime(schedule.getStartTime(), now);
         final ClockInStatus clockInStatus = determineClockInStatus(schedule.getStartTime(), clockInTime);
 
-        final AttendanceEntity attendance = AttendanceEntity.create(schedule, clockInTime, clockInStatus);
+        final AttendanceEntity attendance = AttendanceEntity.createForClockIn(schedule, clockInTime, clockInStatus);
         return attendanceRepository.save(attendance);
     }
 
@@ -107,13 +105,29 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public ScheduleEntity getScheduleWithAttendance(final Long scheduleId) {
-        return scheduleRepository.getByIdAndAttendanceIsNotNull(scheduleId);
+    public AttendanceEntity getScheduleWithAttendance(final Long scheduleId) {
+        return attendanceRepository.getByScheduleId(scheduleId);
     }
 
     @Transactional(readOnly = true)
     public List<WorkDotProjection> getWorkDots(final Long storeId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findWorkDotProjections(storeId, start, end);
+    }
+
+    @Transactional(readOnly = true)
+    public void validateWorkDateForManualAttendance(final LocalDate workDate) {
+        final LocalDate now = LocalDate.now(clock);
+        if (!workDate.isBefore(now)) {
+            throw new CustomException(CustomErrorInfo.ATTENDANCE_DATE_MUST_BE_PAST);
+        }
+    }
+
+    public AttendanceEntity createManualAttendance(final StaffEntity staff, final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime) {
+        final ScheduleEntity schedule = ScheduleEntity.create(workDate, startTime, endTime, staff, null, staff.getStore().getId());
+        scheduleRepository.save(schedule);
+        final AttendanceEntity attendance = AttendanceEntity.create(
+                schedule.getStartTime(), schedule.getEndTime(), ClockInStatus.NORMAL, ClockOutStatus.NORMAL, schedule);
+        return attendanceRepository.save(attendance);
     }
 }
 

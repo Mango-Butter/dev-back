@@ -32,4 +32,10 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     public List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate end) {
         return attendanceJpaRepository.findWorkDotProjections(storeId, start, end);
     }
+
+    @Override
+    public AttendanceEntity getByScheduleId(final Long scheduleId) {
+        return attendanceJpaRepository.findByScheduleId(scheduleId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND));
+    }
 }

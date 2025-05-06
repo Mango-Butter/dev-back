@@ -2,7 +2,9 @@ package com.mangoboss.app.api.controller.attendance;
 
 import com.mangoboss.app.api.facade.attendance.BossAttendanceFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,5 +23,12 @@ public class BossAttendanceController {
                                                         @PathVariable Long scheduleId){
         final Long userId = userDetails.getUserId();
         return bossAttendanceFacade.getAttendanceDetail(storeId, userId, scheduleId);
+    }
+
+    @PostMapping("/attendance")
+    public AttendanceDetailResponse addManualAttendance(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @PathVariable Long storeId, @RequestBody @Valid AttendanceManualAddRequest request){
+        final Long userId = userDetails.getUserId();
+        return bossAttendanceFacade.addManualAttendance(storeId, userId, request);
     }
 }

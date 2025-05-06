@@ -24,12 +24,14 @@ public class ScheduleService {
     private final RegularGroupRepository regularGroupRepository;
     private final Clock clock;
 
+    @Transactional(readOnly = true)
     public void validateTime(final LocalTime startTime, final LocalTime endTime) {
         if (startTime.isAfter(endTime)) {
             throw new CustomException(CustomErrorInfo.INVALID_SCHEDULE_TIME);
         }
     }
 
+    @Transactional(readOnly = true)
     public void validateDate(final LocalDate startDate, final LocalDate endDate,
                              final LocalTime startTime, final LocalTime endTime) {
         final LocalDate now = LocalDate.now(clock);
@@ -40,6 +42,7 @@ public class ScheduleService {
         validateTime(startTime, endTime);
     }
 
+    @Transactional(readOnly = true)
     public void validateScheduleCreatable(final LocalDateTime startTime) {
         final LocalDateTime limitTime = LocalDateTime.now(clock).plusMinutes(SCHEDULE_CREATE_LIMIT_MINUTES);
         if (!startTime.isAfter(limitTime)) {
@@ -69,8 +72,8 @@ public class ScheduleService {
         }
     }
 
-    public void createSchedule(final ScheduleEntity schedule) {
-        scheduleRepository.save(schedule);
+    public ScheduleEntity createSchedule(final ScheduleEntity schedule) {
+        return scheduleRepository.save(schedule);
     }
 
     @Transactional(readOnly = true)
