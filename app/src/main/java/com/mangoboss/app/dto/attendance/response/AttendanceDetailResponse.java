@@ -20,8 +20,8 @@ public record AttendanceDetailResponse(
         ClockInStatus clockInStatus,
         ClockOutStatus clockOutStatus
 ) {
-    public static AttendanceDetailResponse of(final ScheduleEntity schedule) {
-        final AttendanceEntity attendance = schedule.getAttendance();
+    public static AttendanceDetailResponse fromEntity(final AttendanceEntity attendance) {
+        final ScheduleEntity schedule = attendance.getSchedule();
 
         return AttendanceDetailResponse.builder()
                 .scheduleId(schedule.getId())

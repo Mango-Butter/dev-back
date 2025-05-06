@@ -7,8 +7,8 @@ public enum CustomErrorInfo {
 
     // 400 Bad Request
     AUTHORIZATION_CODE_MISSING(400, "Authorization code가 비어있습니다.", 400001),
-    KAKAO_USER_INFO_REQUEST_FAILED(400, "카카오 사용자 정보 요청 실패", 400002),
-    KAKAO_TOKEN_PARSING_FAILED(400, "카카오 토큰 파싱 실패", 400003),
+    KAKAO_USER_INFO_REQUEST_FAILED(400, "카카오 사용자 정보 요청에 실패했습니다.", 400002),
+    KAKAO_TOKEN_PARSING_FAILED(400, "카카오 토큰 파싱을 실패했습니다.", 400003),
     KAKAO_TOKEN_RESPONSE_EMPTY(400, "카카오 토큰 응답이 비어 있습니다.", 400004),
     URL_INPUT_ERROR(400, "URL 입력 오류입니다.", 400005),
     ILLEGAL_ARGUMENT_TOKEN(400, "토큰 형식이 잘못되었습니다.", 400006),
@@ -57,7 +57,8 @@ public enum CustomErrorInfo {
     ALREADY_CLOCKED_OUT(409, "이미 퇴근 처리된 스케줄입니다.", 409005),
     EARLY_CLOCK_IN(409, "근무시작 10분 전부터 출근할 수 있습니다.", 409006),
     SCHEDULE_CREATION_TIME_EXCEEDED(409, "30분후의 스케줄부터 등록 가능합니다.", 409007),
-    CANNOT_MODIFY_PAST_SCHEDULE(409, "과거 스케줄은 수정 불가", 409008),
+    CANNOT_MODIFY_PAST_SCHEDULE(409, "과거 스케줄은 수정이 불가합니다.", 409008),
+    ATTENDANCE_DATE_MUST_BE_PAST(409, "근태는 과거에 대해서만 수동 추가할 수 있습니다.", 409009),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);
