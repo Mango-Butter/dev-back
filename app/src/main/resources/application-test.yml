@@ -46,3 +46,26 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+    aes:
+      secret-key: ${AES_SECRET_KEY:defaultaeskeyfortest1234567890123456}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:dummy-access-key}
+      secret-key: ${AWS_SECRET_KEY:dummy-secret-key}
+    region:
+      static: ap-northeast-2
+    s3:
+      contract-bucket: ${AWS_S3_CONTRACT_BUCKET:test-bucket}
+      kms-key-id: ${AWS_KMS_KEY_ID:dummy-kms-key}
+
+pdf:
+  font-path: ${PDF_FONT_PATH:fonts/NotoSansKR-Regular.ttf}
+
+contract:
+  template-path: ${CONTRACT_TEMPLATE_PATH:templates/contract-template.html}
+
+pre-signed-url:
+  view-expiration-minutes: ${VIEW_EXPIRATION_MINUTES:10}
+  download-expiration-minutes: ${DOWNLOAD_EXPIRATION_MINUTES:10}

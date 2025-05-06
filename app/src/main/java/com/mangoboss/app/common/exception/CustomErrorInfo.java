@@ -22,6 +22,8 @@ public enum CustomErrorInfo {
     INVALID_ATTENDANCE_REQUEST_TYPE(400, "출근 방식에 맞지 않는 요청 형식입니다. 매장의 출근 방식에 따라 필요한 필드를 확인해주세요.", 40014),
     SCHEDULE_ALREADY_ENDED(400, "근무 시간이 이미 종료되어 출근할 수 없습니다.", 400015),
     NOT_CLOCKED_IN_YET(400, "아직 출근하지 않았습니다. 먼저 출근을 해주세요.", 400016),
+    DECRYPTION_FAILED(400, "데이터 복호화에 실패했습니다.", 400017),
+    JSON_PARSE_FAILED(400, "JSON 파싱에 실패했습니다.", 400018),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -35,6 +37,7 @@ public enum CustomErrorInfo {
     NOT_STORE_STAFF(403,"이 매장의 알바생이 아닙니다.",403002),
     SCHEDULE_NOT_BELONG_TO_STAFF(403, "스케줄이 해당 알바생의 것이 아닙니다.", 403003),
     ATTENDANCE_NOT_BELONG_TO_STAFF(403, "근태 기록이 해당 알바생의 것이 아닙니다.", 403004),
+    CONTRACT_NOT_BELONG_TO_STAFF(403, "이 근로계약서는 해당 알바생의 것이 아닙니다.", 403005),
 
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
@@ -42,6 +45,7 @@ public enum CustomErrorInfo {
     INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
     STAFF_NOT_FOUND(404,"해당하는 알바생이 없습니다.",404004),
     STORE_NOT_FOUND(404,"해당하는 매장이 없습니다.",404005),
+    CONTRACT_NOT_FOUND(404, "해당하는 근로계약서를 찾을 수 없습니다.", 404006),
     SCHEDULE_NOT_FOUND(404,"해당하는 스케줄이 없습니다.",404006),
     REGULAR_GROUP_NOT_FOUND(404,"해당하는 고정 근무 그룹이 없습니다.",404007),
     ATTENDANCE_NOT_FOUND(404, "근태 정보가 없습니다.", 404008),
@@ -62,7 +66,15 @@ public enum CustomErrorInfo {
     INCOMPLETE_ATTENDANCE(409, "근태가 아직 완료되지 않았습니다.", 409010),
 
     // 500 INTERNAL_SERVER_ERROR
-    BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001);
+    BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),
+    SIGNATURE_UPLOAD_FAILED(500, "서명 이미지 업로드에 실패했습니다.", 500002),
+    BOSS_SIGNED_HTML_GENERATION_FAILED(500, "사장 서명 포함 계약서 HTML 생성 실패", 500003),
+    STAFF_SIGNED_HTML_GENERATION_FAILED(500, "알바생 서명 포함 계약서 HTML 생성 실패", 500004),
+    PDF_GENERATION_FAILED(500, "계약서 PDF 생성 실패", 500005),
+    SIGNATURE_IMAGE_DOWNLOAD_FAILED(500, "서명 이미지 다운로드 실패", 500006),
+    JSON_CONVERT_FAILED(500, "JSON 문자열 변환에 실패했습니다.", 500007),
+    S3_OBJECT_FETCH_FAILED(500, "S3 객체 조회에 실패했습니다.", 500008),
+    TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009);
 
     private final int statusCode;
     private final String message;

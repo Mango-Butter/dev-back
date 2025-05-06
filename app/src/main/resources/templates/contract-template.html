@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>기본 근로계약서</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm 20mm 30mm 20mm;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #000;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            margin-bottom: 4px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        table.schedule {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        table.schedule th,
+        table.schedule td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .signature-box {
+            width: 48%;
+            text-align: center;
+        }
+
+        .signature-label {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .signature-img-container {
+            width: 160px;
+            height: auto;
+            margin: 0 auto;
+            border-bottom: 1px solid #000;
+        }
+
+        .signature-img-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .no-wrap {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<h1>기본 근로계약서</h1>
+
+<div class="section">
+    <div class="info-row"><span class="bold">${storeName}</span> (이하 "사업주"라 함)과 <span class="bold">${staffName}</span> (이하 "근로자"라 함)은 다음과 같이 근로계약을 체결한다.</div>
+</div>
+
+<div class="section">
+    <div class="info-row">1. 근로계약기간: ${contractStart} ~ ${contractEnd}</div>
+    <div class="info-row">2. 근무 장소: ${storeAddress}</div>
+    <div class="info-row">3. 업무: ${duty}</div>
+</div>
+
+<div class="section">
+    <div class="info-row">4. 근무 시간:</div>
+    <table class="schedule">
+        <thead>
+        <tr>
+            <th>요일</th>
+            <th>시작 시간</th>
+            <th>종료 시간</th>
+        </tr>
+        </thead>
+        <tbody>
+        ${workSchedules}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <div class="info-row">5. 시급: ${hourlyWage} 원</div>
+</div>
+
+<div class="section">
+    <div class="bold">근로계약서 교부</div>
+    <div class="no-wrap">사업주는 근로계약을 체결함과 동시에 본 계약서를 사본하여 근로자에게 교부함 (근로기준법 제17조 이행)</div>
+</div>
+
+<div class="section">
+    <div class="bold">기타</div>
+    이 계약에 정함이 없는 사항은 근로기준법령에 의함
+</div>
+
+<div class="section">
+    <div class="info-row">매장명: ${storeName}</div>
+    <div class="info-row">사업자번호: ${businessNumber}</div>
+    <div class="info-row">매장 주소: ${storeAddress}</div>
+    <div class="info-row">대표자명: ${bossName} </div>
+    <div class="info-row">근로자 성명: ${staffName}</div>
+    <div class="info-row">연락처: ${staffPhone}</div>
+</div>
+
+<div class="signature-section">
+    <div class="signature-box">
+        <div class="signature-label">사장님 서명</div>
+        <div class="signature-img-container">
+            <img src="${bossSignature}" alt="사장님 서명" />
+        </div>
+    </div>
+    <div class="signature-box">
+        <div class="signature-label">근로자 서명</div>
+        <div class="signature-img-container">
+            <img src="${staffSignature}" alt="근로자 서명" />
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    본 계약은 근로기준법 제17조에 따라 작성되었으며, 계약 당사자는 이 계약서를 각 1부씩 보관합니다.
+</div>
+
+</body>
+</html>
