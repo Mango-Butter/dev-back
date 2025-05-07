@@ -3,6 +3,7 @@ package com.mangoboss.app.api.controller.attendance;
 import com.mangoboss.app.api.facade.attendance.BossAttendanceFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
+import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,22 @@ public class BossAttendanceController {
     @GetMapping("/{scheduleId}/attendance")
     public AttendanceDetailResponse getAttendanceDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @PathVariable Long storeId,
-                                                        @PathVariable Long scheduleId){
+                                                        @PathVariable Long scheduleId) {
         final Long userId = userDetails.getUserId();
         return bossAttendanceFacade.getAttendanceDetail(storeId, userId, scheduleId);
     }
 
     @PostMapping("/attendance")
     public AttendanceDetailResponse addManualAttendance(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                        @PathVariable Long storeId, @RequestBody @Valid AttendanceManualAddRequest request){
+                                                        @PathVariable Long storeId, @RequestBody @Valid AttendanceManualAddRequest request) {
         final Long userId = userDetails.getUserId();
         return bossAttendanceFacade.addManualAttendance(storeId, userId, request);
+    }
+
+    @PutMapping("/{scheduleId}/attendance")
+    public AttendanceDetailResponse updateAttendance(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                     @PathVariable Long storeId, @PathVariable Long scheduleId, @RequestBody @Valid AttendanceUpdateRequest request) {
+        final Long userId = userDetails.getUserId();
+        return bossAttendanceFacade.updateAttendance(storeId, userId, scheduleId, request);
     }
 }

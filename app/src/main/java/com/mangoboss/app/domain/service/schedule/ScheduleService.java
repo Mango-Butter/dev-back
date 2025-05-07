@@ -124,4 +124,9 @@ public class ScheduleService {
         }
         schedule.update(workDate, starTime, endTime);
     }
+
+    @Transactional(readOnly = true)
+    public ScheduleEntity getScheduleById(final Long scheduleId) {
+        return scheduleRepository.getById(scheduleId);
+    }
 }

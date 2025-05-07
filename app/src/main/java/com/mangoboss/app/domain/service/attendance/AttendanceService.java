@@ -10,7 +10,6 @@ import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
@@ -122,12 +121,25 @@ public class AttendanceService {
         }
     }
 
-    public AttendanceEntity createManualAttendance(final StaffEntity staff, final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime) {
-        final ScheduleEntity schedule = ScheduleEntity.create(workDate, startTime, endTime, staff, null, staff.getStore().getId());
+    public AttendanceEntity createManualAttendance(final ScheduleEntity schedule) {
         scheduleRepository.save(schedule);
         final AttendanceEntity attendance = AttendanceEntity.create(
                 schedule.getStartTime(), schedule.getEndTime(), ClockInStatus.NORMAL, ClockOutStatus.NORMAL, schedule);
         return attendanceRepository.save(attendance);
+    }
+
+    public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
+        final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
+        if(clockInStatus.equals(ClockInStatus.ABSENT)){
+            return attendance.update(null, null, clockInStatus, null);
+        }
+        if(clockOutTime.isBefore(schedule.getEndTime())){
+            return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.EARLY_LEAVE);
+        }
+        if(clockOutTime.isAfter(schedule.getEndTime())){
+            return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.OVERTIME);
+        }
+        return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.NORMAL);
     }
 }
 

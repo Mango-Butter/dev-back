@@ -72,4 +72,13 @@ public class AttendanceEntity extends BaseTimeEntity {
         this.clockOutTime = time;
         this.clockOutStatus = clockOutStatus;
     }
+
+    public AttendanceEntity update(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
+                                   final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus) {
+        this.clockInTime = clockInTime;
+        this.clockOutTime = clockOutTime;
+        this.clockInStatus = clockInStatus;
+        this.clockOutStatus = clockOutStatus;
+        return this;
+    }
 }
