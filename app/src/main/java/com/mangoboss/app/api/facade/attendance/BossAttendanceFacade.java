@@ -5,12 +5,13 @@ import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
+import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
+import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +30,20 @@ public class BossAttendanceFacade {
     public AttendanceDetailResponse addManualAttendance(final Long storeId, final Long bossId, final AttendanceManualAddRequest request) {
         storeService.isBossOfStore(storeId, bossId);
         attendanceService.validateWorkDateForManualAttendance(request.workDate());
-        scheduleService.validateTime(request.startTime(), request.endTime());
+        scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
 
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
-        final AttendanceEntity attendance = attendanceService.createManualAttendance(staff, request.workDate(), request.toStartDateTime(), request.toEndDateTime());
+        final AttendanceEntity attendance = attendanceService.createManualAttendance(request.toSchedule(staff));
+        return AttendanceDetailResponse.fromEntity(attendance);
+    }
+
+    public AttendanceDetailResponse updateAttendance(final Long storeId, final Long bossId, final Long scheduleId, final AttendanceUpdateRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
+
+        final ScheduleEntity schedule = scheduleService.getScheduleById(scheduleId);
+        final AttendanceEntity attendance = attendanceService.updateAttendance(
+                schedule, request.toClockInDateTime(schedule.getWorkDate()), request.toClockOutDateTime(schedule.getWorkDate()), request.clockInStatus());
         return AttendanceDetailResponse.fromEntity(attendance);
     }
 }

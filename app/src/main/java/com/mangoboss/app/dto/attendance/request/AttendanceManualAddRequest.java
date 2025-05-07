@@ -18,21 +18,13 @@ public record AttendanceManualAddRequest(
         LocalDate workDate,
 
         @NonNull
-        LocalTime startTime,
+        LocalTime clockInTime,
 
         @NonNull
-        LocalTime endTime
+        LocalTime clockOutTime
 ) {
     public ScheduleEntity toSchedule(final StaffEntity staff) {
-        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, startTime), LocalDateTime.of(workDate, endTime),
+        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, clockInTime), LocalDateTime.of(workDate, clockOutTime),
                 staff, null, staff.getStore().getId());
-    }
-
-    public LocalDateTime toStartDateTime() {
-        return LocalDateTime.of(workDate, startTime);
-    }
-
-    public LocalDateTime toEndDateTime() {
-        return LocalDateTime.of(workDate, endTime);
     }
 }
