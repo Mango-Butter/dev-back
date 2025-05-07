@@ -234,4 +234,39 @@ class AttendanceServiceTest {
         // then
         assertThatThrownBy(() -> attendanceService.updateAttendance(schedule, clockInTime, clockOutTime, clockInStatus));
     }
+
+    @Test
+    void 근태기록을_삭제하면_스케줄도_함께_삭제된다() {
+        // given
+        Long scheduleId = schedule.getId();
+        AttendanceEntity attendance = AttendanceEntity.builder()
+                .clockOutStatus(ClockOutStatus.NORMAL)
+                .schedule(schedule)
+                .build();
+        when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
+
+        // when
+        attendanceService.deleteAttendanceWithSchedule(scheduleId);
+
+        // then
+        verify(attendanceRepository,times(1)).delete(attendance);
+        verify(scheduleRepository,times(1)).delete(schedule);
+    }
+
+    @Test
+    void 근태기록이_완료되지_않고_삭제를_시도하면_에러가_발생한다() {
+        // given
+        Long scheduleId = schedule.getId();
+        AttendanceEntity attendance = AttendanceEntity.builder()
+                .clockOutStatus(null)
+                .schedule(schedule)
+                .build();
+        when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
+
+        // when
+        // then
+        assertThatThrownBy(()-> attendanceService.deleteAttendanceWithSchedule(scheduleId))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.INCOMPLETE_ATTENDANCE.getMessage());
+    }
 }
