@@ -131,13 +131,13 @@ class StoreServiceTest {
         GpsRegisterRequest request = new GpsRegisterRequest("경기도 수원시", 37.1234, 127.5678, 100);
         StoreEntity store = mock(StoreEntity.class);
         when(storeRepository.getById(storeId)).thenReturn(store);
-        when(store.updateGpsSettings(request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters())).thenReturn(store);
+        when(store.updateGpsSettings(request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters())).thenReturn(store);
 
         // when
-        StoreEntity updatedStore = storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
+        StoreEntity updatedStore = storeService.updateGpsSettings(storeId, request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
 
         // then
-        verify(store).updateGpsSettings(request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
+        verify(store).updateGpsSettings(request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
         assertThat(updatedStore).isSameAs(store);
     }
 }

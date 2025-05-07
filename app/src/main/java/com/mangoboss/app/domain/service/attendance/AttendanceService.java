@@ -35,7 +35,7 @@ public class AttendanceService {
 
     public AttendanceEntity recordClockIn(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
-        final LocalDateTime now = LocalDateTime.now(clock);
+        final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
 
         validateNotAlreadyClockedIn(schedule);
         validateScheduleNotEnded(schedule.getEndTime(), now);
@@ -48,7 +48,7 @@ public class AttendanceService {
 
     public void recordClockOut(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
-        final LocalDateTime now = LocalDateTime.now(clock);
+        final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
         validateClockedIn(schedule);
         final AttendanceEntity attendance = schedule.getAttendance();
 

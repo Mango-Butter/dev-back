@@ -92,7 +92,7 @@ public class BossStoreFacade {
 
 	public GpsSettingsResponse updateGpsSettings(final Long userId, final Long storeId, final GpsRegisterRequest request) {
 		storeService.isBossOfStore(userId, storeId);
-		final StoreEntity store = storeService.updateGpsSettings(storeId, request.address(), request.latitude(), request.longitude(), request.gpsRangeMeters());
+		final StoreEntity store = storeService.updateGpsSettings(storeId, request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
 		return GpsSettingsResponse.fromEntity(store);
 	}
 }

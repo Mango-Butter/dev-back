@@ -8,10 +8,10 @@ public record GpsRegisterRequest(
 	String address,
 
 	@NotNull
-	Double latitude,
+	Double gpsLatitude,
 
 	@NotNull
-	Double longitude,
+	Double gpsLongitude,
 
 	@NotNull
 	Integer gpsRangeMeters
