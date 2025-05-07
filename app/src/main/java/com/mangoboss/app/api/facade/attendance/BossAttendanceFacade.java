@@ -33,7 +33,7 @@ public class BossAttendanceFacade {
         scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
 
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
-        final AttendanceEntity attendance = attendanceService.createManualAttendance(request.toSchedule(staff));
+        final AttendanceEntity attendance = attendanceService.createManualAttendanceAndSchedule(request.toSchedule(staff));
         return AttendanceDetailResponse.fromEntity(attendance);
     }
 
@@ -45,5 +45,10 @@ public class BossAttendanceFacade {
         final AttendanceEntity attendance = attendanceService.updateAttendance(
                 schedule, request.toClockInDateTime(schedule.getWorkDate()), request.toClockOutDateTime(schedule.getWorkDate()), request.clockInStatus());
         return AttendanceDetailResponse.fromEntity(attendance);
+    }
+
+    public void deleteAttendance(final Long storeId, final Long bossId, final Long scheduleId) {
+        storeService.isBossOfStore(storeId, bossId);
+        attendanceService.deleteAttendanceWithSchedule(scheduleId);
     }
 }

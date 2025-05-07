@@ -34,7 +34,7 @@ public class AttendanceService {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
 
-        validateNotAlreadyClockedIn(schedule);
+        validateNotClockedIn(schedule);
         validateScheduleNotEnded(schedule.getEndTime(), now);
         final LocalDateTime clockInTime = verifyClockInTime(schedule.getStartTime(), now);
         final ClockInStatus clockInStatus = determineClockInStatus(schedule.getStartTime(), clockInTime);
@@ -48,7 +48,7 @@ public class AttendanceService {
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
 
         final AttendanceEntity attendance = validateClockedIn(schedule);
-        validateNotAlreadyClockedOut(attendance);
+        validateNotClockedOut(attendance);
         final LocalDateTime clockOutTime = verifyClockOutTime(schedule.getEndTime(), now);
         final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), now);
 
@@ -62,7 +62,7 @@ public class AttendanceService {
         return schedule.getAttendance();
     }
 
-    private void validateNotAlreadyClockedIn(final ScheduleEntity schedule) {
+    private void validateNotClockedIn(final ScheduleEntity schedule) {
         if (schedule.getAttendance() != null) {
             throw new CustomException(CustomErrorInfo.ALREADY_CLOCKED_IN);
         }
@@ -74,13 +74,13 @@ public class AttendanceService {
         }
     }
 
-    private void validateNotAlreadyClockedOut(final AttendanceEntity attendance) {
+    private void validateNotClockedOut(final AttendanceEntity attendance) {
         if (attendance.isAlreadyClockedOut()) {
             throw new CustomException(CustomErrorInfo.ALREADY_CLOCKED_OUT);
         }
     }
 
-    private void validateAlreadyClockedOut(final AttendanceEntity attendance) {
+    private void validateClockedOut(final AttendanceEntity attendance) {
         if (!attendance.isAlreadyClockedOut()) {
             throw new CustomException(CustomErrorInfo.INCOMPLETE_ATTENDANCE);
         }
@@ -140,7 +140,7 @@ public class AttendanceService {
         }
     }
 
-    public AttendanceEntity createManualAttendance(final ScheduleEntity schedule) {
+    public AttendanceEntity createManualAttendanceAndSchedule(final ScheduleEntity schedule) {
         scheduleRepository.save(schedule);
         final AttendanceEntity attendance = AttendanceEntity.create(
                 schedule.getStartTime(), schedule.getEndTime(), ClockInStatus.NORMAL, ClockOutStatus.NORMAL, schedule);
@@ -149,12 +149,19 @@ public class AttendanceService {
 
     public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
-        validateAlreadyClockedOut(attendance);
+        validateClockedOut(attendance);
         if (clockInStatus.equals(ClockInStatus.ABSENT)) {
             return attendance.update(null, null, clockInStatus, null);
         }
         final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime);
         return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
+    }
+
+    public void deleteAttendanceWithSchedule(final Long scheduleId) {
+        final AttendanceEntity attendance = attendanceRepository.getByScheduleId(scheduleId);
+        validateClockedOut(attendance);
+        attendanceRepository.delete(attendance);
+        scheduleRepository.deleteById(scheduleId);
     }
 }
 
