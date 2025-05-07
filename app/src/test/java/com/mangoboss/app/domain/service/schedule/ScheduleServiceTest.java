@@ -65,20 +65,23 @@ class ScheduleServiceTest {
     @Test
     void 현재시각으로부터_30분_후의_스케줄만_만들_수_있도록_유효성을_검사한다() {
         //given
-        LocalDateTime startTime = fixedNow.plusMinutes(31);
+        LocalDate workDate = fixedNow.toLocalDate();
+        LocalTime startTime = fixedNow.toLocalTime().plusMinutes(31);
+
         //when
         //then
-        assertThatNoException().isThrownBy(() -> scheduleService.validateScheduleCreatable(startTime));
+        assertThatNoException().isThrownBy(() -> scheduleService.validateScheduleCreatable(workDate, startTime));
     }
 
     @Test
     void 현재시각으로부터_30분_이내의_스케줄을_만들면_에러를_던진다() {
         //given
-        LocalDateTime startTime = fixedNow.plusMinutes(30);
+        LocalDate workDate = fixedNow.toLocalDate();
+        LocalTime startTime = fixedNow.toLocalTime().plusMinutes(30);
 
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.validateScheduleCreatable(startTime))
+        assertThatThrownBy(() -> scheduleService.validateScheduleCreatable(workDate, startTime))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.SCHEDULE_CREATION_TIME_EXCEEDED.getMessage());
     }
@@ -86,8 +89,8 @@ class ScheduleServiceTest {
     @Test
     void 스케줄의_시작시간과_끝시간의_유효성을_검사한다() {
         //given
-        LocalTime startTime = LocalTime.of(11, 0, 0);
-        LocalTime endTime = LocalTime.of(15, 0, 0);
+        LocalTime startTime = LocalTime.of(7, 0, 0);
+        LocalTime endTime = LocalTime.of(22, 59, 0);
 
         //when
         //then
@@ -95,10 +98,10 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void 스케줄_유효성_검사에서_시작시간이_끝시간_이후면_에러를_던진다() {
+    void 스케줄_시간_유효성_검사에서_16시간_이상의_스케줄을_만들면_에러가_발생한다() {
         //given
-        LocalTime startTime = LocalTime.of(16, 30, 0);
-        LocalTime endTime = LocalTime.of(16, 0, 0);
+        LocalTime startTime = LocalTime.of(7, 0, 0);
+        LocalTime endTime = LocalTime.of(23, 0, 0);
 
         //when
         //then
@@ -152,7 +155,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
         //when
-        scheduleService.updateSchedule(scheduleId, workDate.plusDays(3), startTime, endTime);
+        scheduleService.updateSchedule(scheduleId, workDate.plusDays(3), startTime.toLocalTime(), endTime.toLocalTime());
         //then
         assertThat(schedule.getRegularGroup()).isNull();
     }
@@ -174,7 +177,7 @@ class ScheduleServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.updateSchedule(scheduleId, fixedNow.toLocalDate().plusDays(1), startTime, endTime))
+        assertThatThrownBy(() -> scheduleService.updateSchedule(scheduleId, fixedNow.toLocalDate().plusDays(1), startTime.toLocalTime(), endTime.toLocalTime()))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE.getMessage());
     }
