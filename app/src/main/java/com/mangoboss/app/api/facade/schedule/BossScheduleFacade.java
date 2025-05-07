@@ -5,14 +5,9 @@ import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.schedule.request.ScheduleCreateRequest;
 import com.mangoboss.app.dto.schedule.request.ScheduleUpdateRequest;
-import com.mangoboss.app.dto.schedule.response.ScheduleDailyResponse;
-import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +19,9 @@ public class BossScheduleFacade {
     public void createSchedule(final Long storeId, final Long bossId, final ScheduleCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
         scheduleService.validateTime(request.startTime(), request.endTime());
-        scheduleService.validateScheduleCreatable(request.toStartDateTime());
+        scheduleService.validateScheduleCreatable(request.workDate(), request.startTime());
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
         scheduleService.createSchedule(request.toEntity(staff, storeId));
-    }
-
-    // todo 삭제해야 함
-    public List<ScheduleDailyResponse> getDailySchedule(final Long storeId, final Long bossId, final LocalDate date) {
-        storeService.isBossOfStore(storeId, bossId);
-        List<ScheduleEntity> schedules = scheduleService.getDailySchedules(storeId, date);
-        return schedules.stream().map(ScheduleDailyResponse::fromEntity).toList();
     }
 
     public void deleteSchedule(final Long storeId, final Long bossId, final Long scheduleId) {
@@ -44,7 +32,7 @@ public class BossScheduleFacade {
     public void updateSchedule(final Long storeId, final Long scheduleId, final Long bossId, final ScheduleUpdateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
         scheduleService.validateTime(request.startTime(), request.endTime());
-        scheduleService.validateScheduleCreatable(request.toStartDateTime());
-        scheduleService.updateSchedule(scheduleId, request.workDate(), request.toStartDateTime(), request.toEndDateTime());
+        scheduleService.validateScheduleCreatable(request.workDate(), request.startTime());
+        scheduleService.updateSchedule(scheduleId, request.workDate(), request.startTime(), request.endTime());
     }
 }
