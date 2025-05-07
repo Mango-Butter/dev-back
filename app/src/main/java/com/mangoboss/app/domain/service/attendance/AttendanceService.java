@@ -27,8 +27,8 @@ public class AttendanceService {
     private final ScheduleRepository scheduleRepository;
     private final Clock clock;
 
-    private static final long OVERTIME_THRESHOLD_MINUTES = 10;  //todo 설정 이후에는 삭제해야 함.
-    private static final long CLOCK_IN_ALLOWED_MINUTES_BEFORE = 10;
+    private static final long OVERTIME_THRESHOLD_MINUTES = 30;  //todo 설정 이후에는 삭제해야 함.
+    private static final long CLOCK_ALLOWED_MINUTES = 10;
 
     public AttendanceEntity recordClockIn(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
@@ -46,19 +46,20 @@ public class AttendanceService {
     public void recordClockOut(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
-        validateClockedIn(schedule);
-        final AttendanceEntity attendance = schedule.getAttendance();
 
+        final AttendanceEntity attendance = validateClockedIn(schedule);
         validateNotAlreadyClockedOut(attendance);
+        final LocalDateTime clockOutTime = verifyClockOutTime(schedule.getEndTime(), now);
         final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), now);
 
-        attendance.recordClockOut(now, clockOutStatus);
+        attendance.recordClockOut(clockOutTime, clockOutStatus);
     }
 
-    private void validateClockedIn(final ScheduleEntity schedule) {
+    private AttendanceEntity validateClockedIn(final ScheduleEntity schedule) {
         if (schedule.getAttendance() == null) {
             throw new CustomException(CustomErrorInfo.NOT_CLOCKED_IN_YET);
         }
+        return schedule.getAttendance();
     }
 
     private void validateNotAlreadyClockedIn(final ScheduleEntity schedule) {
@@ -79,17 +80,22 @@ public class AttendanceService {
         }
     }
 
+    private void validateAlreadyClockedOut(final AttendanceEntity attendance) {
+        if (!attendance.isAlreadyClockedOut()) {
+            throw new CustomException(CustomErrorInfo.INCOMPLETE_ATTENDANCE);
+        }
+    }
+
     private ClockInStatus determineClockInStatus(final LocalDateTime scheduledStartTime, final LocalDateTime clockInTime) {
         return clockInTime.isBefore(scheduledStartTime) ? ClockInStatus.NORMAL : ClockInStatus.LATE;
     }
 
     private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
+        final LocalDateTime limitTime = scheduledEndTime.plusMinutes(CLOCK_ALLOWED_MINUTES);
         if (clockOutTime.isBefore(scheduledEndTime)) {
             return ClockOutStatus.EARLY_LEAVE;
         }
-
-        final long overtimeMinutes = Duration.between(scheduledEndTime, clockOutTime).toMinutes();
-        if (overtimeMinutes >= OVERTIME_THRESHOLD_MINUTES) {
+        if (clockOutTime.isAfter(limitTime)) {  // todo 매장이 초과근무 허용할때만
             return ClockOutStatus.OVERTIME;
         }
 
@@ -97,10 +103,23 @@ public class AttendanceService {
     }
 
     private LocalDateTime verifyClockInTime(final LocalDateTime scheduleStartTime, final LocalDateTime now) {
-        if (now.isBefore(scheduleStartTime.minusMinutes(CLOCK_IN_ALLOWED_MINUTES_BEFORE))) {
+        if (now.isBefore(scheduleStartTime.minusMinutes(CLOCK_ALLOWED_MINUTES))) {
             throw new CustomException(CustomErrorInfo.EARLY_CLOCK_IN);
         }
         return now.isBefore(scheduleStartTime) ? scheduleStartTime : now;
+    }
+
+    private LocalDateTime verifyClockOutTime(final LocalDateTime scheduleEndTime, final LocalDateTime now) {
+        if (now.isBefore(scheduleEndTime)) {
+            return now;
+        }
+        if (now.isBefore(scheduleEndTime.plusMinutes(CLOCK_ALLOWED_MINUTES))) {
+            return scheduleEndTime;
+        }
+        if (now.isBefore(scheduleEndTime.plusMinutes(OVERTIME_THRESHOLD_MINUTES))) {
+            return now;
+        }
+        return scheduleEndTime.plusMinutes(OVERTIME_THRESHOLD_MINUTES);
     }
 
     @Transactional(readOnly = true)
@@ -130,16 +149,12 @@ public class AttendanceService {
 
     public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
-        if(clockInStatus.equals(ClockInStatus.ABSENT)){
+        validateAlreadyClockedOut(attendance);
+        if (clockInStatus.equals(ClockInStatus.ABSENT)) {
             return attendance.update(null, null, clockInStatus, null);
         }
-        if(clockOutTime.isBefore(schedule.getEndTime())){
-            return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.EARLY_LEAVE);
-        }
-        if(clockOutTime.isAfter(schedule.getEndTime())){
-            return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.OVERTIME);
-        }
-        return attendance.update(clockInTime,clockOutTime,clockInStatus,ClockOutStatus.NORMAL);
+        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime);
+        return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
     }
 }
 
