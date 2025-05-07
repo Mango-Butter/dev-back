@@ -44,5 +44,5 @@ INSERT INTO attendance(attendance_id, schedule_id, clock_in_time, clock_out_time
 VALUES (1, 1, '2025-04-01 09:00:00', '2025-04-01 15:30:00', 'NORMAL', 'NORMAL'),
        (2, 2, '2025-04-03 13:00:00', '2025-04-03 18:00:00', 'NORMAL', 'NORMAL'),
        (3, 3, '2025-04-03 13:05:10', '2025-04-03 18:00:00', 'LATE', 'NORMAL'),
-       (4, 4, null, null, 'ABSENT', null),
+       (4, 4, null, null, 'ABSENT', 'ABSENT'),
        (5, 5, '2025-05-05 10:00:00', '2025-05-05 13:00:00', 'NORMAL','EARLY_LEAVE');

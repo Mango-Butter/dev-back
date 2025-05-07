@@ -21,4 +21,6 @@ public interface ScheduleRepository {
     ScheduleEntity getByIdAndAttendanceIsNotNull(Long scheduleId);
 
     List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
+
+    void deleteById(Long scheduleId);
 }

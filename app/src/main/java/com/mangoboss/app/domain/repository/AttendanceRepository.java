@@ -15,4 +15,6 @@ public interface AttendanceRepository {
     List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate endDate);
 
     AttendanceEntity getByScheduleId(Long scheduleId);
+
+    void delete(AttendanceEntity attendance);
 }

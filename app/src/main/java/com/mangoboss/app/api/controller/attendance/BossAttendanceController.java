@@ -39,4 +39,11 @@ public class BossAttendanceController {
         final Long userId = userDetails.getUserId();
         return bossAttendanceFacade.updateAttendance(storeId, userId, scheduleId, request);
     }
+
+    @DeleteMapping("/{scheduleId}/attendance")
+    public void deleteAttendance(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                     @PathVariable Long storeId, @PathVariable Long scheduleId) {
+        final Long userId = userDetails.getUserId();
+        bossAttendanceFacade.deleteAttendance(storeId, userId, scheduleId);
+    }
 }

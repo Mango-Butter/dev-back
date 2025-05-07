@@ -38,4 +38,9 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
         return attendanceJpaRepository.findByScheduleId(scheduleId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_NOT_FOUND));
     }
+
+    @Override
+    public void delete(final AttendanceEntity attendance) {
+        attendanceJpaRepository.delete(attendance);
+    }
 }

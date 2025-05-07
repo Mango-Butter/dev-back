@@ -184,7 +184,7 @@ class AttendanceServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         //when
-        AttendanceEntity result = attendanceService.createManualAttendance(schedule);
+        AttendanceEntity result = attendanceService.createManualAttendanceAndSchedule(schedule);
 
         // then
         assertThat(result.getClockInStatus()).isEqualTo(ClockInStatus.NORMAL);
