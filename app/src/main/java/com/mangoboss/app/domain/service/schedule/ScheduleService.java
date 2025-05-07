@@ -20,13 +20,22 @@ import java.util.List;
 @Slf4j
 public class ScheduleService {
     private static final int SCHEDULE_CREATE_LIMIT_MINUTES = 30;
+    private static final int MAX_SCHEDULE_DURATION_HOURS = 16;
     private final ScheduleRepository scheduleRepository;
     private final RegularGroupRepository regularGroupRepository;
     private final Clock clock;
 
     @Transactional(readOnly = true)
     public void validateTime(final LocalTime startTime, final LocalTime endTime) {
-        if (startTime.isAfter(endTime)) {
+        final LocalDate BASE_DATE = LocalDate.of(2000, 1, 1);
+        LocalDateTime start = LocalDateTime.of(BASE_DATE, startTime);
+        LocalDateTime end = LocalDateTime.of(
+                endTime.isAfter(startTime) ? BASE_DATE : BASE_DATE.plusDays(1),
+                endTime
+        );
+
+        Duration duration = Duration.between(start, end);
+        if (duration.isZero() || duration.toHours() > MAX_SCHEDULE_DURATION_HOURS-1) {
             throw new CustomException(CustomErrorInfo.INVALID_SCHEDULE_TIME);
         }
     }
@@ -43,9 +52,9 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public void validateScheduleCreatable(final LocalDateTime startTime) {
+    public void validateScheduleCreatable(final LocalDate workDate, final LocalTime startTime) {
         final LocalDateTime limitTime = LocalDateTime.now(clock).plusMinutes(SCHEDULE_CREATE_LIMIT_MINUTES);
-        if (!startTime.isAfter(limitTime)) {
+        if (!LocalDateTime.of(workDate, startTime).isAfter(limitTime)) {
             throw new CustomException(CustomErrorInfo.SCHEDULE_CREATION_TIME_EXCEEDED);
         }
     }
@@ -64,8 +73,8 @@ public class ScheduleService {
         LocalDate current = regularGroup.getStartDate().plusDays(daysToAdd);
 
         while (!current.isAfter(regularGroup.getEndDate())) {
-            ScheduleEntity schedule = ScheduleEntity.create(current, LocalDateTime.of(current, regularGroup.getStartTime()),
-                    LocalDateTime.of(current, regularGroup.getEndTime()), regularGroup.getStaff(), regularGroup, storeId);
+            ScheduleEntity schedule = ScheduleEntity.create(current, regularGroup.getStartTime(),
+                    regularGroup.getEndTime(), regularGroup.getStaff(), regularGroup, storeId);
 
             scheduleRepository.save(schedule);
             current = current.plusWeeks(1);
@@ -115,7 +124,7 @@ public class ScheduleService {
     }
 
     public void updateSchedule(final Long scheduleId, final LocalDate workDate,
-                               final LocalDateTime starTime, final LocalDateTime endTime) {
+                               final LocalTime starTime, final LocalTime endTime) {
         final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
 
         final LocalDateTime now = LocalDateTime.now(clock);

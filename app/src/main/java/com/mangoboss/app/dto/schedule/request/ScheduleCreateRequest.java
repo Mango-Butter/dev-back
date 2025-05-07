@@ -3,7 +3,6 @@ package com.mangoboss.app.dto.schedule.request;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.mangoboss.storage.staff.StaffEntity;
@@ -25,10 +24,6 @@ public record ScheduleCreateRequest(
         LocalTime endTime
 ) {
     public ScheduleEntity toEntity(final StaffEntity staff, final Long storeId) {
-        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, startTime), LocalDateTime.of(workDate, endTime), staff, null, storeId);
-    }
-
-    public LocalDateTime toStartDateTime() {
-        return LocalDateTime.of(workDate, startTime);
+        return ScheduleEntity.create(workDate, startTime, endTime, staff, null, storeId);
     }
 }

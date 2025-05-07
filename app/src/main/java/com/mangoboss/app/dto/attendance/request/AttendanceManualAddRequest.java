@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.NonNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -24,7 +23,7 @@ public record AttendanceManualAddRequest(
         LocalTime clockOutTime
 ) {
     public ScheduleEntity toSchedule(final StaffEntity staff) {
-        return ScheduleEntity.create(workDate, LocalDateTime.of(workDate, clockInTime), LocalDateTime.of(workDate, clockOutTime),
+        return ScheduleEntity.create(workDate, clockInTime, clockOutTime,
                 staff, null, staff.getStore().getId());
     }
 }

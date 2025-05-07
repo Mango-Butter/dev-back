@@ -14,7 +14,7 @@ public enum CustomErrorInfo {
     ILLEGAL_ARGUMENT_TOKEN(400, "토큰 형식이 잘못되었습니다.", 400006),
     KAKAO_USER_INFO_INCOMPLETE(400, "카카오에서 받아오는 정보 중 일부가 누락되었습니다.", 400007),
     INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
-    INVALID_SCHEDULE_TIME(400,"스케줄의 시간이 유효하지 않습니다.",400009),
+    INVALID_SCHEDULE_TIME(400,"스케줄은 16시간을 초과하여 등록할 수 없습니다.",400009),
     INVALID_REGULAR_DATE(400,"반복 날짜가 유효하지 않습니다.",400010),
     INVALID_QR_CODE(400, "유효하지 않은 QR 코드입니다.", 400011),
     INVALID_GPS_TIME(400, "위치 정보 유효 시간이 지났습니다.", 400012),

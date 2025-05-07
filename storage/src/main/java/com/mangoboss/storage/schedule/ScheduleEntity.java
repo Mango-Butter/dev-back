@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -57,23 +58,28 @@ public class ScheduleEntity extends BaseTimeEntity {
         this.storeId = storeId;
     }
 
-    public static ScheduleEntity create(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
+    public static ScheduleEntity create(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime,
                                         final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId) {
         return ScheduleEntity.builder()
                 .workDate(workDate)
-                .startTime(startTime)
-                .endTime(endTime)
+                .startTime(LocalDateTime.of(workDate, startTime))
+                .endTime(adjustEndDateTime(workDate,startTime,endTime))
                 .staff(staff)
                 .regularGroup(regularGroup)
                 .storeId(storeId)
                 .build();
     }
 
-    public ScheduleEntity update(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime) {
+    public ScheduleEntity update(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime) {
         this.workDate = workDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = LocalDateTime.of(workDate, startTime);
+        this.endTime = adjustEndDateTime(workDate, startTime, endTime);
         this.regularGroup = null;
         return this;
+    }
+
+    private static LocalDateTime adjustEndDateTime(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime){
+        return endTime.isAfter(startTime) ?
+                LocalDateTime.of(workDate, endTime) : LocalDateTime.of(workDate.plusDays(1), endTime);
     }
 }
