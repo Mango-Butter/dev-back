@@ -159,9 +159,10 @@ public class AttendanceService {
 
     public void deleteAttendanceWithSchedule(final Long scheduleId) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(scheduleId);
+        final ScheduleEntity schedule = attendance.getSchedule();
         validateClockedOut(attendance);
         attendanceRepository.delete(attendance);
-        scheduleRepository.deleteById(scheduleId);
+        scheduleRepository.delete(schedule);
     }
 }
 
