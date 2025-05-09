@@ -2,6 +2,7 @@ package com.mangoboss.app.domain.repository;
 
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
+import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface AttendanceRepository {
     AttendanceEntity getByScheduleId(Long scheduleId);
 
     void delete(AttendanceEntity attendance);
+
+    List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds);
 }
