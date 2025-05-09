@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
@@ -39,7 +40,13 @@ public class ContractHtmlGenerator {
     }
 
     private String fillTemplate(final ContractData data, final String bossSignature, final String staffSignature) throws Exception {
-        final String template = Files.readString(new ClassPathResource(contractTemplatePath).getFile().toPath());
+        final ClassPathResource resource = new ClassPathResource(contractTemplatePath);
+
+        String template;
+        try (InputStream inputStream = resource.getInputStream()) {
+            template = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
 
         final Map<String, String> dataMap = new HashMap<>();
         dataMap.put("staffName", data.staffName());
