@@ -43,55 +43,55 @@ public class BossStoreFacade {
 				.toList();
 	}
 
-	public StoreInfoResponse getStoreInfo(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public StoreInfoResponse getStoreInfo(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.getStoreById(storeId);
 		return StoreInfoResponse.fromEntity(store);
 	}
 
-	public void updateStoreInfo(final Long userId, final Long storeId, final StoreUpdateRequest request) {
-		storeService.isBossOfStore(userId, storeId);
+	public void updateStoreInfo(final Long storeId, final Long userId, final StoreUpdateRequest request) {
+		storeService.isBossOfStore(storeId, userId);
 		storeService.updateStoreInfo(storeId, request.address(), request.storeType());
 	}
 
-	public StoreInviteCodeResponse reissueInviteCode(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public StoreInviteCodeResponse reissueInviteCode(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final String newInviteCode = storeService.reissueInviteCode(storeId);
 		return StoreInviteCodeResponse.of(newInviteCode);
 	}
 
-	public AttendanceSettingsResponse getAttendanceSettings(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public AttendanceSettingsResponse getAttendanceSettings(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.getStoreById(storeId);
 		return AttendanceSettingsResponse.of(store.getAttendanceMethod());
 	}
 
-	public QrCodeResponse getQrSettings(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public QrCodeResponse getQrSettings(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.getStoreById(storeId);
 		return QrCodeResponse.of(store.getId(), store.getQrCode());
 	}
 
-	public GpsSettingsResponse getGpsSettings(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public GpsSettingsResponse getGpsSettings(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.getStoreById(storeId);
 		return GpsSettingsResponse.fromEntity(store);
 	}
 
-	public AttendanceSettingsResponse updateAttendanceSettings(final Long userId, final Long storeId, final AttendanceSettingsRequest request) {
-		storeService.isBossOfStore(userId, storeId);
+	public AttendanceSettingsResponse updateAttendanceSettings(final Long storeId, final Long userId, final AttendanceSettingsRequest request) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.updateAttendanceSettings(storeId, request.attendanceMethod());
 		return AttendanceSettingsResponse.of(store.getAttendanceMethod());
 	}
 
-	public QrCodeResponse regenerateQrCode(final Long userId, final Long storeId) {
-		storeService.isBossOfStore(userId, storeId);
+	public QrCodeResponse regenerateQrCode(final Long storeId, final Long userId) {
+		storeService.isBossOfStore(storeId, userId);
 		final String newQr = storeService.regenerateQrCode(storeId);
 		return QrCodeResponse.of(storeId, newQr);
 	}
 
-	public GpsSettingsResponse updateGpsSettings(final Long userId, final Long storeId, final GpsRegisterRequest request) {
-		storeService.isBossOfStore(userId, storeId);
+	public GpsSettingsResponse updateGpsSettings(final Long storeId, final Long userId, final GpsRegisterRequest request) {
+		storeService.isBossOfStore(storeId, userId);
 		final StoreEntity store = storeService.updateGpsSettings(storeId, request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
 		return GpsSettingsResponse.fromEntity(store);
 	}

@@ -68,7 +68,7 @@ public class BossStoreController {
     public AttendanceSettingsResponse getAttendanceSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                             @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.getAttendanceSettings(userId, storeId);
+        return bossStoreFacade.getAttendanceSettings(storeId, userId);
     }
 
     @PostMapping("/{storeId}/attendance-settings")
@@ -76,28 +76,28 @@ public class BossStoreController {
                                                                @PathVariable Long storeId,
                                                                @RequestBody @Valid AttendanceSettingsRequest request) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.updateAttendanceSettings(userId, storeId, request);
+        return bossStoreFacade.updateAttendanceSettings(storeId, userId, request);
     }
 
     @GetMapping("/{storeId}/attendance-settings/qr")
     public QrCodeResponse getQrSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
                                         @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.getQrSettings(userId, storeId);
+        return bossStoreFacade.getQrSettings(storeId, userId);
     }
 
     @PostMapping("/{storeId}/attendance-settings/qr")
     public QrCodeResponse regenerateQrCode(@AuthenticationPrincipal CustomUserDetails userDetails,
                                            @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.regenerateQrCode(userId, storeId);
+        return bossStoreFacade.regenerateQrCode(storeId, userId);
     }
 
     @GetMapping("/{storeId}/attendance-settings/gps")
     public GpsSettingsResponse getGpsSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
                                               @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.getGpsSettings(userId, storeId);
+        return bossStoreFacade.getGpsSettings(storeId, userId);
     }
 
     @PostMapping("/{storeId}/attendance-settings/gps")
@@ -105,6 +105,6 @@ public class BossStoreController {
                                          @PathVariable Long storeId,
                                          @RequestBody @Valid GpsRegisterRequest request) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.updateGpsSettings(userId, storeId, request);
+        return bossStoreFacade.updateGpsSettings(storeId, userId, request);
     }
 }
