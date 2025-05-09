@@ -9,6 +9,7 @@ import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
+import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import org.springframework.stereotype.Service;
 
@@ -163,6 +164,11 @@ public class AttendanceService {
         validateClockedOut(attendance);
         attendanceRepository.delete(attendance);
         scheduleRepository.delete(schedule);
+    }
+
+    @Transactional(readOnly = true)
+    public List<StaffAttendanceCountProjection> getAttendanceCountsByStaffIds(final List<Long> staffIds) {
+        return attendanceRepository.findAttendanceCountsByStaffIds(staffIds);
     }
 }
 

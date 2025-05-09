@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.AttendanceJpaRepository;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
+import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -43,4 +44,10 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     public void delete(final AttendanceEntity attendance) {
         attendanceJpaRepository.delete(attendance);
     }
+
+    @Override
+    public List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds) {
+        return attendanceJpaRepository.findAttendanceCountsByStaffIds(staffIds);
+    }
+
 }
