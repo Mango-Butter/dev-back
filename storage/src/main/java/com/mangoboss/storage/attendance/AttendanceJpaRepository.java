@@ -1,8 +1,10 @@
 package com.mangoboss.storage.attendance;
 
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
+import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -30,4 +32,16 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
                ORDER BY DATE(s.workDate)
             """)
     List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate end);
+
+    @Query("""
+                SELECT s.staff.id AS staffId,
+                    SUM(CASE WHEN a.clockInStatus = 'NORMAL' THEN 1 ELSE 0 END) AS normalCount,
+                    SUM(CASE WHEN a.clockInStatus = 'LATE' THEN 1 ELSE 0 END) AS lateCount,
+                    SUM(CASE WHEN a.clockInStatus = 'ABSENT' THEN 1 ELSE 0 END) AS absentCount
+                FROM ScheduleEntity s
+                LEFT JOIN AttendanceEntity a ON a.schedule.id = s.id
+                WHERE s.staff.id IN :staffIds
+                GROUP BY s.staff.id
+            """)
+    List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(@Param("staffIds") List<Long> staffIds);
 }

@@ -10,6 +10,8 @@ public interface RegularGroupRepository {
 
     List<RegularGroupEntity> findAllByStaffId(Long storeId);
 
+    List<RegularGroupEntity> findAllByStaffIds(List<Long> staffIds);
+
     RegularGroupEntity getById(Long id);
 
     void delete(RegularGroupEntity regularGroup);
