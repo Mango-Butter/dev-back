@@ -18,7 +18,7 @@ on:
 
 jobs:
   deploy-app:
-    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app') || github.ref == 'refs/heads/dev' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -109,7 +109,7 @@ jobs:
             docker compose up -d
 
   deploy-batch:
-    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'batch') || github.ref == 'refs/heads/dev' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'batch' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -203,7 +203,7 @@ jobs:
         run: ./gradlew :admin:clean :admin:build
 
       - name: Build admin Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}//${{ secrets.PROJECT_NAME }}-admin:latest ./admin
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:latest ./admin
 
 # TODO: admin api 만들고 설정 다시
 #      - name: Log in to Docker Hub
