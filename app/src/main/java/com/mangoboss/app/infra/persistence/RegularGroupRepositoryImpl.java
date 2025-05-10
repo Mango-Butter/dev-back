@@ -26,6 +26,11 @@ public class RegularGroupRepositoryImpl implements RegularGroupRepository {
     }
 
     @Override
+    public List<RegularGroupEntity> findAllByStaffIds(final List<Long> staffIds) {
+        return regularGroupJpaRepository.findAllByStaffIdIn(staffIds);
+    }
+
+    @Override
     public RegularGroupEntity getById(Long id) {
         return regularGroupJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.REGULAR_GROUP_NOT_FOUND));
