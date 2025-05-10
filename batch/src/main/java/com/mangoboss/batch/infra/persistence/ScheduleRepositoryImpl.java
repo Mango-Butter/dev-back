@@ -19,7 +19,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public List<ScheduleEntity> findAllSchedulesWithoutClockOut() {
         LocalDateTime oneHourAgo = LocalDateTime.now(clock).minusHours(1);
-        System.out.println(oneHourAgo);
         return scheduleJpaRepository.findAllSchedulesWithoutClockOut(oneHourAgo);
     }
 }
