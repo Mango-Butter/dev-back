@@ -3,10 +3,10 @@ spring:
     activate:
       on-profile: mysql-dev
   datasource:
-    url: ${DB_URL}
+    url: ${MYSQL_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     hibernate:
