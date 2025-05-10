@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: batch
+    datasource:
+        url: ${MYSQL_URL}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: ${MYSQL_USERNAME}
+        password: ${MYSQL_PASSWORD}
+    jpa:
+        hibernate:
+            ddl-auto: create
+        show-sql: true
+    sql:
+        init:
+            mode: always
+logging:
+    level:
+        org.hibernate.SQL: DEBUG
+        org.hibernate.stat: DEBUG
+
+server:
+    port: 8081
