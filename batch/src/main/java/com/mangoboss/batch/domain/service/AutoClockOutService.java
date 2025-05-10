@@ -24,11 +24,8 @@ public class AutoClockOutService {
 
     @Transactional
     public void autoClockOut() {
-        System.out.println("scheduler");
         List<ScheduleEntity> schedules = scheduleRepository.findAllSchedulesWithoutClockOut();
-        System.out.println(schedules.size());
         List<AttendanceEntity> attendances = schedules.stream().map(schedule -> {
-            System.out.println(schedule.getEndTime());
             if (schedule.getAttendance() == null) {
                 return recordAbsentAttendance(schedule);
             }
