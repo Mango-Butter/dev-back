@@ -68,9 +68,10 @@ public class AttendanceEntity extends BaseTimeEntity {
         return this.clockOutStatus != null;
     }
 
-    public void recordClockOut(LocalDateTime time, ClockOutStatus clockOutStatus) {
+    public AttendanceEntity recordClockOut(LocalDateTime time, ClockOutStatus clockOutStatus) {
         this.clockOutTime = time;
         this.clockOutStatus = clockOutStatus;
+        return this;
     }
 
     public AttendanceEntity update(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
