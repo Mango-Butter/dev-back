@@ -44,9 +44,9 @@ jobs:
       - name: Build app module
         run: ./gradlew :app:clean :app:build
         env: 
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_URL: ${{ secrets.MYSQL_URL }}
+          DB_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_ACCESS_EXPIRATION: ${{ secrets.JWT_ACCESS_EXPIRATION }}
           JWT_REFRESH_EXPIRATION: ${{ secrets.JWT_REFRESH_EXPIRATION }}
@@ -69,9 +69,9 @@ jobs:
       - name: SSH and pull Docker image on EC2
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.DEV_AWS_EC2_HOST }}
-          username: ${{ secrets.DEV_AWS_EC2_USERNAME }}
-          key: ${{ secrets.DEV_AWS_EC2_SSH_KEY }}
+          host: ${{ secrets.DEV_EC2_APP_HOST }}
+          username: ${{ secrets.DEV_EC2_APP_USERNAME }}
+          key: ${{ secrets.DEV_EC2_SSH_KEY }}
           port: 22
           script: |
             cd /home/ubuntu/workspace
@@ -79,16 +79,13 @@ jobs:
             touch .env
             echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> .env
             echo "MYSQL_DATABASE=${{ secrets.PROJECT_NAME }}" >> .env
-            echo "MYSQL_USER=admin" >> .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_USERNAME }}" >> .env
             echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-            echo "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${{ secrets.PROJECT_NAME }}" >> .env
-            echo "SPRING_DATASOURCE_USERNAME=admin" >> .env
+            echo "SPRING_DATASOURCE_URL=${{ secrets.MYSQL_URL }}" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_USERNAME }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
             echo "TEST_ENV_VAR=${{ secrets.TEST_ENV_VAR }}" >> .env
             echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
-            echo "DB_URL=${{ secrets.DB_URL }}" >> .env
-            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}" >> .env
             echo "JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}" >> .env
@@ -109,6 +106,73 @@ jobs:
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
             docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:latest
+            docker compose up -d
+
+  deploy-batch:
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'batch') || github.ref == 'refs/heads/dev' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build batch module
+        run: ./gradlew :batch:clean :batch:build
+        env:
+          DB_URL: ${{ secrets.MYSQL_URL }}
+          DB_USERNAME: ${{ secrets.MYSQL_BATCH_USERNAME }}
+          DB_PASSWORD: ${{ secrets.MYSQL_BATCH_PASSWORD }}
+
+      - name: Build batch Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest ./batch
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push app Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest
+
+      - name: SSH and pull Docker image on EC2
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.DEV_EC2_BATCH_HOST }}
+          username: ${{ secrets.DEV_EC2_BATCH_USERNAME }}
+          key: ${{ secrets.DEV_EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/workspace
+            rm .env
+            touch .env
+            echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> .env
+            echo "MYSQL_DATABASE=${{ secrets.PROJECT_NAME }}" >> .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_BATCH_USERNAME }}" >> .env
+            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_BATCH_PASSWORD }}" >> .env
+            echo "SPRING_DATASOURCE_URL=${{ secrets.MYSQL_URL }}" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_BATCH_USERNAME }}" >> .env
+            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_BATCH_PASSWORD }}" >> .env
+            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            docker compose down -v
+            docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest
             docker compose up -d
 
   deploy-admin:
