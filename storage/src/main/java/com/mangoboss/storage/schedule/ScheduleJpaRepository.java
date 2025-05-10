@@ -2,8 +2,10 @@ package com.mangoboss.storage.schedule;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +25,10 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
     Optional<ScheduleEntity> findByIdAndAttendanceIsNotNull(Long id);
 
     List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
+
+    @Query("SELECT s FROM ScheduleEntity s " +
+            "LEFT JOIN s.attendance a " +
+            "WHERE s.endTime <= :oneHourAgo " +
+            "AND (a.clockOutStatus is NULL OR a is NULL) ")
+    List<ScheduleEntity> findAllSchedulesWithoutClockOut(LocalDateTime oneHourAgo);
 }
