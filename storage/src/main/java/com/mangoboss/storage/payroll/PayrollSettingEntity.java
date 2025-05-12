@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -15,5 +18,17 @@ public class PayrollSettingEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Boolean autoTransferEnabled = false;
+
+    private Integer transfer_date;
+
+    @Column(nullable = false)
     private Integer overtimeLimit;
+
+    @Column(nullable = false)
+    private Integer deduction_unit = 0;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transfer_account_id", nullable = false)
+    private TransferAccountEntity transferAccountEntity;
 }
