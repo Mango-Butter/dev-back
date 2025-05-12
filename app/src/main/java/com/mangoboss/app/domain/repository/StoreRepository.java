@@ -20,4 +20,7 @@ public interface StoreRepository {
     StoreEntity getById(Long id);
 
     List<StoreEntity> findAllByBossId(Long bossId);
+
+    List<StoreEntity> findAllByUserId(Long userId);
+
 }

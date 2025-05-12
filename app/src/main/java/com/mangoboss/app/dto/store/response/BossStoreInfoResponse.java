@@ -5,7 +5,7 @@ import com.mangoboss.storage.store.StoreType;
 import lombok.Builder;
 
 @Builder
-public record StoreInfoResponse(
+public record BossStoreInfoResponse(
         Long storeId,
         String storeName,
         String businessNumber,
@@ -13,8 +13,8 @@ public record StoreInfoResponse(
         String address,
         String inviteCode
 ) {
-    public static StoreInfoResponse fromEntity(final StoreEntity store) {
-        return StoreInfoResponse.builder()
+    public static BossStoreInfoResponse fromEntity(final StoreEntity store) {
+        return BossStoreInfoResponse.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
                 .businessNumber(store.getBusinessNumber())

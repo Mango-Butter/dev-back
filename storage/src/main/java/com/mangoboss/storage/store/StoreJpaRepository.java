@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface StoreJpaRepository extends JpaRepository<StoreEntity, Long> {
     boolean existsByBusinessNumber(String businessNumber);
@@ -17,4 +19,9 @@ public interface StoreJpaRepository extends JpaRepository<StoreEntity, Long> {
     boolean existsByIdAndBossId(Long id, Long userId);
 
     List<StoreEntity> findAllByBossId(Long bossId);
+
+    @Query("""
+        SELECT st.store FROM StaffEntity st WHERE st.user.id = :userId
+    """)
+    List<StoreEntity> findAllByUserId(@Param("userId") Long userId);
 }

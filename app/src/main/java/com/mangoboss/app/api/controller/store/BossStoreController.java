@@ -37,14 +37,14 @@ public class BossStoreController {
     }
 
     @GetMapping
-    public ListWrapperResponse<StoreListResponse> getMyStores(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ListWrapperResponse<BossStoreInfoResponse> getMyStores(@AuthenticationPrincipal CustomUserDetails userDetails) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossStoreFacade.getMyStores(userId));
     }
 
     @GetMapping("/{storeId}/store-info")
-    public StoreInfoResponse getStoreInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                          @PathVariable final Long storeId) {
+    public BossStoreInfoResponse getStoreInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @PathVariable final Long storeId) {
         final Long userId = userDetails.getUserId();
         return bossStoreFacade.getStoreInfo(userId, storeId);
     }
