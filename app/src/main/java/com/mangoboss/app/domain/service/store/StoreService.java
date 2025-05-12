@@ -129,4 +129,9 @@ public class StoreService {
         final StoreEntity store = getStoreById(storeId);
         return store.updateAttendanceMethod(method);
     }
+
+    @Transactional(readOnly = true)
+    public List<StoreEntity> getStoresByUserId(final Long userId) {
+        return storeRepository.findAllByUserId(userId);
+    }
 }

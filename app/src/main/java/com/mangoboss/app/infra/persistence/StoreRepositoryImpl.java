@@ -61,4 +61,9 @@ public class StoreRepositoryImpl implements StoreRepository {
         return storeJpaRepository.findAllByBossId(bossId);
     }
 
+    @Override
+    public List<StoreEntity> findAllByUserId(final Long userId) {
+        return storeJpaRepository.findAllByUserId(userId);
+    }
+
 }

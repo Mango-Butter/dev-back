@@ -5,11 +5,14 @@ import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.store.request.StaffJoinRequest;
 import com.mangoboss.app.dto.store.response.StaffJoinResponse;
+import com.mangoboss.app.dto.store.response.StaffStoreInfoResponse;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +27,18 @@ public class StaffStoreFacade {
         final StoreEntity store = storeService.getStoreByInviteCode(request.inviteCode());
         staffService.createStaff(user, store);
         return StaffJoinResponse.fromEntity(store);
+    }
+
+    public List<StaffStoreInfoResponse> getMyStores(final Long userId) {
+        final List<StoreEntity> stores = storeService.getStoresByUserId(userId);
+        return stores.stream()
+                .map(StaffStoreInfoResponse::fromEntity)
+                .toList();
+    }
+
+    public StaffStoreInfoResponse getStoreInfo(final Long storeId, final Long userId) {
+        staffService.getStaffBelongsToStore(storeId, userId);
+        final StoreEntity store = storeService.getStoreById(storeId);
+        return StaffStoreInfoResponse.fromEntity(store);
     }
 }
