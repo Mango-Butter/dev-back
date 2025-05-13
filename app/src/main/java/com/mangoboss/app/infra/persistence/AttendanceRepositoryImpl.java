@@ -51,7 +51,7 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     }
 
     @Override
-    public List<AttendanceEntity> findByStoreIdAndStaffIdAndWorkDateBetween(final Long storeId, final Long staffId, final LocalDate start, final LocalDate end) {
-        return attendanceJpaRepository.findByStoreIdAndStaffIdAndWorkDateBetween(storeId, staffId, start, end);
+    public List<AttendanceEntity> findByStaffIdAndWorkDateBetween(final Long staffId, final LocalDate start, final LocalDate end) {
+        return attendanceJpaRepository.findByStaffIdAndWorkDateBetween(staffId, start, end);
     }
 }

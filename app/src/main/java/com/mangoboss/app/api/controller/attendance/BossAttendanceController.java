@@ -55,8 +55,8 @@ public class BossAttendanceController {
     public List<AttendanceDetailResponse> getAttendancesByStaffAndDateRange(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                             @PathVariable Long storeId,
                                                                             @PathVariable Long staffId,
-                                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-                                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+                                                                            @RequestParam LocalDate start,
+                                                                            @RequestParam LocalDate end) {
         final Long userId = userDetails.getUserId();
         return bossAttendanceFacade.getAttendancesByStaffAndDateRange(storeId, staffId, userId, start, end);
     }

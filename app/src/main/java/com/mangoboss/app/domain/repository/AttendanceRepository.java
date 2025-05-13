@@ -21,5 +21,5 @@ public interface AttendanceRepository {
 
     List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds);
 
-    List<AttendanceEntity> findByStoreIdAndStaffIdAndWorkDateBetween(Long storeId, Long staffId, LocalDate start, LocalDate end);
+    List<AttendanceEntity> findByStaffIdAndWorkDateBetween(Long staffId, LocalDate start, LocalDate end);
 }

@@ -172,8 +172,8 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public List<AttendanceEntity> getAttendancesByStaffAndDateRange(final Long storeId, final Long staffId, final LocalDate start, final LocalDate end) {
-        return attendanceRepository.findByStoreIdAndStaffIdAndWorkDateBetween(storeId, staffId, start, end);
+    public List<AttendanceEntity> getAttendancesByStaffAndDateRange(final Long staffId, final LocalDate start, final LocalDate end) {
+        return attendanceRepository.findByStaffIdAndWorkDateBetween(staffId, start, end);
     }
 }
 
