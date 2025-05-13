@@ -27,6 +27,8 @@ public enum CustomErrorInfo {
     INVALID_BANK_NAME(400, "유효한 은행을 선택해 주세요.", 400019),
     NOT_OWNER_ACCOUNT(400, "입력한 계좌는 본인의 계좌가 아닙니다.", 400020),
     INVALID_ACCOUNT(400, "유효하지 않은 계좌입니다.", 400021),
+    TRANSFER_ACCOUNT_REQUIRED(400, "자동 송금을 설정하려면 계좌를 등록해야 합니다.", 400022),
+    TRANSFER_DATE_REQUIRED(400, "자동 송금을 설정하려면 급여 지급일을 등록해야 합니다.", 400023),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

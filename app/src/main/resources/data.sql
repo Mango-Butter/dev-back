@@ -1,6 +1,6 @@
 INSERT INTO user (user_id, email, name, password, phone, kakao_id, birth, profile_image_url, role, created_at,
                   modified_at)
-VALUES (1, 'test1@ajou.ac.kr', '망사장', null, '010-1234-5678', '11111111', '2000-02-13',
+VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111', '2000-02-13',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
         'BOSS', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 'test2@ajou.ac.kr', '망알바', null, '010-2312-1111', '22222222', '2006-05-11',
@@ -21,6 +21,11 @@ VALUES (1, 1, '망고쥬스', '경기도 수원시 영통구 월드컵로 206', 
         'JUADEFSE2392', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (3, 1, '욕할머니부대찌개', '경기도 고양시 일산서구 성저로 92', '1953100092', 'RESTAURANT', 'BJJ38L', 'QR', 15, 37.685024, 126.757285,
         'KOP22WT78JUC', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, overtime_limit, deduction_unit,
+                             transfer_account_id, store_id)
+VALUES (1, false, 0, 0, null, 1);
+
 
 INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, created_at, modified_at)
 VALUES (1, 2, 1, '망알바',
