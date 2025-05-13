@@ -46,4 +46,10 @@ public class BossStaffFacade {
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
         return staffs.stream().map(StaffSimpleResponse::fromEntity).toList();
     }
+
+    public StaffSimpleResponse getStaffDetail(final Long storeId, final Long staffId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+        return StaffSimpleResponse.fromEntity(staff);
+    }
 }

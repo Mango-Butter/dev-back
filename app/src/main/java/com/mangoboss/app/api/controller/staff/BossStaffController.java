@@ -51,4 +51,12 @@ public class BossStaffController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossStaffFacade.getStaffsForStore(storeId, userId));
     }
+
+    @GetMapping("/{staffId}")
+    public StaffSimpleResponse getStaffDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @PathVariable Long storeId,
+                                              @PathVariable Long staffId) {
+        final Long userId = userDetails.getUserId();
+        return bossStaffFacade.getStaffDetail(storeId, staffId, userId);
+    }
 }
