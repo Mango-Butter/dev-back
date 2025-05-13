@@ -35,11 +35,6 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     @Override
-    public boolean existsByIdAndBossId(final Long storeId, final Long userId) {
-        return storeJpaRepository.existsByIdAndBossId(storeId, userId);
-    }
-
-    @Override
     public StoreEntity save(final StoreEntity storeEntity) {
         return storeJpaRepository.save(storeEntity);
     }
@@ -53,12 +48,18 @@ public class StoreRepositoryImpl implements StoreRepository {
     @Override
     public StoreEntity getById(final Long id) {
         return storeJpaRepository.findById(id)
-                .orElseThrow(()->new CustomException(CustomErrorInfo.STORE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.STORE_NOT_FOUND));
     }
 
     @Override
     public List<StoreEntity> findAllByBossId(final Long bossId) {
         return storeJpaRepository.findAllByBossId(bossId);
+    }
+
+    @Override
+    public StoreEntity getByIdAndBossId(final Long id, final Long bossId) {
+        return storeJpaRepository.findByIdAndBossId(id, bossId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.NOT_STORE_BOSS));
     }
 
     @Override

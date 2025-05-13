@@ -11,8 +11,6 @@ public interface StoreRepository {
 
     boolean existsByAttendanceQrCode(String qrCode);
 
-    boolean existsByIdAndBossId(Long id, Long userId);
-
     StoreEntity save(StoreEntity storeEntity);
 
     StoreEntity getByInviteCode(String inviteCode);
@@ -20,6 +18,8 @@ public interface StoreRepository {
     StoreEntity getById(Long id);
 
     List<StoreEntity> findAllByBossId(Long bossId);
+
+    StoreEntity getByIdAndBossId(Long id, Long bossId);
 
     List<StoreEntity> findAllByUserId(Long userId);
 
