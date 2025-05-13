@@ -6,6 +6,7 @@ import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,5 +31,12 @@ public class BossPayrollController {
                                             @PathVariable Long storeId, @RequestBody @Valid PayrollSettingRequest request) {
         final Long userId = userDetails.getUserId();
         bossPayrollFacade.updatePayrollSettings(storeId, userId, request);
+    }
+
+    @GetMapping("/settings")
+    public PayrollSettingResponse getPayrollSettings(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                     @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossPayrollFacade.getPayrollSettings(storeId, userId);
     }
 }

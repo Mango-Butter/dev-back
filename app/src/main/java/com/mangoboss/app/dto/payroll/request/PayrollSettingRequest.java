@@ -1,5 +1,6 @@
 package com.mangoboss.app.dto.payroll.request;
 
+import com.mangoboss.app.dto.payroll.DeductionUnit;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Builder;

@@ -8,6 +8,7 @@ import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.TransferAccountEntity;
 import com.mangoboss.storage.store.StoreEntity;
@@ -37,6 +38,11 @@ public class BossPayrollFacade {
                 request.transferDate(),
                 request.overtimeLimit(),
                 request.deductionUnit().getValue());
+    }
+
+    public PayrollSettingResponse getPayrollSettings(final Long storeId, final Long userId) {
+        final StoreEntity store = storeService.isBossOfStore(storeId, userId);
+        return PayrollSettingResponse.fromEntity(store.getPayrollSetting());
     }
 }
 
