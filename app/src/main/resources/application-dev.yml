@@ -68,3 +68,11 @@ contract:
 pre-signed-url:
   view-expiration-minutes: ${VIEW_EXPIRATION_MINUTES:10}
   download-expiration-minutes: ${DOWNLOAD_EXPIRATION_MINUTES:10}
+
+external:
+  nh:
+    base-url: ${NH_BASE_URL}
+    access-token: ${NH_ACCESS_TOKEN}
+    iscd : ${NH_ISCD}
+    fintech-apsno: ${NH_FINTECH_APSNO}
+    api-svc-cd: ${NH_API_SVC_CD}
