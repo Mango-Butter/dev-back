@@ -11,7 +11,7 @@ public record AccountRegisterResponse(
 ) {
     public static AccountRegisterResponse fromEntity(final TransferAccountEntity transferAccount) {
         return AccountRegisterResponse.builder()
-                .bankName(transferAccount.getBankCode().getName())
+                .bankName(transferAccount.getBankCode().getDisplayName())
                 .accountHolder(transferAccount.getAccountHolder())
                 .accountNumber(transferAccount.getAccountNumber())
                 .build();
