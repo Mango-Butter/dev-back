@@ -31,10 +31,8 @@ public class StoreService {
     private final ExternalBusinessApiClient externalBusinessApiClient;
 
     @Transactional(readOnly = true)
-    public void isBossOfStore(final Long storeId, final Long userId){
-        if(!storeRepository.existsByIdAndBossId(storeId,userId)){
-            throw new CustomException(CustomErrorInfo.NOT_STORE_BOSS);
-        }
+    public StoreEntity isBossOfStore(final Long storeId, final Long userId){
+        return storeRepository.getByIdAndBossId(storeId, userId);
     }
 
     @Transactional(readOnly = true)
@@ -80,7 +78,6 @@ public class StoreService {
     }
 
     private String generateQrCode() {
-        // 중복 방지를 위해 QR 코드를 생성하고 DB에 존재하는지 검사
         String code;
         do {
             code = randomString(QR_CODE_LENGTH);

@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.store;
 
+import com.mangoboss.app.domain.service.payroll.PayrollSettingService;
 import com.mangoboss.app.dto.store.response.*;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
 
@@ -15,6 +16,7 @@ import com.mangoboss.storage.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,11 +26,14 @@ import java.util.List;
 public class BossStoreFacade {
 	private final StoreService storeService;
 	private final UserService userService;
+	private final PayrollSettingService payrollSettingService;
 
+	@Transactional
 	public StoreCreateResponse createStore(final Long userId, final StoreCreateRequest request) {
 		final UserEntity boss = userService.getUserById(userId);
 		storeService.validateBusinessNumber(request.businessNumber());
 		final StoreEntity saved = storeService.createStore(request, boss);
+		payrollSettingService.initPayrollSettingForStore(saved);
 		return StoreCreateResponse.fromEntity(saved);
 	}
 
@@ -44,8 +49,7 @@ public class BossStoreFacade {
 	}
 
 	public BossStoreInfoResponse getStoreInfo(final Long storeId, final Long userId) {
-		storeService.isBossOfStore(storeId, userId);
-		final StoreEntity store = storeService.getStoreById(storeId);
+		final StoreEntity store = storeService.isBossOfStore(storeId, userId);
 		return BossStoreInfoResponse.fromEntity(store);
 	}
 
