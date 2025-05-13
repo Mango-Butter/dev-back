@@ -13,6 +13,9 @@ import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BossAttendanceFacade {
@@ -50,5 +53,12 @@ public class BossAttendanceFacade {
     public void deleteAttendance(final Long storeId, final Long bossId, final Long scheduleId) {
         storeService.isBossOfStore(storeId, bossId);
         attendanceService.deleteAttendanceWithSchedule(scheduleId);
+    }
+
+    public List<AttendanceDetailResponse> getAttendancesByStaffAndDateRange(final Long storeId, final Long staffId, final Long bossId,
+                                                                            final LocalDate start, final LocalDate end) {
+        storeService.isBossOfStore(storeId, bossId);
+        final List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(storeId, staffId, start, end);
+        return attendances.stream().map(AttendanceDetailResponse::fromEntity).toList();
     }
 }

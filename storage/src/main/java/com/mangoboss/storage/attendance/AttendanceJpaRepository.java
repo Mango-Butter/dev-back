@@ -44,4 +44,18 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
                 GROUP BY s.staff.id
             """)
     List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(@Param("staffIds") List<Long> staffIds);
+
+    @Query("""
+                SELECT a FROM AttendanceEntity a
+                WHERE a.schedule.storeId = :storeId
+                  AND a.schedule.staff.id = :staffId
+                  AND a.schedule.workDate BETWEEN :start AND :end
+                ORDER BY a.schedule.workDate ASC
+            """)
+    List<AttendanceEntity> findByStoreIdAndStaffIdAndWorkDateBetween(
+            @Param("storeId") Long storeId,
+            @Param("staffId") Long staffId,
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end
+    );
 }
