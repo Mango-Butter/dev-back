@@ -14,8 +14,8 @@ public enum CustomErrorInfo {
     ILLEGAL_ARGUMENT_TOKEN(400, "토큰 형식이 잘못되었습니다.", 400006),
     KAKAO_USER_INFO_INCOMPLETE(400, "카카오에서 받아오는 정보 중 일부가 누락되었습니다.", 400007),
     INVALID_BUSINESS_NUMBER(400, "유효하지 않은 사업자등록번호입니다.", 400008),
-    INVALID_SCHEDULE_TIME(400,"스케줄은 16시간을 초과하여 등록할 수 없습니다.",400009),
-    INVALID_REGULAR_DATE(400,"반복 날짜가 유효하지 않습니다.",400010),
+    INVALID_SCHEDULE_TIME(400, "스케줄은 16시간을 초과하여 등록할 수 없습니다.", 400009),
+    INVALID_REGULAR_DATE(400, "반복 날짜가 유효하지 않습니다.", 400010),
     INVALID_QR_CODE(400, "유효하지 않은 QR 코드입니다.", 400011),
     INVALID_GPS_TIME(400, "위치 정보 유효 시간이 지났습니다.", 400012),
     GPS_OUT_OF_RANGE(400, "출근 반경을 벗어났습니다.", 400013),
@@ -24,6 +24,9 @@ public enum CustomErrorInfo {
     NOT_CLOCKED_IN_YET(400, "아직 출근하지 않았습니다. 먼저 출근을 해주세요.", 400016),
     DECRYPTION_FAILED(400, "데이터 복호화에 실패했습니다.", 400017),
     JSON_PARSE_FAILED(400, "JSON 파싱에 실패했습니다.", 400018),
+    INVALID_BANK_NAME(400, "유효한 은행을 선택해 주세요.", 400019),
+    NOT_OWNER_ACCOUNT(400, "입력한 계좌는 본인의 계좌가 아닙니다.", 400020),
+    INVALID_ACCOUNT(400, "유효하지 않은 계좌입니다.", 400021),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -33,8 +36,8 @@ public enum CustomErrorInfo {
     UNSUPPORTED_TOKEN(401, "지원되지 않는 토큰입니다.", 401005),
 
     // 403 FORBIDDEN
-    NOT_STORE_BOSS(403,"이 매장의 사장이 아닙니다.",403001),
-    NOT_STORE_STAFF(403,"이 매장의 알바생이 아닙니다.",403002),
+    NOT_STORE_BOSS(403, "이 매장의 사장이 아닙니다.", 403001),
+    NOT_STORE_STAFF(403, "이 매장의 알바생이 아닙니다.", 403002),
     SCHEDULE_NOT_BELONG_TO_STAFF(403, "스케줄이 해당 알바생의 것이 아닙니다.", 403003),
     ATTENDANCE_NOT_BELONG_TO_STAFF(403, "근태 기록이 해당 알바생의 것이 아닙니다.", 403004),
     CONTRACT_NOT_BELONG_TO_STAFF(403, "이 근로계약서는 해당 알바생의 것이 아닙니다.", 403005),
@@ -43,11 +46,11 @@ public enum CustomErrorInfo {
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
     INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
-    STAFF_NOT_FOUND(404,"해당하는 알바생이 없습니다.",404004),
-    STORE_NOT_FOUND(404,"해당하는 매장이 없습니다.",404005),
+    STAFF_NOT_FOUND(404, "해당하는 알바생이 없습니다.", 404004),
+    STORE_NOT_FOUND(404, "해당하는 매장이 없습니다.", 404005),
     CONTRACT_NOT_FOUND(404, "해당하는 근로계약서를 찾을 수 없습니다.", 404006),
-    SCHEDULE_NOT_FOUND(404,"해당하는 스케줄이 없습니다.",404006),
-    REGULAR_GROUP_NOT_FOUND(404,"해당하는 고정 근무 그룹이 없습니다.",404007),
+    SCHEDULE_NOT_FOUND(404, "해당하는 스케줄이 없습니다.", 404006),
+    REGULAR_GROUP_NOT_FOUND(404, "해당하는 고정 근무 그룹이 없습니다.", 404007),
     ATTENDANCE_NOT_FOUND(404, "근태 정보가 없습니다.", 404008),
 
     // 405 Method Not Allowed
@@ -56,7 +59,7 @@ public enum CustomErrorInfo {
     // 409 CONFLICT
     ALREADY_SIGNED_UP(409, "이미 가입된 사용자입니다.", 409001),
     DUPLICATE_BUSINESS_NUMBER(409, "이미 망고보스에 등록된 사업자등록번호입니다.", 409002),
-    ALREADY_JOIN_STAFF(409,"이미 매장에 가입한 알바생입니다.",409003),
+    ALREADY_JOIN_STAFF(409, "이미 매장에 가입한 알바생입니다.", 409003),
     ALREADY_CLOCKED_IN(409, "이미 출근 처리된 스케줄입니다.", 409004),
     ALREADY_CLOCKED_OUT(409, "이미 퇴근 처리된 스케줄입니다.", 409005),
     EARLY_CLOCK_IN(409, "근무시작 10분 전부터 출근할 수 있습니다.", 409006),
@@ -74,7 +77,8 @@ public enum CustomErrorInfo {
     SIGNATURE_IMAGE_DOWNLOAD_FAILED(500, "서명 이미지 다운로드 실패", 500006),
     JSON_CONVERT_FAILED(500, "JSON 문자열 변환에 실패했습니다.", 500007),
     S3_OBJECT_FETCH_FAILED(500, "S3 객체 조회에 실패했습니다.", 500008),
-    TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009);
+    TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009),
+    EXTERNAL_API_EXCEPTION(500, "외부 api에서 에러가 발생했습니다.", 500010);
 
     private final int statusCode;
     private final String message;
@@ -85,4 +89,4 @@ public enum CustomErrorInfo {
         this.message = message;
         this.detailStatusCode = detailStatusCode;
     }
-}
+    }
