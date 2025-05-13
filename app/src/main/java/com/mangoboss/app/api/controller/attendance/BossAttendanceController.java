@@ -7,9 +7,13 @@ import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/boss/stores/{storeId}/schedules")
@@ -45,5 +49,15 @@ public class BossAttendanceController {
                                                      @PathVariable Long storeId, @PathVariable Long scheduleId) {
         final Long userId = userDetails.getUserId();
         bossAttendanceFacade.deleteAttendance(storeId, userId, scheduleId);
+    }
+
+    @GetMapping("/staffs/{staffId}/attendances")
+    public List<AttendanceDetailResponse> getAttendancesByStaffAndDateRange(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                            @PathVariable Long storeId,
+                                                                            @PathVariable Long staffId,
+                                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+        final Long userId = userDetails.getUserId();
+        return bossAttendanceFacade.getAttendancesByStaffAndDateRange(storeId, staffId, userId, start, end);
     }
 }

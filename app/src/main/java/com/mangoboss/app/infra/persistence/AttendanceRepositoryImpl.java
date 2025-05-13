@@ -50,4 +50,8 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
         return attendanceJpaRepository.findAttendanceCountsByStaffIds(staffIds);
     }
 
+    @Override
+    public List<AttendanceEntity> findByStoreIdAndStaffIdAndWorkDateBetween(final Long storeId, final Long staffId, final LocalDate start, final LocalDate end) {
+        return attendanceJpaRepository.findByStoreIdAndStaffIdAndWorkDateBetween(storeId, staffId, start, end);
+    }
 }

@@ -170,5 +170,10 @@ public class AttendanceService {
     public List<StaffAttendanceCountProjection> getAttendanceCountsByStaffIds(final List<Long> staffIds) {
         return attendanceRepository.findAttendanceCountsByStaffIds(staffIds);
     }
+
+    @Transactional(readOnly = true)
+    public List<AttendanceEntity> getAttendancesByStaffAndDateRange(final Long storeId, final Long staffId, final LocalDate start, final LocalDate end) {
+        return attendanceRepository.findByStoreIdAndStaffIdAndWorkDateBetween(storeId, staffId, start, end);
+    }
 }
 

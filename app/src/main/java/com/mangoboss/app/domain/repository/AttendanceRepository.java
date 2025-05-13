@@ -20,4 +20,6 @@ public interface AttendanceRepository {
     void delete(AttendanceEntity attendance);
 
     List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds);
+
+    List<AttendanceEntity> findByStoreIdAndStaffIdAndWorkDateBetween(Long storeId, Long staffId, LocalDate start, LocalDate end);
 }
