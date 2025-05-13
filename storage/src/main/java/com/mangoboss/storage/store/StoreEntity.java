@@ -1,5 +1,6 @@
 package com.mangoboss.storage.store;
 
+import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.user.UserEntity;
 import jakarta.persistence.*;
 
@@ -56,6 +57,9 @@ public class StoreEntity extends BaseTimeEntity {
 
     @Column(nullable = false, unique = true)
     private String qrCode;
+
+    @OneToOne(mappedBy = "store", fetch = FetchType.LAZY)
+    private PayrollSettingEntity payrollSetting;
 
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,

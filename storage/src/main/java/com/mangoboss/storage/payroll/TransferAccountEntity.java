@@ -14,9 +14,11 @@ import lombok.NoArgsConstructor;
 public class TransferAccountEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transfer_id")
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BankCode bankCode;
 
     @Column(nullable = false)
@@ -26,7 +28,7 @@ public class TransferAccountEntity extends BaseTimeEntity {
     private String accountHolder;
 
     @Builder
-    public TransferAccountEntity(final BankCode bankCode, final String accountHolder, final String accountNumber) {
+    private TransferAccountEntity(final BankCode bankCode, final String accountHolder, final String accountNumber) {
         this.accountHolder = accountHolder;
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;

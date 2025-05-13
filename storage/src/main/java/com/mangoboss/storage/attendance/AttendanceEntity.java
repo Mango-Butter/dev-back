@@ -36,7 +36,7 @@ public class AttendanceEntity extends BaseTimeEntity {
     private ClockOutStatus clockOutStatus;
 
     @Builder
-    public AttendanceEntity(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
+    private AttendanceEntity(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
                             final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus, final ScheduleEntity schedule) {
         this.clockInTime = clockInTime;
         this.clockOutTime = clockOutTime;
