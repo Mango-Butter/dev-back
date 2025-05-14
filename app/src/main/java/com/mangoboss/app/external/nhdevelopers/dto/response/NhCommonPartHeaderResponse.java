@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.payroll.nhdevelopers.response;
+package com.mangoboss.app.external.nhdevelopers.dto.response;
 
 import lombok.Builder;
 

@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.payroll.nhdevelopers.reqeust;
+package com.mangoboss.app.external.nhdevelopers.dto.reqeust;
 
 import lombok.Getter;
 

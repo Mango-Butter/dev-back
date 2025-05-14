@@ -4,6 +4,7 @@ import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.PayrollSettingRepository;
 import com.mangoboss.app.domain.repository.TransferAccountRepository;
+import com.mangoboss.app.external.nhdevelopers.NhDevelopersClient;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
