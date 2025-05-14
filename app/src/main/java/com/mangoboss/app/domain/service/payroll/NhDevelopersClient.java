@@ -3,7 +3,7 @@ package com.mangoboss.app.domain.service.payroll;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.ApiName;
-import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NHDepositorAccountNumberRequest;
+import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhDepositorAccountNumberRequest;
 import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhCommonPartHeaderRequest;
 import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhHeaderFactory;
 import com.mangoboss.app.dto.payroll.nhdevelopers.response.NhDepositorAccountNumberResponse;
@@ -40,7 +40,7 @@ public class NhDevelopersClient {
 
     public String getVerifyAccountHolder(final String bankCode, final String accountNumber) {
         final NhCommonPartHeaderRequest requestHeader = headerFactory.create(ApiName.InquireDepositorAccountNumber, clock);
-        final NHDepositorAccountNumberRequest request = NHDepositorAccountNumberRequest.create(requestHeader, bankCode, accountNumber);
+        final NhDepositorAccountNumberRequest request = NhDepositorAccountNumberRequest.create(requestHeader, bankCode, accountNumber);
         try {
             final NhDepositorAccountNumberResponse response = webClient
                     .post()
