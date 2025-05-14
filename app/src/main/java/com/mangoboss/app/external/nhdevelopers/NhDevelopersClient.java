@@ -1,12 +1,12 @@
-package com.mangoboss.app.domain.service.payroll;
+package com.mangoboss.app.external.nhdevelopers;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
-import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.ApiName;
-import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhDepositorAccountNumberRequest;
-import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhCommonPartHeaderRequest;
-import com.mangoboss.app.dto.payroll.nhdevelopers.reqeust.NhHeaderFactory;
-import com.mangoboss.app.dto.payroll.nhdevelopers.response.NhDepositorAccountNumberResponse;
+import com.mangoboss.app.external.nhdevelopers.dto.reqeust.ApiName;
+import com.mangoboss.app.external.nhdevelopers.dto.reqeust.NhDepositorAccountNumberRequest;
+import com.mangoboss.app.external.nhdevelopers.dto.reqeust.NhCommonPartHeaderRequest;
+import com.mangoboss.app.external.nhdevelopers.dto.reqeust.NhHeaderFactory;
+import com.mangoboss.app.external.nhdevelopers.dto.response.NhDepositorAccountNumberResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
