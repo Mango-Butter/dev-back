@@ -40,7 +40,7 @@ jobs:
 
       - name: Build app module
         run: ./gradlew :app:clean :app:build
-        env: 
+        env:
           DB_URL: ${{ secrets.MYSQL_URL }}
           DB_USERNAME: ${{ secrets.MYSQL_USERNAME }}
           DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
@@ -99,6 +99,11 @@ jobs:
             echo "VIEW_EXPIRATION_MINUTES=${{ secrets.VIEW_EXPIRATION_MINUTES }}" >> .env
             echo "DOWNLOAD_EXPIRATION_MINUTES=${{ secrets.DOWNLOAD_EXPIRATION_MINUTES }}" >> .env
             echo "CONTRACT_TEMPLATE_PATH=${{ secrets.CONTRACT_TEMPLATE_PATH }}" >> .env
+            echo "NH_BASE_URL=${{ secrets.NH_BASE_URL }}" >> .env
+            echo "NH_ACCESS_TOKEN=${{ secrets.NH_ACCESS_TOKEN }}" >> .env
+            echo "NH_ISCD=${{ secrets.NH_ISCD }}" >> .env
+            echo "NH_FINTECH_APSNO=${{ secrets.NH_FINTECH_APSNO }}" >> .env
+            echo "NH_API_SVC_CD=${{ secrets.NH_API_SVC_CD }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
@@ -167,6 +172,12 @@ jobs:
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_BATCH_USERNAME }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_BATCH_PASSWORD }}" >> .env
             echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+            echo "NH_BASE_URL=${{ secrets.NH_BASE_URL }}" >> .env
+            echo "NH_ACCESS_TOKEN=${{ secrets.NH_ACCESS_TOKEN }}" >> .env
+            echo "NH_ISCD=${{ secrets.NH_ISCD }}" >> .env
+            echo "NH_FINTECH_APSNO=${{ secrets.NH_FINTECH_APSNO }}" >> .env
+            echo "NH_API_SVC_CD=${{ secrets.NH_API_SVC_CD }}" >> .env
+            
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
             docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest | grep -q . && docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:latest
