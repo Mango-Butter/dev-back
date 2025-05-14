@@ -41,7 +41,7 @@ public class NhDevelopersClient {
         final NhCommonPartHeaderRequest requestHeader = headerFactory.create(ApiName.InquireDepositorAccountNumber, clock);
         final NhDepositorAccountNumberRequest request = NhDepositorAccountNumberRequest.create(requestHeader, bankCode, accountNumber);
         try {
-            final NhDepositorAccountNumberResponse response = webClient
+            return webClient
                     .post()
                     .uri("/InquireDepositorAccountNumber.nh")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -49,7 +49,6 @@ public class NhDevelopersClient {
                     .retrieve()
                     .bodyToMono(NhDepositorAccountNumberResponse.class)
                     .block();
-            return response;
         } catch (WebClientResponseException e) {
             log.warn("NH API 통신 오류", e);
             throw new ExternalApiServerException("NH API 요청 실패", e);
