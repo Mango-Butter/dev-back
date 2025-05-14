@@ -1,7 +1,6 @@
 package com.mangoboss.app.external.nhdevelopers;
 
-import com.mangoboss.app.common.exception.CustomErrorInfo;
-import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.exception.ExternalApiServerException;
 import com.mangoboss.app.external.nhdevelopers.dto.reqeust.ApiName;
 import com.mangoboss.app.external.nhdevelopers.dto.reqeust.NhDepositorAccountNumberRequest;
 import com.mangoboss.app.external.nhdevelopers.dto.reqeust.NhCommonPartHeaderRequest;
@@ -38,7 +37,7 @@ public class NhDevelopersClient {
                 .build();
     }
 
-    public String getVerifyAccountHolder(final String bankCode, final String accountNumber) {
+    public NhDepositorAccountNumberResponse getVerifyAccountHolder(final String bankCode, final String accountNumber) {
         final NhCommonPartHeaderRequest requestHeader = headerFactory.create(ApiName.InquireDepositorAccountNumber, clock);
         final NhDepositorAccountNumberRequest request = NhDepositorAccountNumberRequest.create(requestHeader, bankCode, accountNumber);
         try {
@@ -50,12 +49,10 @@ public class NhDevelopersClient {
                     .retrieve()
                     .bodyToMono(NhDepositorAccountNumberResponse.class)
                     .block();
-            if(!response.Header().Rsms().equals("정상처리 되었습니다.")){
-                throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);
-            }
-            return response.Dpnm();
-        }catch (WebClientResponseException e){
-            throw new CustomException(CustomErrorInfo.EXTERNAL_API_EXCEPTION);
+            return response;
+        } catch (WebClientResponseException e) {
+            log.warn("NH API 통신 오류", e);
+            throw new ExternalApiServerException("NH API 요청 실패", e);
         }
     }
 }

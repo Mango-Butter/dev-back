@@ -5,6 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.PayrollSettingRepository;
 import com.mangoboss.app.domain.repository.TransferAccountRepository;
 import com.mangoboss.app.external.nhdevelopers.NhDevelopersClient;
+import com.mangoboss.app.external.nhdevelopers.dto.response.NhDepositorAccountNumberResponse;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.TransferAccountEntity;
@@ -25,7 +26,11 @@ public class PayrollSettingService {
     private final Clock clock;
 
     private void isBossAccount(final String bossName, final BankCode bankCode, final String accountNumber) {
-        final String realName = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
+        final NhDepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
+        if (!"정상처리 되었습니다.".equals(response.Header().Rsms())) {
+            throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);
+        }
+        final String realName = response.Dpnm();
         if (!realName.equals(bossName)) {
             throw new CustomException(CustomErrorInfo.NOT_OWNER_ACCOUNT);
         }
@@ -59,12 +64,12 @@ public class PayrollSettingService {
                                       final Integer overtimeLimit,
                                       final Integer deductionUnit) {
         updateAutoTransferEnabled(payrollSetting, autoTransferEnabled, transferDate)
-                .updatePayrollPolicy(overtimeLimit,deductionUnit);
+                .updatePayrollPolicy(overtimeLimit, deductionUnit);
     }
 
     private PayrollSettingEntity updateAutoTransferEnabled(final PayrollSettingEntity payrollSetting,
-                                           final Boolean autoTransferEnabled,
-                                           final Integer transferDate) {
+                                                           final Boolean autoTransferEnabled,
+                                                           final Integer transferDate) {
         if (autoTransferEnabled && transferDate == null) {
             throw new CustomException(CustomErrorInfo.TRANSFER_DATE_REQUIRED);
         }

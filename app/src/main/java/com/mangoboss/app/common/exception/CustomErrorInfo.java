@@ -80,7 +80,7 @@ public enum CustomErrorInfo {
     JSON_CONVERT_FAILED(500, "JSON 문자열 변환에 실패했습니다.", 500007),
     S3_OBJECT_FETCH_FAILED(500, "S3 객체 조회에 실패했습니다.", 500008),
     TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009),
-    EXTERNAL_API_EXCEPTION(500, "외부 api에서 에러가 발생했습니다.", 500010);
+    EXTERNAL_API_EXCEPTION(500, "현재 외부 인증 서비스에 문제가 있습니다. 잠시 후 다시 시도해주세요", 500010);
 
     private final int statusCode;
     private final String message;
