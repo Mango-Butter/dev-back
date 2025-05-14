@@ -1,5 +1,7 @@
 package com.mangoboss.app.dto.payroll;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -16,9 +18,8 @@ public enum DeductionUnit {
     }
 
     public static DeductionUnit getDeductionUnit(final Integer value) {
-        final Optional<DeductionUnit> deductionUnit = Arrays.stream(DeductionUnit.values())
+        return Arrays.stream(DeductionUnit.values())
                 .filter(d -> d.value.equals(value))
-                .findFirst();
-        return deductionUnit.orElse(null);
+                .findFirst().orElseThrow(()-> new CustomException(CustomErrorInfo.UNMAPPED_DEDUCTION_UNIT_EXCEPTION));
     }
 }

@@ -66,7 +66,7 @@ public class PayrollSettingEntity {
                 .build();
     }
 
-    public void setTransferAccountEntity(final TransferAccountEntity transferAccountEntity) {
+    public void registerTransferAccountEntity(final TransferAccountEntity transferAccountEntity) {
         this.transferAccountEntity = transferAccountEntity;
     }
 

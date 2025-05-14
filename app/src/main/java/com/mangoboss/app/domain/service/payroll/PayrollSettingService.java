@@ -20,6 +20,8 @@ import java.time.Clock;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PayrollSettingService {
+    private static final String SUCCESS_MESSAGE = "정상처리 되었습니다.";
+
     private final PayrollSettingRepository payrollSettingRepository;
     private final TransferAccountRepository transferAccountRepository;
     private final NhDevelopersClient nhDevelopersClient;
@@ -27,7 +29,7 @@ public class PayrollSettingService {
 
     private void isBossAccount(final String bossName, final BankCode bankCode, final String accountNumber) {
         final NhDepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
-        if (!"정상처리 되었습니다.".equals(response.Header().Rsms())) {
+        if (!response.Header().Rsms().equals(SUCCESS_MESSAGE)) {
             throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);
         }
         final String realName = response.Dpnm();
@@ -47,7 +49,7 @@ public class PayrollSettingService {
                 bossName,
                 accountNumber
         );
-        payrollSetting.setTransferAccountEntity(transferAccount);
+        payrollSetting.registerTransferAccountEntity(transferAccount);
         return transferAccountRepository.save(transferAccount);
     }
 

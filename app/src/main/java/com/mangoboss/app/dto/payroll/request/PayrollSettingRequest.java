@@ -17,6 +17,7 @@ public record PayrollSettingRequest(
 
         Integer overtimeLimit,
 
+        @NonNull
         DeductionUnit deductionUnit
 ) {
 }
