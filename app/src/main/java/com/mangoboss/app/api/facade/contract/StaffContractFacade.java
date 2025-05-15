@@ -41,7 +41,7 @@ public class StaffContractFacade {
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
 
-        final ContractData contractData = contractService.convertFromJson(contract.getContractDataJson());
+        final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
 
         applyRegularSchedulesFromContractData(contractData, staff, storeId);
 
@@ -69,7 +69,7 @@ public class StaffContractFacade {
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
 
-        final ContractData contractData = contractService.convertFromJson(contract.getContractDataJson());
+        final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
 
         final ViewPreSignedUrlResponse bossSigned = s3FileManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
 

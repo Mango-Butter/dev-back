@@ -2,7 +2,10 @@ package com.mangoboss.app.api.controller.contract;
 
 import com.mangoboss.app.api.facade.contract.BossContractFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.contract.request.ContractCreateRequest;
+import com.mangoboss.app.dto.contract.request.ContractTemplateCreateRequest;
+import com.mangoboss.app.dto.contract.request.ContractTemplateUpdateRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;
 import com.mangoboss.app.dto.contract.response.*;
 import jakarta.validation.Valid;
@@ -57,5 +60,45 @@ public class BossContractController {
                                                     @PathVariable Long contractId) {
         final Long userId = userDetails.getUserId();
         return bossContractFacade.getContractDetail(storeId, userId, contractId);
+    }
+
+    @PostMapping("/templates")
+    public ContractTemplateResponse createContractTemplate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                           @PathVariable Long storeId,
+                                                           @RequestBody @Valid ContractTemplateCreateRequest request) {
+        final Long userId = userDetails.getUserId();
+        return bossContractFacade.createContractTemplate(storeId, userId, request);
+    }
+
+    @GetMapping("/templates")
+    public ListWrapperResponse<ContractTemplateResponse> getAllContractTemplates(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                 @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossContractFacade.getAllContractTemplates(storeId, userId));
+    }
+
+    @GetMapping("/templates/{templateId}")
+    public ContractTemplateDetailResponse getContractTemplate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @PathVariable Long storeId,
+                                                              @PathVariable Long templateId) {
+        final Long userId = userDetails.getUserId();
+        return bossContractFacade.getContractTemplate(storeId, userId, templateId);
+    }
+
+    @PostMapping("/templates/{templateId}")
+    public ContractTemplateResponse updateContractTemplate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                           @PathVariable Long storeId,
+                                                           @PathVariable Long templateId,
+                                                           @RequestBody @Valid ContractTemplateUpdateRequest request) {
+        final Long userId = userDetails.getUserId();
+        return bossContractFacade.updateContractTemplate(storeId, userId, templateId, request);
+    }
+
+    @DeleteMapping("/templates/{templateId}")
+    public void deleteContractTemplate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                       @PathVariable Long storeId,
+                                       @PathVariable Long templateId) {
+        final Long userId = userDetails.getUserId();
+        bossContractFacade.deleteContractTemplate(storeId, userId, templateId);
     }
 }

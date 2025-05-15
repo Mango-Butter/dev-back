@@ -2,6 +2,7 @@ package com.mangoboss.app.api.facade.contract;
 
 import com.mangoboss.app.common.util.*;
 import com.mangoboss.app.domain.service.contract.ContractService;
+import com.mangoboss.app.domain.service.contract.ContractTemplateService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.domain.service.user.UserService;
@@ -12,9 +13,12 @@ import com.mangoboss.storage.contract.ContractEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.user.UserEntity;
+import com.mangoboss.storage.contract.ContractTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class BossContractFacade {
 
     private final ContractService contractService;
+    private final ContractTemplateService contractTemplateService;
     private final StoreService storeService;
     private final StaffService staffService;
     private final UserService userService;
@@ -60,7 +65,7 @@ public class BossContractFacade {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
 
-        final ContractData contractData = contractService.convertFromJson(contract.getContractDataJson());
+        final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
 
         final ViewPreSignedUrlResponse bossSigned = s3FileManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
 
@@ -69,5 +74,39 @@ public class BossContractFacade {
                 : ViewPreSignedUrlResponse.builder().url("").expiresAt(null).build();
 
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
+    }
+
+    public ContractTemplateResponse createContractTemplate(final Long storeId, final Long bossId, final ContractTemplateCreateRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        final String dataJson = contractService.convertToContractTemplateJson(request.contractTemplateData());
+        final ContractTemplate template = ContractTemplate.create(storeId, request.title(), dataJson);
+        final ContractTemplate saved = contractTemplateService.createContractTemplate(template);
+        return ContractTemplateResponse.fromEntity(saved);
+    }
+
+    public List<ContractTemplateResponse> getAllContractTemplates(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return contractTemplateService.getAllContractTemplates(storeId).stream()
+                .map(ContractTemplateResponse::fromEntity)
+                .toList();
+    }
+
+    public ContractTemplateDetailResponse getContractTemplate(final Long storeId, final Long bossId, final Long templateId) {
+        storeService.isBossOfStore(storeId, bossId);
+        final ContractTemplate template = contractTemplateService.getContractTemplateById(storeId, templateId);
+        final ContractTemplateData data = contractService.convertFromContractTemplateJson(template.getContractTemplateDataJson());
+        return ContractTemplateDetailResponse.of(template.getTitle(), data);
+    }
+
+    public ContractTemplateResponse updateContractTemplate(final Long storeId, final Long bossId, final Long templateId,
+                                                           final ContractTemplateUpdateRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        final ContractTemplate updated = contractTemplateService.updateContractTemplate(storeId, templateId, request.title(), request.contractTemplateData());
+        return ContractTemplateResponse.fromEntity(updated);
+    }
+
+    public void deleteContractTemplate(final Long storeId, final Long bossId, final Long templateId) {
+        storeService.isBossOfStore(storeId, bossId);
+        contractTemplateService.deleteContractTemplate(storeId, templateId);
     }
 }
