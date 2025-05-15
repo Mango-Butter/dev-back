@@ -2,16 +2,22 @@ package com.mangoboss.app.api.facade.contract;
 
 import com.mangoboss.app.common.util.*;
 import com.mangoboss.app.domain.service.contract.ContractService;
+import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.dto.contract.request.ContractData;
 import com.mangoboss.app.dto.contract.request.ContractSignRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;
+import com.mangoboss.app.dto.contract.request.WorkSchedule;
 import com.mangoboss.app.dto.contract.response.*;
 import com.mangoboss.storage.contract.ContractEntity;
+import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ public class StaffContractFacade {
 
     private final ContractService contractService;
     private final StaffService staffService;
+    private final ScheduleService scheduleService;
     private final S3FileManager s3FileManager;
 
     public SignatureUploadResponse uploadSignature(final Long storeId, final Long staffId, final SignatureUploadRequest request) {
@@ -30,9 +37,16 @@ public class StaffContractFacade {
 
     public ContractResponse signContract(final Long storeId, final Long contractId, final Long staffId, final ContractSignRequest contractSignRequest) {
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
+
+        final ContractData contractData = contractService.convertFromJson(contract.getContractDataJson());
+
+        applyRegularSchedulesFromContractData(contractData, staff, storeId);
+
         final ContractEntity signedContract = contractService.signByStaff(contractId, contractSignRequest.staffSignatureKey());
+
         return ContractResponse.fromEntity(signedContract);
     }
 
@@ -64,5 +78,22 @@ public class StaffContractFacade {
                 : ViewPreSignedUrlResponse.builder().url("").expiresAt(null).build();
 
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
+    }
+
+    private void applyRegularSchedulesFromContractData(final ContractData contractData, final StaffEntity staff, final Long storeId) {
+        final LocalDate startDate = contractData.contractStart();
+        final LocalDate originalEndDate = contractData.contractEnd();
+        final LocalDate limitedEndDate = originalEndDate.isAfter(startDate.plusYears(1))
+                ? startDate.plusYears(1)
+                : originalEndDate;
+
+        for (WorkSchedule workSchedule : contractData.workSchedules()) {
+            scheduleService.validateDate(startDate, limitedEndDate, workSchedule.startTime(), workSchedule.endTime());
+        }
+
+        final List<RegularGroupEntity> regularGroups =
+                contractService.extractRegularGroupsFromContract(contractData, staff, limitedEndDate);
+
+        scheduleService.createRegularGroupAndSchedules(regularGroups, storeId);
     }
 }
