@@ -9,6 +9,7 @@ import com.mangoboss.app.common.util.PdfGenerator;
 import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.ContractRepository;
 import com.mangoboss.app.dto.contract.request.ContractData;
+import com.mangoboss.app.dto.contract.request.ContractTemplateData;
 import com.mangoboss.storage.contract.ContractEntity;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;
@@ -52,7 +53,7 @@ public class ContractService {
 
         s3FileManager.upload(pdfBytes, fileKey, ContentType.PDF.getMimeType());
 
-        final String contractDataJson = convertToJson(contractData);
+        final String contractDataJson = convertToContractDataJson(contractData);
 
         final LocalDateTime now = LocalDateTime.now(clock);
         final ContractEntity contract = ContractEntity.create(staffId, fileKey, contractDataJson, now, bossSignatureKey, now);
@@ -62,7 +63,8 @@ public class ContractService {
     @Transactional
     public ContractEntity signByStaff(final Long contractId, final String staffSignatureKey) {
         final ContractEntity contract = getContractById(contractId);
-        final ContractData contractData = convertFromJson(contract.getContractDataJson());
+
+        final ContractData contractData = convertFromContractDataJson(contract.getContractDataJson());
 
         final byte[] pdfBytes = generateStaffSignedContractPdf(contractData, contract.getBossSignatureKey(), staffSignatureKey);
         final String existingFileKey = contract.getFileKey();
@@ -75,12 +77,20 @@ public class ContractService {
         return contractRepository.getContractById(contractId);
     }
 
-    public ContractData convertFromJson(final String contractDataJson) {
+    public ContractData convertFromContractDataJson(final String contractDataJson) {
         return JsonConverter.fromJson(contractDataJson, ContractData.class);
     }
 
-    public String convertToJson(final ContractData contractData) {
+    public String convertToContractDataJson(final ContractData contractData) {
         return JsonConverter.toJson(contractData);
+    }
+
+    public ContractTemplateData convertFromContractTemplateJson(final String json) {
+        return JsonConverter.fromJson(json, ContractTemplateData.class);
+    }
+
+    public String convertToContractTemplateJson(final ContractTemplateData data) {
+        return JsonConverter.toJson(data);
     }
 
     public void validateContractBelongsToStaff(final Long contractStaffId, final Long staffId) {
