@@ -10,12 +10,16 @@ import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.ContractRepository;
 import com.mangoboss.app.dto.contract.request.ContractData;
 import com.mangoboss.storage.contract.ContractEntity;
+import com.mangoboss.storage.schedule.RegularGroupEntity;
+import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,13 +62,12 @@ public class ContractService {
     @Transactional
     public ContractEntity signByStaff(final Long contractId, final String staffSignatureKey) {
         final ContractEntity contract = getContractById(contractId);
-
         final ContractData contractData = convertFromJson(contract.getContractDataJson());
 
         final byte[] pdfBytes = generateStaffSignedContractPdf(contractData, contract.getBossSignatureKey(), staffSignatureKey);
-
         final String existingFileKey = contract.getFileKey();
         s3FileManager.upload(pdfBytes, existingFileKey, ContentType.PDF.getMimeType());
+
         return contract.completeStaffSign(existingFileKey, staffSignatureKey, LocalDateTime.now(clock));
     }
 
@@ -84,6 +87,19 @@ public class ContractService {
         if (!contractStaffId.equals(staffId)) {
             throw new CustomException(CustomErrorInfo.CONTRACT_NOT_BELONG_TO_STAFF);
         }
+    }
+
+    public List<RegularGroupEntity> extractRegularGroupsFromContract(final ContractData contractData, final StaffEntity staff, final LocalDate limitedEndDate) {
+        return contractData.workSchedules().stream()
+                .map(ws -> RegularGroupEntity.create(
+                        ws.dayOfWeek(),
+                        ws.startTime(),
+                        ws.endTime(),
+                        contractData.contractStart(),
+                        limitedEndDate,
+                        staff
+                ))
+                .toList();
     }
 
     private byte[] generateContractPdf(final ContractData contractData, final String bossSignatureKey) {
