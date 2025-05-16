@@ -82,6 +82,14 @@ public class StaffContractFacade {
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
     }
 
+    public List<StaffContractListResponse> getMyContracts(final Long storeId, final Long staffId) {
+        staffService.getStaffBelongsToStore(storeId, staffId);
+        final List<ContractEntity> contracts = contractService.getContractsByStaffId(staffId);
+        return contracts.stream()
+                .map(StaffContractListResponse::fromEntity)
+                .toList();
+    }
+
     private void applyRegularSchedulesFromContractData(final ContractData contractData, final StaffEntity staff, final Long storeId) {
         final LocalDate contractStart = contractData.contractStart();
         final LocalDate adjustedStartDate = contractStart.isBefore(LocalDate.now(clock).plusDays(1))

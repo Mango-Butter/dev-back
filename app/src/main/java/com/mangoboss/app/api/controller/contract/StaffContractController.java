@@ -2,6 +2,7 @@ package com.mangoboss.app.api.controller.contract;
 
 import com.mangoboss.app.api.facade.contract.StaffContractFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.contract.request.ContractSignRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;
 import com.mangoboss.app.dto.contract.response.*;
@@ -58,5 +59,12 @@ public class StaffContractController {
                                                     @PathVariable Long contractId) {
         final Long userId = userDetails.getUserId();
         return staffContractFacade.getContractDetail(storeId, contractId, userId);
+    }
+
+    @GetMapping
+    public ListWrapperResponse<StaffContractListResponse> getMyContracts(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                         @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(staffContractFacade.getMyContracts(storeId, userId));
     }
 }

@@ -8,6 +8,8 @@ import com.mangoboss.storage.contract.ContractJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class ContractRepositoryImpl implements ContractRepository {
@@ -22,5 +24,10 @@ public class ContractRepositoryImpl implements ContractRepository {
     public ContractEntity getContractById(final Long contractId) {
         return contractJpaRepository.findById(contractId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.CONTRACT_NOT_FOUND));
+    }
+
+    @Override
+    public List<ContractEntity> findAllByStaffId(final Long staffId) {
+        return contractJpaRepository.findAllByStaffId(staffId);
     }
 }
