@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class StaffContractFacade {
     private final StaffService staffService;
     private final ScheduleService scheduleService;
     private final S3FileManager s3FileManager;
+    private final Clock clock;
 
     public SignatureUploadResponse uploadSignature(final Long storeId, final Long staffId, final SignatureUploadRequest request) {
         staffService.getStaffBelongsToStore(storeId, staffId);
@@ -81,14 +83,18 @@ public class StaffContractFacade {
     }
 
     private void applyRegularSchedulesFromContractData(final ContractData contractData, final StaffEntity staff, final Long storeId) {
-        final LocalDate startDate = contractData.contractStart();
+        final LocalDate contractStart = contractData.contractStart();
+        final LocalDate adjustedStartDate = contractStart.isBefore(LocalDate.now(clock).plusDays(1))
+                ? LocalDate.now(clock).plusDays(1)
+                : contractStart;
         final LocalDate originalEndDate = contractData.contractEnd();
-        final LocalDate limitedEndDate = originalEndDate.isAfter(startDate.plusYears(1))
-                ? startDate.plusYears(1)
+        final LocalDate limitedEndDate = originalEndDate.isAfter(adjustedStartDate.plusYears(1))
+                ? adjustedStartDate.plusYears(1)
                 : originalEndDate;
 
+
         for (WorkSchedule workSchedule : contractData.workSchedules()) {
-            scheduleService.validateDate(startDate, limitedEndDate, workSchedule.startTime(), workSchedule.endTime());
+            scheduleService.validateDate(adjustedStartDate, limitedEndDate, workSchedule.startTime(), workSchedule.endTime());
         }
 
         final List<RegularGroupEntity> regularGroups =
