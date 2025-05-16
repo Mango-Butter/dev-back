@@ -113,6 +113,10 @@ public class ContractService {
                 .toList();
     }
 
+    public List<ContractEntity> getContractsByStaffId(final Long staffId) {
+        return contractRepository.findAllByStaffId(staffId);
+    }
+
     private byte[] generateContractPdf(final ContractData contractData, final String bossSignatureKey) {
         final String bossSignatureBase64 = fetchSignatureBase64(bossSignatureKey);
         final String html = contractHtmlGenerator.generateHtmlWithBossSignature(contractData, bossSignatureBase64);
