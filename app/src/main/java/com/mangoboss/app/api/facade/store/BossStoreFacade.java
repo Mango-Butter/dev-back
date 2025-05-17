@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.store;
 
+import com.mangoboss.app.domain.service.document.RequiredDocumentService;
 import com.mangoboss.app.domain.service.payroll.PayrollSettingService;
 import com.mangoboss.app.dto.store.response.*;
 import com.mangoboss.app.dto.store.request.StoreUpdateRequest;
@@ -27,6 +28,7 @@ public class BossStoreFacade {
 	private final StoreService storeService;
 	private final UserService userService;
 	private final PayrollSettingService payrollSettingService;
+	private final RequiredDocumentService requiredDocumentService;
 
 	@Transactional
 	public StoreCreateResponse createStore(final Long userId, final StoreCreateRequest request) {
@@ -34,6 +36,7 @@ public class BossStoreFacade {
 		storeService.validateBusinessNumber(request.businessNumber());
 		final StoreEntity saved = storeService.createStore(request, boss);
 		payrollSettingService.initPayrollSettingForStore(saved);
+		requiredDocumentService.initRequiredDocuments(saved);
 		return StoreCreateResponse.fromEntity(saved);
 	}
 
