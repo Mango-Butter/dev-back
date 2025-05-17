@@ -3,8 +3,9 @@ package com.mangoboss.app.common.util;
 import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
-import com.mangoboss.app.dto.contract.response.DownloadPreSignedUrlResponse;
-import com.mangoboss.app.dto.contract.response.ViewPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.UploadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,9 @@ public class S3FileManager {
     @Value("${pre-signed-url.download-expiration-minutes}")
     private int downloadExpirationMinutes;
 
+    @Value("${pre-signed-url.upload-expiration-minutes}")
+    private int uploadExpirationMinutes;
+
     private static final String SSE_ALGORITHM = "aws:kms";
 
     // 파일 업로드: byte[] 기반
@@ -54,6 +58,19 @@ public class S3FileManager {
                 .build();
 
         s3Client.putObject(request, RequestBody.fromBytes(fileData));
+    }
+
+    public void deleteFile(final String key) {
+        try {
+            final DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(contractBucketName)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteRequest);
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorInfo.FILE_DELETE_FAILED);
+        }
     }
 
     // 서명 파일 base64로 가져옴
@@ -93,10 +110,7 @@ public class S3FileManager {
 
         final String url = s3Presigner.presignGetObject(preSignRequest).url().toString();
 
-        return ViewPreSignedUrlResponse.builder()
-                .url(url)
-                .expiresAt(LocalDateTime.now(clock).plusMinutes(viewExpirationMinutes))
-                .build();
+        return ViewPreSignedUrlResponse.of(url, LocalDateTime.now(clock).plusMinutes(viewExpirationMinutes));
     }
 
     // 다운로드용 presingedUrl
@@ -114,13 +128,44 @@ public class S3FileManager {
 
         final String url = s3Presigner.presignGetObject(preSignRequest).url().toString();
 
-        return DownloadPreSignedUrlResponse.builder()
-                .url(url)
-                .expiresAt(LocalDateTime.now(clock).plusMinutes(downloadExpirationMinutes))
-                .build();
+        return DownloadPreSignedUrlResponse.of(url, LocalDateTime.now(clock).plusMinutes(downloadExpirationMinutes));
     }
 
-    public String generateFileKey(final S3FileType fileType) {
-        return fileType.getFolder() + UUID.randomUUID() + "." + fileType.getContentType().getExtension();
+    // 업로드용 presingedUrl
+    public UploadPreSignedUrlResponse generateUploadPreSignedUrl(final String key, final String contentType) {
+        final PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(contractBucketName)
+                .key(key)
+                .contentType(contentType)
+                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                .ssekmsKeyId(kmsKeyId)
+                .build();
+
+        final PutObjectPresignRequest preSignRequest = PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(uploadExpirationMinutes))
+                .putObjectRequest(putObjectRequest)
+                .build();
+
+        final String url = s3Presigner.presignPutObject(preSignRequest).url().toString();
+
+        return UploadPreSignedUrlResponse.of(url, LocalDateTime.now(clock).plusMinutes(uploadExpirationMinutes), key);
+    }
+
+    public String generateFileKey(final S3FileType fileType, String extension) {
+        return fileType.getFolder() + UUID.randomUUID() + "." + extension;
+    }
+
+    public String getContentTypeFromS3(final String key) {
+        try {
+            final HeadObjectRequest request = HeadObjectRequest.builder()
+                    .bucket(contractBucketName)
+                    .key(key)
+                    .build();
+
+            final HeadObjectResponse response = s3Client.headObject(request);
+            return response.contentType();
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorInfo.S3_OBJECT_FETCH_FAILED);
+        }
     }
 }

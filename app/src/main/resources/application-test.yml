@@ -69,6 +69,7 @@ contract:
 pre-signed-url:
   view-expiration-minutes: ${VIEW_EXPIRATION_MINUTES:10}
   download-expiration-minutes: ${DOWNLOAD_EXPIRATION_MINUTES:10}
+  upload-expiration-minutes: ${UPLOAD_EXPIRATION_MINUTES:10}
 
 external:
   nh:

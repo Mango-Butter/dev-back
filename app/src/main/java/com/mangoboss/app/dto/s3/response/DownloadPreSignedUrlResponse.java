@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.contract.response;
+package com.mangoboss.app.dto.s3.response;
 
 import lombok.Builder;
 

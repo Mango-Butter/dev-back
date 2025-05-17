@@ -9,6 +9,8 @@ import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.contract.request.*;
 import com.mangoboss.app.dto.contract.response.*;
 
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import com.mangoboss.storage.contract.ContractEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
@@ -45,7 +47,7 @@ public class BossContractFacade {
         final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
 
         final ContractData contractData = ContractData.of(request.contractDataInput(), boss, store, staff);
-        final ContractEntity contract = contractService.create(request.staffId(), request.bossSignatureKey(), contractData);
+        final ContractEntity contract = contractService.createContract(request.staffId(), request.bossSignatureKey(), contractData);
         return ContractResponse.fromEntity(contract);
     }
 
