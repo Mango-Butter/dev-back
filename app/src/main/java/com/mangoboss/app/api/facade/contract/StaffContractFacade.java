@@ -9,6 +9,8 @@ import com.mangoboss.app.dto.contract.request.ContractSignRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;
 import com.mangoboss.app.dto.contract.request.WorkSchedule;
 import com.mangoboss.app.dto.contract.response.*;
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import com.mangoboss.storage.contract.ContractEntity;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;

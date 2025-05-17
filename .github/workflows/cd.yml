@@ -104,6 +104,7 @@ jobs:
             echo "NH_ISCD=${{ secrets.NH_ISCD }}" >> .env
             echo "NH_FINTECH_APSNO=${{ secrets.NH_FINTECH_APSNO }}" >> .env
             echo "NH_API_SVC_CD=${{ secrets.NH_API_SVC_CD }}" >> .env
+            echo "UPLOAD_EXPIRATION_MINUTES=${{ secrets.UPLOAD_EXPIRATION_MINUTES }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v

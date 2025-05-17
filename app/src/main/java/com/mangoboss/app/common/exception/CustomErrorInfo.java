@@ -29,6 +29,8 @@ public enum CustomErrorInfo {
     INVALID_ACCOUNT(400, "유효하지 않은 계좌입니다.", 400021),
     TRANSFER_ACCOUNT_REQUIRED(400, "자동 송금을 설정하려면 계좌를 등록해야 합니다.", 400022),
     TRANSFER_DATE_REQUIRED(400, "자동 송금을 설정하려면 급여 지급일을 등록해야 합니다.", 400023),
+    UNSUPPORTED_FILE_TYPE(400, "지원하지 않는 파일 형식입니다.", 400024),
+    FILE_DECRYPTION_FAILED(400, "파일 복호화에 실패했습니다.", 400025),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -56,6 +58,7 @@ public enum CustomErrorInfo {
     ATTENDANCE_NOT_FOUND(404, "근태 정보가 없습니다.", 404008),
     CONTRACT_TEMPLATE_NOT_FOUND(404, "존재하지 않는 근로계약서 템플릿입니다.", 404009),
     REQUIRED_DOCUMENT_NOT_FOUND(404, "요청한 제출 서류 설정이 존재하지 않습니다.", 404010),
+    DOCUMENT_NOT_FOUND(404, "해당 문서를 찾을 수 없습니다.", 404011),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
@@ -83,7 +86,9 @@ public enum CustomErrorInfo {
     S3_OBJECT_FETCH_FAILED(500, "S3 객체 조회에 실패했습니다.", 500008),
     TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009),
     EXTERNAL_API_EXCEPTION(500, "현재 외부 인증 서비스에 문제가 있습니다. 잠시 후 다시 시도해주세요", 500010),
-    UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500011);
+    UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500011),
+    FILE_UPLOAD_FAILED(500, "파일 업로드에 실패했습니다.", 500012),
+    FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500013);
 
     private final int statusCode;
     private final String message;
@@ -94,4 +99,4 @@ public enum CustomErrorInfo {
         this.message = message;
         this.detailStatusCode = detailStatusCode;
     }
-    }
+}

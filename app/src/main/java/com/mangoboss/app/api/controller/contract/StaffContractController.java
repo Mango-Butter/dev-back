@@ -5,6 +5,8 @@ import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.contract.request.ContractSignRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;
 import com.mangoboss.app.dto.contract.response.*;
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

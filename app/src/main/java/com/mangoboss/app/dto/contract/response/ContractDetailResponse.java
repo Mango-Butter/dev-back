@@ -1,9 +1,8 @@
 package com.mangoboss.app.dto.contract.response;
 
 import com.mangoboss.app.dto.contract.request.ContractData;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import lombok.Builder;
-
-import java.time.LocalDateTime;
 
 @Builder
 public record ContractDetailResponse(

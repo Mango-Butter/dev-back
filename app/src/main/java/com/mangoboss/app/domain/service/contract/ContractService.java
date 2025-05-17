@@ -4,6 +4,7 @@ import com.mangoboss.app.common.constant.ContentType;
 import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.security.EncryptedFileDecoder;
 import com.mangoboss.app.common.util.JsonConverter;
 import com.mangoboss.app.common.util.PdfGenerator;
 import com.mangoboss.app.common.util.S3FileManager;
@@ -32,13 +33,13 @@ public class ContractService {
     private final ContractHtmlGenerator contractHtmlGenerator;
 
     private final PdfGenerator pdfGenerator;
-    private final SignatureImageDecoder signatureImageDecoder;
+    private final EncryptedFileDecoder encryptedFileDecoder;
     private final Clock clock;
 
     public String uploadSignature(final String signatureData) {
-        final String signatureKey = s3FileManager.generateFileKey(S3FileType.SIGNATURE_IMAGE);
+        final String signatureKey = s3FileManager.generateFileKey(S3FileType.SIGNATURE, ContentType.PNG.getExtension());
 
-        final byte[] imageBytes = signatureImageDecoder.decodeSignatureImageBytes(signatureData);
+        final byte[] imageBytes = encryptedFileDecoder.decode(signatureData).fileBytes();
 
         s3FileManager.upload(imageBytes, signatureKey, ContentType.PNG.getMimeType());
 
@@ -46,10 +47,10 @@ public class ContractService {
     }
 
     @Transactional
-    public ContractEntity create(final Long staffId, final String bossSignatureKey, final ContractData contractData) {
+    public ContractEntity createContract(final Long staffId, final String bossSignatureKey, final ContractData contractData) {
         final byte[] pdfBytes = generateContractPdf(contractData, bossSignatureKey);
 
-        final String fileKey = s3FileManager.generateFileKey(S3FileType.CONTRACT_PDF);
+        final String fileKey = s3FileManager.generateFileKey(S3FileType.CONTRACT, ContentType.PDF.getExtension());
 
         s3FileManager.upload(pdfBytes, fileKey, ContentType.PDF.getMimeType());
 
