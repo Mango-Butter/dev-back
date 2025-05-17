@@ -26,6 +26,19 @@ INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, overtime
                              transfer_account_id, store_id)
 VALUES (1, false, 0, 0, null, 1);
 
+INSERT INTO required_document (store_id, document_type, is_required, created_at, modified_at)
+VALUES(1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (1, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (1, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (1, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (2, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (2, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (2, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (2, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (3, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (3, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (3, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+      (3, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, created_at, modified_at)
 VALUES (1, 2, 1, '망알바',
