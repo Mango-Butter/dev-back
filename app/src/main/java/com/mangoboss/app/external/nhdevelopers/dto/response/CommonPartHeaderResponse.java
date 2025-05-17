@@ -3,7 +3,7 @@ package com.mangoboss.app.external.nhdevelopers.dto.response;
 import lombok.Builder;
 
 @Builder
-public record NhCommonPartHeaderResponse(
+public record CommonPartHeaderResponse(
         String ApiNm,
         String Trtm,
         String Iscd,

@@ -26,7 +26,7 @@ public class BossPayrollFacade {
         final StoreEntity store = storeService.isBossOfStore(storeId, bossId);
         final BankCode bankCode = BankCode.findCodeByName(request.bankName())
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.INVALID_BANK_NAME));
-        final TransferAccountEntity transferAccount = payrollSettingService.registerBossAccount(store, bankCode, request.accountNumber());
+        final TransferAccountEntity transferAccount = payrollSettingService.registerBossAccount(store, bankCode, request.accountNumber(), request.birthdate());
         return AccountRegisterResponse.fromEntity(transferAccount);
     }
 

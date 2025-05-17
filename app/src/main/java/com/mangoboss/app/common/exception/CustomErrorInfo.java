@@ -57,9 +57,6 @@ public enum CustomErrorInfo {
     SCHEDULE_NOT_FOUND(404, "해당하는 스케줄이 없습니다.", 404006),
     REGULAR_GROUP_NOT_FOUND(404, "해당하는 고정 근무 그룹이 없습니다.", 404007),
     ATTENDANCE_NOT_FOUND(404, "근태 정보가 없습니다.", 404008),
-    CONTRACT_TEMPLATE_NOT_FOUND(404, "존재하지 않는 근로계약서 템플릿입니다.", 404009),
-    REQUIRED_DOCUMENT_NOT_FOUND(404, "요청한 제출 서류 설정이 존재하지 않습니다.", 404010),
-    DOCUMENT_NOT_FOUND(404, "해당 문서를 찾을 수 없습니다.", 404011),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
@@ -87,9 +84,10 @@ public enum CustomErrorInfo {
     S3_OBJECT_FETCH_FAILED(500, "S3 객체 조회에 실패했습니다.", 500008),
     TEMP_FILE_CREATION_FAILED(500, "임시 파일 생성에 실패했습니다.", 500009),
     EXTERNAL_API_EXCEPTION(500, "현재 외부 인증 서비스에 문제가 있습니다. 잠시 후 다시 시도해주세요", 500010),
-    UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500011),
-    FILE_UPLOAD_FAILED(500, "파일 업로드에 실패했습니다.", 500012),
-    FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500013);
+    EXTERNAL_API_LOGICAL_FAILURE(500, "외부 서비스 요청은 성공했지만 처리에 실패했습니다.", 500011),
+    UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500012),
+    FILE_UPLOAD_FAILED(500, "파일 업로드에 실패했습니다.", 500013),
+    FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500014);
 
     private final int statusCode;
     private final String message;

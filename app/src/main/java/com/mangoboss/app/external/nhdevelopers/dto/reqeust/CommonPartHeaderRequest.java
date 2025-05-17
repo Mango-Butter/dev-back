@@ -3,7 +3,7 @@ package com.mangoboss.app.external.nhdevelopers.dto.reqeust;
 import lombok.Builder;
 
 @Builder
-public record NhCommonPartHeaderRequest(
+public record CommonPartHeaderRequest(
         String ApiNm,
         String Tsymd,
         String Trtm,

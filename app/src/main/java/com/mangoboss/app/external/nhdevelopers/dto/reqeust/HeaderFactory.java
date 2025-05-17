@@ -9,16 +9,16 @@ import static java.time.format.DateTimeFormatter.*;
 
 @Component
 @RequiredArgsConstructor
-public class NhHeaderFactory {
-    private final NhApiProperties props;
+public class HeaderFactory {
+    private final ApiProperties props;
 
-    public NhCommonPartHeaderRequest create(final ApiName apiName, final Clock clock) {
+    public CommonPartHeaderRequest create(final ApiName apiName, final Clock clock) {
         LocalDateTime now = LocalDateTime.now(clock);
         String tsymd = now.format(ofPattern("yyyyMMdd"));
         String trtm = now.format(ofPattern("HHmmss"));
         String isTuno = trtm + now.getNano();
 
-        return NhCommonPartHeaderRequest.builder()
+        return CommonPartHeaderRequest.builder()
                 .ApiNm(apiName.getName())
                 .Tsymd(tsymd)
                 .Trtm(trtm)

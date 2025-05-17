@@ -27,18 +27,25 @@ public class TransferAccountEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String accountHolder;
 
+    @Column(nullable = false)
+    private String finAccount;
+
     @Builder
-    private TransferAccountEntity(final BankCode bankCode, final String accountHolder, final String accountNumber) {
+    private TransferAccountEntity(final BankCode bankCode, final String accountHolder,
+                                  final String accountNumber, final String finAccount) {
         this.accountHolder = accountHolder;
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;
+        this.finAccount = finAccount;
     }
 
-    public static TransferAccountEntity create(final BankCode bankCode, final String accountHolder, final String accountNumber) {
+    public static TransferAccountEntity create(final BankCode bankCode, final String accountHolder,
+                                               final String accountNumber, final String finAccount) {
         return TransferAccountEntity.builder()
                 .bankCode(bankCode)
                 .accountHolder(accountHolder)
                 .accountNumber(accountNumber)
+                .finAccount(finAccount)
                 .build();
     }
 

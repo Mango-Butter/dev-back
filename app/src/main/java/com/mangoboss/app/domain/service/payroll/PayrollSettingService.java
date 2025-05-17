@@ -5,12 +5,15 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.PayrollSettingRepository;
 import com.mangoboss.app.domain.repository.TransferAccountRepository;
 import com.mangoboss.app.external.nhdevelopers.NhDevelopersClient;
-import com.mangoboss.app.external.nhdevelopers.dto.response.NhDepositorAccountNumberResponse;
+import com.mangoboss.app.external.nhdevelopers.dto.response.CheckFinAccountResponse;
+import com.mangoboss.app.external.nhdevelopers.dto.response.DepositorAccountNumberResponse;
+import com.mangoboss.app.external.nhdevelopers.dto.response.FinAccountDirectResponse;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.TransferAccountEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,42 +23,53 @@ import java.time.Clock;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PayrollSettingService {
-    private static final String SUCCESS_MESSAGE = "정상처리 되었습니다.";
-
     private final PayrollSettingRepository payrollSettingRepository;
     private final TransferAccountRepository transferAccountRepository;
     private final NhDevelopersClient nhDevelopersClient;
+
+    @Value("${external.nh.fin-acno}")
+    private String finAcno;
     private final Clock clock;
 
     private void isBossAccount(final String bossName, final BankCode bankCode, final String accountNumber) {
-        final NhDepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
-        if (!response.Header().Rsms().equals(SUCCESS_MESSAGE)) {
-            throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);
-        }
-        final String realName = response.Dpnm();
+        DepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
+        String realName = response.Dpnm();
         if (!realName.equals(bossName)) {
             throw new CustomException(CustomErrorInfo.NOT_OWNER_ACCOUNT);
         }
     }
 
+    private String registerFinAccount(final BankCode bankCode,
+                                      final String accountNumber, final String birthDate) {
+//        FinAccountDirectResponse finAccountDirectResponse =
+//                nhDevelopersClient.finAccountDirect(bankCode.getCode(), accountNumber, birthDate);
+//        CheckFinAccountResponse checkFinAccountResponse =
+//                nhDevelopersClient.checkFinAccount(finAccountDirectResponse.Rgno(), birthDate);
+//        checkFinAccountResponse.FinAcno();
+        return finAcno;
+    }
+
     @Transactional
-    public TransferAccountEntity registerBossAccount(final StoreEntity store, final BankCode bankCode, final String accountNumber) {
-        final PayrollSettingEntity payrollSetting = store.getPayrollSetting();
-        final String bossName = store.getBoss().getName();
+    public TransferAccountEntity registerBossAccount(final StoreEntity store, final BankCode bankCode,
+                                                     final String accountNumber, final String birthDate) {
+        PayrollSettingEntity payrollSetting = store.getPayrollSetting();
+        String bossName = store.getBoss().getName();
 
         isBossAccount(bossName, bankCode, accountNumber);
-        final TransferAccountEntity transferAccount = TransferAccountEntity.create(
+        String finAccount = registerFinAccount(bankCode, accountNumber, birthDate);
+        TransferAccountEntity transferAccount = TransferAccountEntity.create(
                 bankCode,
                 bossName,
-                accountNumber
-        );
+                accountNumber,
+                finAccount
+                );
         payrollSetting.registerTransferAccountEntity(transferAccount);
         return transferAccountRepository.save(transferAccount);
     }
 
     @Transactional
     public void initPayrollSettingForStore(final StoreEntity store) {
-        final PayrollSettingEntity payrollSetting = PayrollSettingEntity.init(store);
+        PayrollSettingEntity payrollSetting = PayrollSettingEntity.init(store);
         payrollSettingRepository.save(payrollSetting);
     }
 
