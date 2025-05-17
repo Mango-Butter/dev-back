@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum ApiName {
-    InquireDepositorAccountNumber("InquireDepositorAccountNumber");
+    InquireDepositorAccountNumber("InquireDepositorAccountNumber"),
+    OpenFinAccountDirect("OpenFinAccountDirect"),
+    CheckOpenFinAccountDirect("CheckOpenFinAccountDirect");
 
     private final String name;
 

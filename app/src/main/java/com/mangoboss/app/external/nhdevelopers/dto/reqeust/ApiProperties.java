@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @Setter
-public class NhApiProperties {
+public class ApiProperties {
     private String iscd;
     private String fintechApsno;
     private String apiSvcCd;

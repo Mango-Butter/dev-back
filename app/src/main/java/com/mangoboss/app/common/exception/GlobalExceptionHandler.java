@@ -67,20 +67,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getErrorCode().getStatusCode()));
     }
 
-    @ExceptionHandler(ExternalApiServerException.class)
-    public ResponseEntity<CustomErrorResponse> handleExternal(ExternalApiServerException e, WebRequest request) {
-        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
-        CustomException ex = new CustomException(EXTERNAL_API_EXCEPTION);
-        CustomErrorResponse errorResponse = new CustomErrorResponse(
-                ex.getErrorCode().getStatusCode(),
-                ex.getErrorCode().getMessage(),
-                path,
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getErrorCode().getStatusCode()));
-
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
