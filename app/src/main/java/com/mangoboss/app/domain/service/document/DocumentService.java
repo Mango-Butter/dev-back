@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +56,10 @@ public class DocumentService {
     public void deleteDocument(final DocumentEntity document) {
         s3FileManager.deleteFile(document.getFileKey());
         documentRepository.delete(document);
+    }
+
+    public List<DocumentEntity> findAllByStoreIdAndType(final Long storeId, final DocumentType type) {
+        return documentRepository.findAllByStoreIdAndDocumentType(storeId, type);
     }
 
     public void validateDocumentBelongsToStaff(final Long documentStaffId, final Long staffId) {
