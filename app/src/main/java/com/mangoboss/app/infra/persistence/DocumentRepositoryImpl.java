@@ -5,8 +5,11 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.DocumentRepository;
 import com.mangoboss.storage.document.DocumentEntity;
 import com.mangoboss.storage.document.DocumentJpaRepository;
+import com.mangoboss.storage.document.DocumentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,4 +37,10 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     public void delete(final DocumentEntity entity) {
         documentJpaRepository.delete(entity);
     }
+
+    @Override
+    public List<DocumentEntity> findAllByStoreIdAndDocumentType(final Long storeId, final DocumentType documentType) {
+        return documentJpaRepository.findAllByStoreIdAndDocumentType(storeId, documentType);
+    }
+
 }
