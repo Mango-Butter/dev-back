@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.store.request.StaffJoinRequest;
 import com.mangoboss.app.dto.store.response.StaffJoinResponse;
 import com.mangoboss.app.dto.store.response.StaffStoreInfoResponse;
+import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.user.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,8 @@ public class StaffStoreFacade {
     }
 
     public StaffStoreInfoResponse getStoreInfo(final Long storeId, final Long userId) {
-        staffService.getStaffBelongsToStore(storeId, userId);
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        staffService.getStaffBelongsToStore(storeId, staff.getId());
         final StoreEntity store = storeService.getStoreById(storeId);
         return StaffStoreInfoResponse.fromEntity(store);
     }

@@ -33,14 +33,14 @@ public class StaffContractFacade {
     private final S3FileManager s3FileManager;
     private final Clock clock;
 
-    public SignatureUploadResponse uploadSignature(final Long storeId, final Long staffId, final SignatureUploadRequest request) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
+    public SignatureUploadResponse uploadSignature(final Long storeId, final Long userId, final SignatureUploadRequest request) {
+        staffService.getVerifiedStaff(userId, storeId);
         final String signatureKey = contractService.uploadSignature(request.signatureData());
         return SignatureUploadResponse.of(signatureKey);
     }
 
-    public ContractResponse signContract(final Long storeId, final Long contractId, final Long staffId, final ContractSignRequest contractSignRequest) {
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+    public ContractResponse signContract(final Long storeId, final Long contractId, final Long userId, final ContractSignRequest contractSignRequest) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
 
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
@@ -54,22 +54,22 @@ public class StaffContractFacade {
         return ContractResponse.fromEntity(signedContract);
     }
 
-    public ViewPreSignedUrlResponse getContractViewUrl(final Long storeId, final Long contractId, final Long staffId) {
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+    public ViewPreSignedUrlResponse getContractViewUrl(final Long storeId, final Long contractId, final Long userId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
         return s3FileManager.generateViewPreSignedUrl(contract.getFileKey());
     }
 
-    public DownloadPreSignedUrlResponse getContractDownloadUrl(final Long storeId, final Long contractId, final Long staffId) {
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+    public DownloadPreSignedUrlResponse getContractDownloadUrl(final Long storeId, final Long contractId, final Long userId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
         return s3FileManager.generateDownloadPreSignedUrl(contract.getFileKey());
     }
 
-    public ContractDetailResponse getContractDetail(final Long storeId, final Long contractId, final Long staffId) {
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+    public ContractDetailResponse getContractDetail(final Long storeId, final Long contractId, final Long userId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
 
@@ -84,9 +84,9 @@ public class StaffContractFacade {
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
     }
 
-    public List<StaffContractListResponse> getMyContracts(final Long storeId, final Long staffId) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
-        final List<ContractEntity> contracts = contractService.getContractsByStaffId(staffId);
+    public List<StaffContractListResponse> getMyContracts(final Long storeId, final Long userId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        final List<ContractEntity> contracts = contractService.getContractsByStaffId(staff.getId());
         return contracts.stream()
                 .map(StaffContractListResponse::fromEntity)
                 .toList();

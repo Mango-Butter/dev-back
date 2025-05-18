@@ -21,31 +21,31 @@ public class StaffDocumentController {
     public void uploadDocument(@PathVariable final Long storeId,
                                @AuthenticationPrincipal final CustomUserDetails userDetails,
                                @RequestBody @Valid DocumentUploadRequest request) {
-        final Long staffId = userDetails.getUserId();
-        staffDocumentFacade.uploadDocument(storeId, staffId, request);
+        final Long userId = userDetails.getUserId();
+        staffDocumentFacade.uploadDocument(storeId, userId, request);
     }
 
     @GetMapping("/{documentId}/view-url")
     public ViewPreSignedUrlResponse viewDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
                                                  @PathVariable final Long storeId,
                                                  @PathVariable Long documentId) {
-        final Long staffId = userDetails.getUserId();
-        return staffDocumentFacade.viewDocument(storeId, staffId, documentId);
+        final Long userId = userDetails.getUserId();
+        return staffDocumentFacade.viewDocument(storeId, userId, documentId);
     }
 
     @GetMapping("/{documentId}/download-url")
     public DownloadPreSignedUrlResponse downloadDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
                                                          @PathVariable final Long storeId,
                                                          @PathVariable Long documentId) {
-        final Long staffId = userDetails.getUserId();
-        return staffDocumentFacade.downloadDocument(storeId, staffId, documentId);
+        final Long userId = userDetails.getUserId();
+        return staffDocumentFacade.downloadDocument(storeId, userId, documentId);
     }
 
     @DeleteMapping("/{documentId}")
     public void deleteDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
                                @PathVariable final Long storeId,
                                @PathVariable final Long documentId) {
-        final Long staffId = userDetails.getUserId();
-        staffDocumentFacade.deleteDocument(storeId, staffId, documentId);
+        final Long userId = userDetails.getUserId();
+        staffDocumentFacade.deleteDocument(storeId, userId, documentId);
     }
 }

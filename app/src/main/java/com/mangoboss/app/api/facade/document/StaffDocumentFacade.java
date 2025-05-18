@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
+import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,25 +18,25 @@ public class StaffDocumentFacade {
     private final DocumentService documentService;
     private final StaffService staffService;
 
-    public void uploadDocument(final Long storeId, final Long staffId, final DocumentUploadRequest request) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
-        documentService.uploadDocument(request.documentData(), request.documentType(), request.expiresAt(), storeId, staffId);
+    public void uploadDocument(final Long storeId, final Long userId, final DocumentUploadRequest request) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        documentService.uploadDocument(request.documentData(), request.documentType(), request.expiresAt(), storeId, staff.getId());
     }
 
-    public ViewPreSignedUrlResponse viewDocument(Long storeId, Long staffId, Long documentId) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
-        final String key = documentService.getFileKeyByIdAndStaffId(staffId, documentId);
+    public ViewPreSignedUrlResponse viewDocument(Long storeId, Long userId, Long documentId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        final String key = documentService.getFileKeyByIdAndStaffId(staff.getId(), documentId);
         return s3FileManager.generateViewPreSignedUrl(key);
     }
 
-    public DownloadPreSignedUrlResponse downloadDocument(final Long storeId, final Long staffId, final Long documentId) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
-        final String key = documentService.getFileKeyByIdAndStaffId(staffId, documentId);
+    public DownloadPreSignedUrlResponse downloadDocument(final Long storeId, final Long userId, final Long documentId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        final String key = documentService.getFileKeyByIdAndStaffId(staff.getId(), documentId);
         return s3FileManager.generateDownloadPreSignedUrl(key);
     }
 
-    public void deleteDocument(final Long storeId, final Long staffId, final Long documentId) {
-        staffService.getStaffBelongsToStore(storeId, staffId);
-        documentService.deleteDocument(staffId, documentId);
+    public void deleteDocument(final Long storeId, final Long userId, final Long documentId) {
+        final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        documentService.deleteDocument(staff.getId(), documentId);
     }
 }
