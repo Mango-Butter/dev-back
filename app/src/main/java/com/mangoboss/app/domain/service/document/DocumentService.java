@@ -2,6 +2,8 @@ package com.mangoboss.app.domain.service.document;
 
 import com.mangoboss.app.common.constant.ContentType;
 import com.mangoboss.app.common.constant.S3FileType;
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.security.EncryptedFileDecoder;
 import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.DocumentRepository;
@@ -15,13 +17,14 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final S3FileManager s3FileManager;
     private final EncryptedFileDecoder encryptedFileDecoder;
 
+    @Transactional
     public void uploadDocument(final String documentData, final DocumentType documentType, final LocalDate expiresAt,
                                final Long storeId, final Long staffId) {
 
@@ -44,9 +47,19 @@ public class DocumentService {
         return document.getFileKey();
     }
 
-    public void deleteDocument(final Long staffId, final Long documentId) {
-        final DocumentEntity document = documentRepository.getByIdAndStaffId(documentId, staffId);
+    public DocumentEntity getByDocumentId(final Long documentId) {
+        return documentRepository.getById(documentId);
+    }
+
+    @Transactional
+    public void deleteDocument(final DocumentEntity document) {
         s3FileManager.deleteFile(document.getFileKey());
         documentRepository.delete(document);
+    }
+
+    public void validateDocumentBelongsToStaff(final Long documentStaffId, final Long staffId) {
+        if (!documentStaffId.equals(staffId)) {
+            throw new CustomException(CustomErrorInfo.DOCUMENT_NOT_BELONG_TO_STAFF);
+        }
     }
 }

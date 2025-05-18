@@ -25,6 +25,12 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     }
 
     @Override
+    public DocumentEntity getById(final Long id) {
+        return documentJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.DOCUMENT_NOT_FOUND));
+    }
+
+    @Override
     public void delete(final DocumentEntity entity) {
         documentJpaRepository.delete(entity);
     }

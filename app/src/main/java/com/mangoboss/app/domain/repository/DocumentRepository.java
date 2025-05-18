@@ -7,5 +7,7 @@ public interface DocumentRepository {
 
     DocumentEntity getByIdAndStaffId(Long id, Long staffId);
 
+    DocumentEntity getById(Long id);
+
     void delete(DocumentEntity entity);
 }

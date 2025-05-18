@@ -5,6 +5,8 @@ import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.document.request.RequiredDocumentCreateRequest;
 import com.mangoboss.app.dto.document.response.RequiredDocumentResponse;
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,4 +37,29 @@ public class BossDocumentController {
         final Long bossId = userDetails.getUserId();
         return ListWrapperResponse.of(bossDocumentFacade.getRequiredDocuments(storeId, bossId));
     }
+
+    @GetMapping("/{documentId}/view-url")
+    public ViewPreSignedUrlResponse viewDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                                                 @PathVariable final Long storeId,
+                                                 @PathVariable Long documentId) {
+        final Long bossId = userDetails.getUserId();
+        return bossDocumentFacade.viewDocument(storeId, bossId, documentId);
+    }
+
+    @GetMapping("/{documentId}/download-url")
+    public DownloadPreSignedUrlResponse downloadDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                                                         @PathVariable final Long storeId,
+                                                         @PathVariable Long documentId) {
+        final Long bossId = userDetails.getUserId();
+        return bossDocumentFacade.downloadDocument(storeId, bossId, documentId);
+    }
+
+    @DeleteMapping("/{documentId}")
+    public void deleteDocument(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                               @PathVariable final Long storeId,
+                               @PathVariable final Long documentId) {
+        final Long bossId = userDetails.getUserId();
+        bossDocumentFacade.deleteDocument(storeId, bossId, documentId);
+    }
+
 }
