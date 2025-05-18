@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
+import com.mangoboss.storage.document.DocumentEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class StaffDocumentFacade {
 
     public void deleteDocument(final Long storeId, final Long userId, final Long documentId) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
-        documentService.deleteDocument(staff.getId(), documentId);
+        final DocumentEntity document = documentService.getByDocumentId(documentId);
+        documentService.validateDocumentBelongsToStaff(document.getStaffId(), staff.getId());
+        documentService.deleteDocument(document);
     }
 }
