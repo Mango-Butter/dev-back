@@ -147,4 +147,14 @@ public class BossContractFacade {
                 })
                 .toList();
     }
+
+    public List<ContractSimpleResponse> getContractsByStaff(final Long storeId, final Long bossId, final Long staffId) {
+        storeService.isBossOfStore(storeId, bossId);
+        staffService.getStaffBelongsToStore(storeId, staffId);
+
+        final List<ContractEntity> contracts = contractService.getContractsByStaffId(staffId);
+        return contracts.stream()
+                .map(ContractSimpleResponse::fromEntity)
+                .toList();
+    }
 }

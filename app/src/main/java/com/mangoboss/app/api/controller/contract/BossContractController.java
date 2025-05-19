@@ -120,4 +120,11 @@ public class BossContractController {
         return ListWrapperResponse.of(bossContractFacade.getAllContracts(storeId, userId));
     }
 
+    @GetMapping("/staffs/{staffId}")
+    public ListWrapperResponse<ContractSimpleResponse> getContractsByStaff(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                           @PathVariable Long storeId,
+                                                                           @PathVariable Long staffId) {
+        final Long bossId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossContractFacade.getContractsByStaff(storeId, bossId, staffId));
+    }
 }
