@@ -78,3 +78,7 @@ external:
     iscd : ${NH_ISCD:dummy-iscd}
     fintech-apsno: ${NH_FINTECH_APSNO:dummy-fintech-apsno}
     api-svc-cd: ${NH_API_SVC_CD:dummy-api-svc-cd}
+    api-svc-cd-received: ${NH_API_SVC_CD_RECEIVED:dummy-api-svc-cd-received}
+    fin-acno: ${NH_FIN_ACNO:dummy-fin-acno}
+    mangoboss-account: ${NH_MANGOBOSS_ACCOUNT:dummy-mangoboss-account}
+    mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE:dummy-mangoboss-bankcode}
