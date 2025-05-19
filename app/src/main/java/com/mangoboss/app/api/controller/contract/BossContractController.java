@@ -112,4 +112,12 @@ public class BossContractController {
         final Long userId = userDetails.getUserId();
         bossContractFacade.deleteContractTemplate(storeId, userId, templateId);
     }
+
+    @GetMapping("")
+    public ListWrapperResponse<ContractSummaryResponse> getAllContracts(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                        @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossContractFacade.getAllContracts(storeId, userId));
+    }
+
 }
