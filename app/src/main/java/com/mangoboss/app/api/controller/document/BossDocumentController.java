@@ -4,6 +4,7 @@ import com.mangoboss.app.api.facade.document.BossDocumentFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.document.request.RequiredDocumentCreateRequest;
+import com.mangoboss.app.dto.document.response.DocumentStatusResponse;
 import com.mangoboss.app.dto.document.response.RequiredDocumentResponse;
 import com.mangoboss.app.dto.document.response.StaffDocumentStatusResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
@@ -72,4 +73,11 @@ public class BossDocumentController {
         bossDocumentFacade.deleteDocument(storeId, bossId, documentId);
     }
 
+    @GetMapping("/staffs/{staffId}")
+    public ListWrapperResponse<DocumentStatusResponse> getDocumentStatusByStaff(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                                                                                @PathVariable final Long storeId,
+                                                                                @PathVariable final Long staffId) {
+        final Long bossId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossDocumentFacade.getDocumentStatusByStaff(storeId, bossId, staffId));
+    }
 }

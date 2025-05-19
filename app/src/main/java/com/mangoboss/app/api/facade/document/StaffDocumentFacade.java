@@ -4,7 +4,7 @@ import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.service.document.DocumentService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
-import com.mangoboss.app.dto.document.response.MyDocumentStatusResponse;
+import com.mangoboss.app.dto.document.response.DocumentStatusResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import com.mangoboss.storage.document.DocumentEntity;
@@ -52,7 +52,7 @@ public class StaffDocumentFacade {
         documentService.deleteDocument(document);
     }
 
-    public List<MyDocumentStatusResponse> getMyDocumentStatus(final Long storeId, final Long userId) {
+    public List<DocumentStatusResponse> getMyDocumentStatus(final Long storeId, final Long userId) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final List<DocumentEntity> documents = documentService.findAllByStoreIdAndStaffId(storeId, staff.getId());
 
@@ -66,7 +66,7 @@ public class StaffDocumentFacade {
                     final LocalDate expiresAt = isSubmitted ? document.getExpiresAt() : null;
                     final Long documentId = isSubmitted ? document.getId() : null;
 
-                    return MyDocumentStatusResponse.of(type, isSubmitted, expiresAt, documentId);
+                    return DocumentStatusResponse.of(type, isSubmitted, expiresAt, documentId);
                 })
                 .toList();
     }
