@@ -2,7 +2,9 @@ package com.mangoboss.app.api.controller.document;
 
 import com.mangoboss.app.api.facade.document.StaffDocumentFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
+import com.mangoboss.app.dto.document.response.MyDocumentStatusResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import jakarta.validation.Valid;
@@ -47,5 +49,12 @@ public class StaffDocumentController {
                                @PathVariable final Long documentId) {
         final Long userId = userDetails.getUserId();
         staffDocumentFacade.deleteDocument(storeId, userId, documentId);
+    }
+
+    @GetMapping("")
+    public ListWrapperResponse<MyDocumentStatusResponse> getMyDocumentStatus(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                                                                             @PathVariable final Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(staffDocumentFacade.getMyDocumentStatus(storeId, userId));
     }
 }

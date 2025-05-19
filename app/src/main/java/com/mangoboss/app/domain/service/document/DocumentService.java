@@ -67,4 +67,8 @@ public class DocumentService {
             throw new CustomException(CustomErrorInfo.DOCUMENT_NOT_BELONG_TO_STAFF);
         }
     }
+
+    public List<DocumentEntity> findAllByStoreIdAndStaffId(final Long storeId, final Long staffId) {
+        return documentRepository.findAllByStoreIdAndStaffId(storeId, staffId);
+    }
 }
