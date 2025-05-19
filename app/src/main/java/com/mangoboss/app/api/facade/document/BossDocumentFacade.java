@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.service.document.RequiredDocumentService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.document.request.RequiredDocumentCreateRequest;
+import com.mangoboss.app.dto.document.response.DocumentStatusResponse;
 import com.mangoboss.app.dto.document.response.RequiredDocumentResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
@@ -16,6 +17,7 @@ import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -86,5 +88,26 @@ public class BossDocumentFacade {
         storeService.isBossOfStore(storeId, bossId);
         final DocumentEntity document = documentService.getByDocumentId(documentId);
         documentService.deleteDocument(document);
+    }
+
+    public List<DocumentStatusResponse> getDocumentStatusByStaff(final Long storeId, final Long bossId, final Long staffId) {
+        storeService.isBossOfStore(storeId, bossId);
+        staffService.getStaffBelongsToStore(storeId, staffId);
+
+        final List<DocumentEntity> documents = documentService.findAllByStoreIdAndStaffId(storeId, staffId);
+        final Map<DocumentType, DocumentEntity> documentMap = documents.stream()
+                .collect(Collectors.toMap(DocumentEntity::getDocumentType, Function.identity()));
+
+        return Arrays.stream(DocumentType.values())
+                .map(type -> {
+                    final DocumentEntity doc = documentMap.get(type);
+                    return DocumentStatusResponse.of(
+                            type,
+                            doc != null,
+                            doc != null ? doc.getExpiresAt() : null,
+                            doc != null ? doc.getId() : null
+                    );
+                })
+                .toList();
     }
 }

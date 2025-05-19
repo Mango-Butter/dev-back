@@ -4,7 +4,7 @@ import com.mangoboss.app.api.facade.document.StaffDocumentFacade;
 import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
-import com.mangoboss.app.dto.document.response.MyDocumentStatusResponse;
+import com.mangoboss.app.dto.document.response.DocumentStatusResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import jakarta.validation.Valid;
@@ -52,8 +52,8 @@ public class StaffDocumentController {
     }
 
     @GetMapping("")
-    public ListWrapperResponse<MyDocumentStatusResponse> getMyDocumentStatus(@AuthenticationPrincipal final CustomUserDetails userDetails,
-                                                                             @PathVariable final Long storeId) {
+    public ListWrapperResponse<DocumentStatusResponse> getMyDocumentStatus(@AuthenticationPrincipal final CustomUserDetails userDetails,
+                                                                           @PathVariable final Long storeId) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(staffDocumentFacade.getMyDocumentStatus(storeId, userId));
     }
