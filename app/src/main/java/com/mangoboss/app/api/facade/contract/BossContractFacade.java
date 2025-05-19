@@ -78,6 +78,19 @@ public class BossContractFacade {
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
     }
 
+    public void deleteContract(final Long storeId, final Long bossId, final Long contractId) {
+        storeService.isBossOfStore(storeId, bossId);
+        final ContractEntity contract = contractService.getContractById(contractId);
+
+        s3FileManager.deleteFile(contract.getFileKey());
+        if (contract.getStaffSignatureKey() != null) {
+            s3FileManager.deleteFile(contract.getStaffSignatureKey());
+        }
+
+        contractService.deleteContract(contractId);
+    }
+
+
     public ContractTemplateResponse createContractTemplate(final Long storeId, final Long bossId, final ContractTemplateCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
         final String dataJson = contractService.convertToContractTemplateJson(request.contractTemplateData());

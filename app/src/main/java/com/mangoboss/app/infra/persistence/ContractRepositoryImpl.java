@@ -30,4 +30,10 @@ public class ContractRepositoryImpl implements ContractRepository {
     public List<ContractEntity> findAllByStaffId(final Long staffId) {
         return contractJpaRepository.findAllByStaffId(staffId);
     }
+
+    @Override
+    public void delete(final ContractEntity contract) {
+        contractJpaRepository.delete(contract);
+    }
+
 }

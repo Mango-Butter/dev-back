@@ -78,6 +78,12 @@ public class ContractService {
         return contractRepository.getContractById(contractId);
     }
 
+    public void deleteContract(final Long contractId) {
+        final ContractEntity contract = getContractById(contractId);
+        contractRepository.delete(contract);
+    }
+
+
     public ContractData convertFromContractDataJson(final String contractDataJson) {
         return JsonConverter.fromJson(contractDataJson, ContractData.class);
     }
