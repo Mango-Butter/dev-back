@@ -12,4 +12,6 @@ public interface ContractRepository {
     List<ContractEntity> findAllByStaffId(Long staffId);
 
     void delete(final ContractEntity contract);
+
+    List<ContractEntity> findAllByStoreId(Long storeId);
 }

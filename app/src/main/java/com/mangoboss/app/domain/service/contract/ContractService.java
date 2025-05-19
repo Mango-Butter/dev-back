@@ -57,7 +57,7 @@ public class ContractService {
         final String contractDataJson = convertToContractDataJson(contractData);
 
         final LocalDateTime now = LocalDateTime.now(clock);
-        final ContractEntity contract = ContractEntity.create(staffId, fileKey, contractDataJson, now, bossSignatureKey, now);
+        final ContractEntity contract = ContractEntity.create(staffId, fileKey, contractDataJson, bossSignatureKey, now);
         return contractRepository.save(contract);
     }
 
@@ -121,6 +121,10 @@ public class ContractService {
 
     public List<ContractEntity> getContractsByStaffId(final Long staffId) {
         return contractRepository.findAllByStaffId(staffId);
+    }
+
+    public List<ContractEntity> findAllByStoreId(final Long storeId) {
+        return contractRepository.findAllByStoreId(storeId);
     }
 
     private byte[] generateContractPdf(final ContractData contractData, final String bossSignatureKey) {

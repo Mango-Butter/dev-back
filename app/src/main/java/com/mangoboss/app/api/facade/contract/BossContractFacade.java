@@ -21,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -123,5 +126,25 @@ public class BossContractFacade {
     public void deleteContractTemplate(final Long storeId, final Long bossId, final Long templateId) {
         storeService.isBossOfStore(storeId, bossId);
         contractTemplateService.deleteContractTemplate(storeId, templateId);
+    }
+
+    public List<ContractSummaryResponse> getAllContracts(Long storeId, Long userId) {
+        storeService.isBossOfStore(storeId, userId);
+
+        List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
+        List<ContractEntity> contracts = contractService.findAllByStoreId(storeId);
+
+        Map<Long, ContractEntity> contractMap = contracts.stream()
+                .collect(Collectors.toMap(ContractEntity::getStaffId, Function.identity()));
+
+        return staffs.stream()
+                .map(staff -> {
+                    ContractEntity contract = contractMap.get(staff.getId());
+                    if (contract == null) {
+                        return ContractSummaryResponse.fromStaffOnly(staff);
+                    }
+                    return ContractSummaryResponse.fromEntity(contract, staff);
+                })
+                .toList();
     }
 }

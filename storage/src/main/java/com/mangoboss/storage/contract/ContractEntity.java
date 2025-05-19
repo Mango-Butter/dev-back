@@ -1,5 +1,6 @@
 package com.mangoboss.storage.contract;
 
+import com.mangoboss.storage.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "contract")
-public class ContractEntity {
+public class ContractEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +35,6 @@ public class ContractEntity {
     @Column(nullable = false)
     private ContractStatus status;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     private LocalDateTime bossSignedAt;
 
     private LocalDateTime staffSignedAt;
@@ -47,14 +45,12 @@ public class ContractEntity {
 
     @Builder
     private ContractEntity(final Long staffId, final String fileKey, final String bossSignatureKey,
-                           final ContractStatus status, final LocalDateTime createdAt,
-                           final LocalDateTime bossSignedAt, final LocalDateTime staffSignedAt,
+                           final ContractStatus status, final LocalDateTime bossSignedAt, final LocalDateTime staffSignedAt,
                            final String contractDataJson) {
         this.staffId = staffId;
         this.fileKey = fileKey;
         this.bossSignatureKey = bossSignatureKey;
         this.status = status;
-        this.createdAt = createdAt;
         this.bossSignedAt = bossSignedAt;
         this.staffSignedAt = staffSignedAt;
         this.contractDataJson = contractDataJson;
@@ -62,12 +58,11 @@ public class ContractEntity {
 
     // 계약 생성 (초안 상태)
     public static ContractEntity create(final Long staffId, final String fileKey, final String contractDataJson,
-                                        final LocalDateTime createdAt, final String bossSignatureKey, final LocalDateTime bossSignedAt) {
+                                        final String bossSignatureKey, final LocalDateTime bossSignedAt) {
         return ContractEntity.builder()
                 .staffId(staffId)
                 .fileKey(fileKey)
                 .contractDataJson(contractDataJson)
-                .createdAt(createdAt)
                 .bossSignatureKey(bossSignatureKey)
                 .bossSignedAt(bossSignedAt)
                 .status(ContractStatus.PENDING_STAFF_SIGNATURE)

@@ -36,4 +36,10 @@ public class ContractRepositoryImpl implements ContractRepository {
         contractJpaRepository.delete(contract);
     }
 
+
+    @Override
+    public List<ContractEntity> findAllByStoreId(Long storeId) {
+        return contractJpaRepository.findAllByStoreId(storeId);
+    }
+
 }
