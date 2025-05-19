@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 public class AutoTransferScheduler {
     private final AutoTransferService autoTransferService;
 
-    @Scheduled(cron = "0 0 9,18 * * *")
-//@Scheduled(cron = "*/5 * * * * *") // 30초
-    public void runAutoClockOut() {
+    @Scheduled(cron = "${cron.transfer}")
+    public void runTransfer() {
         autoTransferService.autoTransfer();
     }
 }

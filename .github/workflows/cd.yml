@@ -104,6 +104,10 @@ jobs:
             echo "NH_ISCD=${{ secrets.NH_ISCD }}" >> .env
             echo "NH_FINTECH_APSNO=${{ secrets.NH_FINTECH_APSNO }}" >> .env
             echo "NH_API_SVC_CD=${{ secrets.NH_API_SVC_CD }}" >> .env
+            echo "NH_API_SVC_CD_RECEIVED=${{ secrets.NH_API_SVC_CD_RECEIVED }}" >> .env
+            echo "NH_FIN_ACNO=${{ secrets.NH_FIN_ACNO }}" >> .env
+            echo "NH_MANGOBOSS_ACCOUNT=${{ secrets.NH_MANGOBOSS_ACCOUNT }}" >> .env
+            echo "NH_MANGOBOSS_BANKCODE=${{ secrets.NH_MANGOBOSS_BANKCODE }}" >> .env
             echo "UPLOAD_EXPIRATION_MINUTES=${{ secrets.UPLOAD_EXPIRATION_MINUTES }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -178,6 +182,12 @@ jobs:
             echo "NH_ISCD=${{ secrets.NH_ISCD }}" >> .env
             echo "NH_FINTECH_APSNO=${{ secrets.NH_FINTECH_APSNO }}" >> .env
             echo "NH_API_SVC_CD=${{ secrets.NH_API_SVC_CD }}" >> .env
+            echo "NH_API_SVC_CD_RECEIVED=${{ secrets.NH_API_SVC_CD_RECEIVED }}" >> .env
+            echo "NH_FIN_ACNO=${{ secrets.NH_FIN_ACNO }}" >> .env
+            echo "NH_MANGOBOSS_ACCOUNT=${{ secrets.NH_MANGOBOSS_ACCOUNT }}" >> .env
+            echo "NH_MANGOBOSS_BANKCODE=${{ secrets.NH_MANGOBOSS_BANKCODE }}" >> .env
+            echo "CRON_CLOCK_OUT=${{ secrets.CRON_CLOCK_OUT }}" >> .env
+            echo "CRON_TRANSFER=${{ secrets.CRON_TRANSFER }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
