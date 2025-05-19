@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long> {
-    List<PayrollEntity> findAllByTransferStateAndTransferDate(TransferState transferState, LocalDate transferDate);
+    List<PayrollEntity> findAllByTransferDateAndTransferStateIn(LocalDate transferDate, List<TransferState> transferStates);
 }
