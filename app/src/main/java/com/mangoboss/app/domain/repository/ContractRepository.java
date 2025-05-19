@@ -10,4 +10,6 @@ public interface ContractRepository {
     ContractEntity getContractById(final Long contractId);
 
     List<ContractEntity> findAllByStaffId(Long staffId);
+
+    void delete(final ContractEntity contract);
 }

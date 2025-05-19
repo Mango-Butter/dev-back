@@ -64,6 +64,15 @@ public class BossContractController {
         return bossContractFacade.getContractDetail(storeId, userId, contractId);
     }
 
+    @DeleteMapping("/{contractId}")
+    public void deleteContract(@AuthenticationPrincipal CustomUserDetails userDetails,
+                               @PathVariable Long storeId,
+                               @PathVariable Long contractId) {
+        final Long userId = userDetails.getUserId();
+        bossContractFacade.deleteContract(storeId, userId, contractId);
+    }
+
+
     @PostMapping("/templates")
     public ContractTemplateResponse createContractTemplate(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                            @PathVariable Long storeId,
