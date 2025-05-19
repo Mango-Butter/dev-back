@@ -57,6 +57,9 @@ public enum CustomErrorInfo {
     SCHEDULE_NOT_FOUND(404, "해당하는 스케줄이 없습니다.", 404006),
     REGULAR_GROUP_NOT_FOUND(404, "해당하는 고정 근무 그룹이 없습니다.", 404007),
     ATTENDANCE_NOT_FOUND(404, "근태 정보가 없습니다.", 404008),
+    CONTRACT_TEMPLATE_NOT_FOUND(404, "존재하지 않는 근로계약서 템플릿입니다.", 404009),
+    REQUIRED_DOCUMENT_NOT_FOUND(404, "요청한 제출 서류 설정이 존재하지 않습니다.", 404010),
+    DOCUMENT_NOT_FOUND(404, "해당 문서를 찾을 수 없습니다.", 404011),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
