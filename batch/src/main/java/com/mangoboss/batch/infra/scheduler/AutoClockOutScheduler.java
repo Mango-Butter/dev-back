@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 public class AutoClockOutScheduler {
     private final AutoClockOutService autoClockOutService;
 
-//    @Scheduled(cron = "0 */1 * * * *")
-    @Scheduled(cron = "*/30 * * * * *") // 30초
+    @Scheduled(cron = "${cron.clock-out}")
     public void runAutoClockOut() {
         autoClockOutService.autoClockOut();
     }
