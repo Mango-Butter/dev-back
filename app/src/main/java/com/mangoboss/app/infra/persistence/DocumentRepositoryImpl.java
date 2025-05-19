@@ -43,4 +43,8 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         return documentJpaRepository.findAllByStoreIdAndDocumentType(storeId, documentType);
     }
 
+    @Override
+    public List<DocumentEntity> findAllByStoreIdAndStaffId(final Long storeId, final Long staffId) {
+        return documentJpaRepository.findAllByStoreIdAndStaffId(storeId, staffId);
+    }
 }
