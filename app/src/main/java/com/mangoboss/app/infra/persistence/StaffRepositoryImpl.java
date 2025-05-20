@@ -27,8 +27,8 @@ public class StaffRepositoryImpl implements StaffRepository {
 
     @Override
     public StaffEntity getByIdAndStoreId(final Long staffId, final Long storeId) {
-        return staffJpaRepository.findByIdAndStoreId(staffId,storeId)
-                .orElseThrow(()->new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
+        return staffJpaRepository.findByIdAndStoreId(staffId, storeId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
     }
 
     @Override
@@ -39,6 +39,12 @@ public class StaffRepositoryImpl implements StaffRepository {
     @Override
     public StaffEntity getByUserIdAndStoreId(final Long userId, final Long storeId) {
         return staffJpaRepository.findByUserIdAndStoreId(userId, storeId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
+    }
+
+    @Override
+    public StaffEntity getById(final Long id) {
+        return staffJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
     }
 }

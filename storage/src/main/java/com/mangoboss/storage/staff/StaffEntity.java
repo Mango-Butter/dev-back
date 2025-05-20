@@ -30,17 +30,22 @@ public class StaffEntity extends BaseTimeEntity {
     private StoreEntity store;
 
     @Column(nullable = false)
+    private Integer hourlyWage;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String profileImageUrl;
 
     @Builder
-    private StaffEntity(final String name, final String profileImageUrl, final UserEntity user, final StoreEntity store) {
+    private StaffEntity(final String name, final String profileImageUrl, final UserEntity user, final StoreEntity store,
+                        final Integer hourlyWage) {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.user = user;
         this.store = store;
+        this.hourlyWage = hourlyWage;
     }
 
     public static StaffEntity create(final UserEntity user, final StoreEntity store) {
@@ -49,6 +54,11 @@ public class StaffEntity extends BaseTimeEntity {
                 .profileImageUrl(user.getProfileImageUrl())
                 .user(user)
                 .store(store)
+                .hourlyWage(10030)
                 .build();
+    }
+
+    public void updateHourlyWage(final Integer newWage) {
+        this.hourlyWage = newWage;
     }
 }
