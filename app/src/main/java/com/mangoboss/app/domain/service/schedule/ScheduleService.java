@@ -150,4 +150,12 @@ public class ScheduleService {
                 .stream()
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public void validateScheduleBelongsToStaff(final Long scheduleId, final Long staffId) {
+        final ScheduleEntity schedule = getScheduleById(scheduleId);
+        if (!schedule.getStaff().getId().equals(staffId)) {
+            throw new CustomException(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF);
+        }
+    }
 }
