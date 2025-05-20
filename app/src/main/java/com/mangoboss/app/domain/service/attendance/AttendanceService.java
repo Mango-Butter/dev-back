@@ -150,10 +150,10 @@ public class AttendanceService {
 
     public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
-        validateClockedOut(attendance);
         if (clockInStatus.equals(ClockInStatus.ABSENT)) {
             return attendance.update(null, null, ClockInStatus.ABSENT, ClockOutStatus.ABSENT);
         }
+        validateClockedOut(attendance);
         final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime);
         return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
     }
