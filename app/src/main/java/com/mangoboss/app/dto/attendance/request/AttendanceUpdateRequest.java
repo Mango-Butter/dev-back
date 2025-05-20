@@ -19,14 +19,16 @@ public record AttendanceUpdateRequest(
         ClockInStatus clockInStatus
 ) {
     public LocalDateTime toClockInDateTime(final LocalDate workDate) {
-        return LocalDateTime.of(workDate, clockInTime);
+        return clockInTime == null ? null : LocalDateTime.of(workDate, clockInTime);
     }
 
     public LocalDateTime toClockOutDateTime(final LocalDate workDate) {
+        if (clockOutTime == null) {
+            return null;
+        }
         if (clockOutTime.isAfter(clockInTime)) {
             return LocalDateTime.of(workDate, clockOutTime);
-        } else {
-            return LocalDateTime.of(workDate.plusDays(1), clockOutTime);
         }
+        return LocalDateTime.of(workDate.plusDays(1), clockOutTime);
     }
 }

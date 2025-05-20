@@ -8,6 +8,7 @@ import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
 import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
+import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,9 @@ public class BossAttendanceFacade {
 
     public AttendanceDetailResponse updateAttendance(final Long storeId, final Long bossId, final Long scheduleId, final AttendanceUpdateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
-        scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
+        if(!request.clockInStatus().equals(ClockInStatus.ABSENT)) {
+            scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
+        }
 
         final ScheduleEntity schedule = scheduleService.getScheduleById(scheduleId);
         final AttendanceEntity attendance = attendanceService.updateAttendance(
