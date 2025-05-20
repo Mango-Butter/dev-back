@@ -16,10 +16,8 @@ public record AttendanceManualAddRequest(
         @NonNull
         LocalDate workDate,
 
-        @NonNull
         LocalTime clockInTime,
 
-        @NonNull
         LocalTime clockOutTime
 ) {
     public ScheduleEntity toSchedule(final StaffEntity staff) {

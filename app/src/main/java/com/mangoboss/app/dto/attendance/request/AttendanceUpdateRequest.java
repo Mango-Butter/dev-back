@@ -10,10 +10,9 @@ import java.time.LocalTime;
 
 @Builder
 public record AttendanceUpdateRequest(
-        @NonNull
+
         LocalTime clockInTime,
 
-        @NonNull
         LocalTime clockOutTime,
 
         @NonNull
