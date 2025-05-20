@@ -25,7 +25,7 @@ public class StaffService {
     }
 
     @Transactional(readOnly = true)
-    public StaffEntity validateStaffBelongsToStore(final Long storeId, final Long staffId){
+    public StaffEntity validateStaffBelongsToStore(final Long storeId, final Long staffId) {
         return staffRepository.getByIdAndStoreId(staffId, storeId);
     }
 
@@ -36,12 +36,18 @@ public class StaffService {
     }
 
     @Transactional(readOnly = true)
-    public List<StaffEntity> getStaffsForStore(final Long storeId){
+    public List<StaffEntity> getStaffsForStore(final Long storeId) {
         return staffRepository.findAllByStoreId(storeId);
     }
 
     @Transactional(readOnly = true)
     public StaffEntity getVerifiedStaff(final Long userId, final Long storeId) {
         return staffRepository.getByUserIdAndStoreId(userId, storeId);
+    }
+
+    @Transactional
+    public void updateHourlyWage(final Long staffId, final Integer hourlyWage) {
+        final StaffEntity staff = staffRepository.getById(staffId);
+        staff.updateHourlyWage(hourlyWage);
     }
 }

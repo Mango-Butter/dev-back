@@ -40,16 +40,16 @@ VALUES(1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
       (3, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
       (3, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, created_at, modified_at)
+INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, hourly_wage, created_at, modified_at)
 VALUES (1, 2, 1, '망알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 3, 1, '고알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (3, 4, 1, '심알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO schedule (schedule_id, staff_id, regular_group_id, work_date, start_time, end_time, store_id)
 VALUES (1, 1, null, '2025-04-01', '2025-04-01 09:00:00', '2025-04-01 15:30:00', 1),

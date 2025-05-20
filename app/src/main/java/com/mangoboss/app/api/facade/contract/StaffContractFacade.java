@@ -44,12 +44,11 @@ public class StaffContractFacade {
 
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
+        final ContractEntity signedContract = contractService.signByStaff(contractId, contractSignRequest.staffSignatureKey());
 
         final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
-
+        staffService.updateHourlyWage(staff.getId(), contractData.hourlyWage());
         applyRegularSchedulesFromContractData(contractData, staff, storeId);
-
-        final ContractEntity signedContract = contractService.signByStaff(contractId, contractSignRequest.staffSignatureKey());
 
         return ContractResponse.fromEntity(signedContract);
     }
