@@ -65,7 +65,7 @@ class StaffServiceTest {
         when(staffRepository.getByIdAndStoreId(any(Long.class), any(Long.class))).thenReturn(staff);
 
         //when
-        StaffEntity result = staffService.getStaffBelongsToStore(staffId,storeId);
+        StaffEntity result = staffService.validateStaffBelongsToStore(staffId,storeId);
         //then
         assertThat(result).isEqualTo(staff);
     }

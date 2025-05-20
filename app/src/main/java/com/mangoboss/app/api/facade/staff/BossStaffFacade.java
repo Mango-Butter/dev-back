@@ -25,7 +25,7 @@ public class BossStaffFacade {
         requestList.forEach(request -> scheduleService.validateDate(
                         request.startDate(), request.endDate(), request.startTime(), request.endTime())
         );
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
         final List<RegularGroupEntity> regularGroups = requestList.stream().map(request -> request.toEntity(staff)).toList();
         scheduleService.createRegularGroupAndSchedules(regularGroups, storeId);
     }
@@ -49,7 +49,7 @@ public class BossStaffFacade {
 
     public StaffSimpleResponse getStaffDetail(final Long storeId, final Long staffId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, staffId);
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
         return StaffSimpleResponse.fromEntity(staff);
     }
 }

@@ -20,7 +20,7 @@ public class BossScheduleFacade {
         storeService.isBossOfStore(storeId, bossId);
         scheduleService.validateTime(request.startTime(), request.endTime());
         scheduleService.validateScheduleCreatable(request.workDate(), request.startTime());
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, request.staffId());
         scheduleService.createSchedule(request.toEntity(staff, storeId));
     }
 

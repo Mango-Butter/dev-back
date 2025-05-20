@@ -39,7 +39,7 @@ public class StaffStoreFacade {
 
     public StaffStoreInfoResponse getStoreInfo(final Long storeId, final Long userId) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
-        staffService.getStaffBelongsToStore(storeId, staff.getId());
+        staffService.validateStaffBelongsToStore(storeId, staff.getId());
         final StoreEntity store = storeService.getStoreById(storeId);
         return StaffStoreInfoResponse.fromEntity(store);
     }

@@ -35,7 +35,7 @@ public class BossAttendanceFacade {
         attendanceService.validateWorkDateForManualAttendance(request.workDate());
         scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
 
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, request.staffId());
         final AttendanceEntity attendance = attendanceService.createManualAttendanceAndSchedule(request.toSchedule(staff));
         return AttendanceDetailResponse.fromEntity(attendance);
     }
@@ -58,7 +58,7 @@ public class BossAttendanceFacade {
     public List<AttendanceDetailResponse> getAttendancesByStaffAndDateRange(final Long storeId, final Long staffId, final Long bossId,
                                                                             final LocalDate start, final LocalDate end) {
         storeService.isBossOfStore(storeId, bossId);
-        staffService.getStaffBelongsToStore(storeId, staffId);
+        staffService.validateStaffBelongsToStore(storeId, staffId);
         final List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(staffId, start, end);
         return attendances.stream().map(AttendanceDetailResponse::fromEntity).toList();
     }
