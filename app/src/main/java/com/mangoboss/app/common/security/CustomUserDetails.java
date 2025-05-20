@@ -1,7 +1,8 @@
-package com.mangoboss.app.common.exception;
+package com.mangoboss.app.common.security;
 
 import com.mangoboss.app.common.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+
 import java.util.Collection;
 import java.util.List;
 

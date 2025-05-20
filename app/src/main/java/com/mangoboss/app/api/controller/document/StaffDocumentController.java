@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.document;
 
 import com.mangoboss.app.api.facade.document.StaffDocumentFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.document.request.DocumentUploadRequest;
 import com.mangoboss.app.dto.document.response.DocumentStatusResponse;

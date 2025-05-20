@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mangoboss.app.api.facade.user.UserFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.user.response.UserInfoResponse;
 import com.mangoboss.app.dto.auth.requeset.SignUpRequest;
 

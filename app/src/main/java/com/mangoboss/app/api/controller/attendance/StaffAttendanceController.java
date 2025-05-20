@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.mangoboss.app.api.facade.attendance.StaffAttendanceFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 

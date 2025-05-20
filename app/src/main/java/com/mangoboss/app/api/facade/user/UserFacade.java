@@ -5,7 +5,7 @@ import com.mangoboss.app.dto.auth.response.JwtResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.user.response.UserInfoResponse;
 import com.mangoboss.app.dto.auth.requeset.SignUpRequest;

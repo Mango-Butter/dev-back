@@ -4,14 +4,12 @@ import static com.mangoboss.app.common.util.JwtUtil.AUTHORIZATION_HEADER;
 import static com.mangoboss.app.common.util.JwtUtil.BEARER_PREFIX;
 
 import io.jsonwebtoken.Claims;
+
 import java.io.IOException;
-import java.util.List;
 
 import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.mangoboss.app.common.exception.CustomException;
-import com.mangoboss.app.common.exception.CustomUserDetails;
 import com.mangoboss.app.common.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;

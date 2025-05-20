@@ -8,7 +8,7 @@ import com.mangoboss.storage.store.AttendanceMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangoboss.app.ExternalBusinessApiClient;
+import com.mangoboss.app.external.national_tax_service.ExternalBusinessApiClient;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StoreRepository;
