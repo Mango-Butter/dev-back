@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/staff/stores")
+@RequestMapping("/api/staff/stores")
 @PreAuthorize("hasRole('STAFF')")
 public class StaffStoreController {
 
     private final StaffStoreFacade staffStoreFacade;
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public StaffJoinResponse joinStore(@AuthenticationPrincipal CustomUserDetails userDetails,
                                        @RequestBody @Valid StaffJoinRequest request) {

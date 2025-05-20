@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/boss/stores/{storeId}/staffs")
 @RequiredArgsConstructor
@@ -19,8 +21,10 @@ public class BossDashboardController {
 
     @GetMapping("/attendances")
     public ListWrapperResponse<StaffAttendanceSummaryResponse> getStaffAttendanceDashboard(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                                           @PathVariable Long storeId) {
-        final Long bossId = userDetails.getUserId();
-        return ListWrapperResponse.of(bossDashboardFacade.getStaffAttendanceDashboard(storeId, bossId));
+                                                                                           @PathVariable Long storeId,
+                                                                                           @RequestParam LocalDate start,
+                                                                                           @RequestParam LocalDate end) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossDashboardFacade.getStaffAttendanceDashboard(storeId, userId, start, end));
     }
 }

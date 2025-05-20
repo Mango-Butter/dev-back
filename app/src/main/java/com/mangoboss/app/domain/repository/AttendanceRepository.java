@@ -19,7 +19,7 @@ public interface AttendanceRepository {
 
     void delete(AttendanceEntity attendance);
 
-    List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds);
+    List<StaffAttendanceCountProjection> findAttendanceCountsByStoreId(Long storeId, LocalDate start, LocalDate end);
 
     List<AttendanceEntity> findByStaffIdAndWorkDateBetween(Long staffId, LocalDate start, LocalDate end);
 }

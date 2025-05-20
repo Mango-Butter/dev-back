@@ -6,7 +6,6 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -141,10 +141,13 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<RegularGroupEntity> getRegularGroupsByStaffList(final List<StaffEntity> staffList) {
-        final List<Long> staffIds = staffList.stream()
-                .map(StaffEntity::getId)
+    public List<DayOfWeek> getDayOfWeeksForRegularGroup(final Long staffId) {
+        final List<RegularGroupEntity> regularGroups = getRegularGroupsForStaff(staffId);
+        return regularGroups
+                .stream()
+                .map(RegularGroupEntity::getDayOfWeek)
+                .collect(Collectors.toSet())
+                .stream()
                 .toList();
-        return regularGroupRepository.findAllByStaffIds(staffIds);
     }
 }

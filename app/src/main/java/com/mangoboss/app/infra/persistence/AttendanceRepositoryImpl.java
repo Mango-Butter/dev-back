@@ -46,8 +46,8 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     }
 
     @Override
-    public List<StaffAttendanceCountProjection> findAttendanceCountsByStaffIds(List<Long> staffIds) {
-        return attendanceJpaRepository.findAttendanceCountsByStaffIds(staffIds);
+    public List<StaffAttendanceCountProjection> findAttendanceCountsByStoreId(final Long storeId, final LocalDate start, final LocalDate end) {
+        return attendanceJpaRepository.findAttendanceCountsByStoreId(storeId,start,end);
     }
 
     @Override

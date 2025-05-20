@@ -1,7 +1,9 @@
 package com.mangoboss.storage.attendance.projection;
 
+import com.mangoboss.storage.staff.StaffEntity;
+
 public interface StaffAttendanceCountProjection {
-    Long getStaffId();
+    StaffEntity getStaff();
     Integer getNormalCount();
     Integer getLateCount();
     Integer getAbsentCount();

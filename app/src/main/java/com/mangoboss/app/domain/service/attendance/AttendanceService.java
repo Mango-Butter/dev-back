@@ -167,8 +167,8 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public List<StaffAttendanceCountProjection> getAttendanceCountsByStaffIds(final List<Long> staffIds) {
-        return attendanceRepository.findAttendanceCountsByStaffIds(staffIds);
+    public List<StaffAttendanceCountProjection> getAttendanceCountsByStoreId(final Long storeId, final LocalDate start, final LocalDate end) {
+        return attendanceRepository.findAttendanceCountsByStoreId(storeId, start, end);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,7 @@
 package com.mangoboss.app.dto.dashboard.response;
 
 import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
+import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.Builder;
 
@@ -16,12 +17,12 @@ public record StaffAttendanceSummaryResponse(
     public static StaffAttendanceSummaryResponse of(
             StaffEntity staffEntity,
             List<DayOfWeek> workDays,
-            StaffAttendanceCountResponse staffAttendanceCountResponse
+            StaffAttendanceCountProjection projection
     ) {
         return StaffAttendanceSummaryResponse.builder()
                 .staff(StaffSimpleResponse.fromEntity(staffEntity))
                 .workDays(workDays)
-                .attendanceCount(staffAttendanceCountResponse)
+                .attendanceCount(StaffAttendanceCountResponse.of(projection))
                 .build();
     }
 }
