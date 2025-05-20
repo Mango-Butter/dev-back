@@ -7,7 +7,11 @@ import java.util.Optional;
 
 public interface DocumentJpaRepository extends JpaRepository<DocumentEntity, Long> {
     Optional<DocumentEntity> findByIdAndStaffId(Long id, Long staffId);
+
     List<DocumentEntity> findAllByStoreIdAndDocumentType(Long storeId, DocumentType documentType);
+
     List<DocumentEntity> findAllByStoreIdAndStaffId(Long storeId, Long staffId);
+
+    boolean existsByStaffIdAndDocumentType(Long staffId, DocumentType documentType);
 
 }

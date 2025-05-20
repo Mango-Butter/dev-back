@@ -47,4 +47,9 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     public List<DocumentEntity> findAllByStoreIdAndStaffId(final Long storeId, final Long staffId) {
         return documentJpaRepository.findAllByStoreIdAndStaffId(storeId, staffId);
     }
+
+    @Override
+    public boolean existsByStaffIdAndDocumentType(final Long staffId, final DocumentType documentType) {
+        return documentJpaRepository.existsByStaffIdAndDocumentType(staffId, documentType);
+    }
 }

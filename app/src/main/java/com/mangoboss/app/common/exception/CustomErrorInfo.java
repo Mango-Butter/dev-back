@@ -31,6 +31,7 @@ public enum CustomErrorInfo {
     TRANSFER_DATE_REQUIRED(400, "자동 송금을 설정하려면 급여 지급일을 등록해야 합니다.", 400023),
     UNSUPPORTED_FILE_TYPE(400, "지원하지 않는 파일 형식입니다.", 400024),
     FILE_DECRYPTION_FAILED(400, "파일 복호화에 실패했습니다.", 400025),
+    DOCUMENT_ALREADY_UPLOADED(400, "이미 업로드한 서류입니다.", 400026),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

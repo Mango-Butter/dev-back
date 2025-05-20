@@ -71,4 +71,10 @@ public class DocumentService {
     public List<DocumentEntity> findAllByStoreIdAndStaffId(final Long storeId, final Long staffId) {
         return documentRepository.findAllByStoreIdAndStaffId(storeId, staffId);
     }
+
+    public void validateNotAlreadyUploaded(final Long staffId, final DocumentType documentType) {
+        if (documentRepository.existsByStaffIdAndDocumentType(staffId, documentType)) {
+            throw new CustomException(CustomErrorInfo.DOCUMENT_ALREADY_UPLOADED);
+        }
+    }
 }

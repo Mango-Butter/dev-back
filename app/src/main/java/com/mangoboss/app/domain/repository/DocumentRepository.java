@@ -17,4 +17,6 @@ public interface DocumentRepository {
     List<DocumentEntity> findAllByStoreIdAndDocumentType(Long storeId, DocumentType documentType);
 
     List<DocumentEntity> findAllByStoreIdAndStaffId(Long storeId, Long staffId);
+
+    boolean existsByStaffIdAndDocumentType(Long staffId, DocumentType documentType);
 }

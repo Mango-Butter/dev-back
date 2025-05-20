@@ -34,6 +34,7 @@ public class StaffDocumentFacade {
 
     public void uploadDocument(final Long storeId, final Long userId, final DocumentUploadRequest request) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        documentService.validateNotAlreadyUploaded(staff.getId(), request.documentType());
         documentService.uploadDocument(request.documentData(), request.documentType(), request.expiresAt(), storeId, staff.getId());
     }
 
