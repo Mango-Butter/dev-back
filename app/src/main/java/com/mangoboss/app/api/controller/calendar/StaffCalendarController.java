@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.calendar;
 
 import com.mangoboss.app.api.facade.calendar.StaffCalendarFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.calender.WorkDotResponse;
 import com.mangoboss.app.dto.calender.WorkWithStaffResponse;

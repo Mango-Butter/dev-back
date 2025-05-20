@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.store;
 
 import com.mangoboss.app.api.facade.store.StaffStoreFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.request.StaffJoinRequest;
 import com.mangoboss.app.dto.store.response.StaffJoinResponse;

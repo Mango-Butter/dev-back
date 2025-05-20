@@ -1,6 +1,6 @@
 package com.mangoboss.app.domain.service.store;
 
-import com.mangoboss.app.ExternalBusinessApiClient;
+import com.mangoboss.app.external.national_tax_service.ExternalBusinessApiClient;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StoreRepository;

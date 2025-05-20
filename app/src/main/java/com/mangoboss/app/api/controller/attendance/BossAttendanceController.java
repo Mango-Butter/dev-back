@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.attendance;
 
 import com.mangoboss.app.api.facade.attendance.BossAttendanceFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
 import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
@@ -45,7 +45,7 @@ public class BossAttendanceController {
 
     @DeleteMapping("/{scheduleId}/attendance")
     public void deleteAttendance(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                     @PathVariable Long storeId, @PathVariable Long scheduleId) {
+                                 @PathVariable Long storeId, @PathVariable Long scheduleId) {
         final Long userId = userDetails.getUserId();
         bossAttendanceFacade.deleteAttendance(storeId, userId, scheduleId);
     }

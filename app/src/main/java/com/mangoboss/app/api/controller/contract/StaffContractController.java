@@ -1,7 +1,7 @@
 package com.mangoboss.app.api.controller.contract;
 
 import com.mangoboss.app.api.facade.contract.StaffContractFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.contract.request.ContractSignRequest;
 import com.mangoboss.app.dto.contract.request.SignatureUploadRequest;

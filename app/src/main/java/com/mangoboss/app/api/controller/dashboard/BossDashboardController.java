@@ -1,6 +1,6 @@
 package com.mangoboss.app.api.controller.dashboard;
 
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.api.facade.dashboard.BossDashboardFacade;
 import com.mangoboss.app.dto.dashboard.response.StaffAttendanceSummaryResponse;

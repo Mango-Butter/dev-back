@@ -2,7 +2,7 @@ package com.mangoboss.app.api.controller.staff;
 
 
 import com.mangoboss.app.api.facade.staff.BossStaffFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.staff.request.RegularGroupCreateRequest;
 import com.mangoboss.app.dto.staff.response.RegularGroupResponse;
