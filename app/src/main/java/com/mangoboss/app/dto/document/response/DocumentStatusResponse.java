@@ -10,14 +10,16 @@ import lombok.Builder;
 public record DocumentStatusResponse(
         DocumentType documentType,
         boolean isSubmitted,
+        boolean isRequired,
         LocalDate expiresAt,
         Long documentId
 ) {
-    public static DocumentStatusResponse of(final DocumentType documentType, final boolean isSubmitted,
+    public static DocumentStatusResponse of(final DocumentType documentType, final boolean isSubmitted, final boolean isRequired,
                                             final LocalDate expiresAt, final Long documentId) {
         return DocumentStatusResponse.builder()
                 .documentType(documentType)
                 .isSubmitted(isSubmitted)
+                .isRequired(isRequired)
                 .expiresAt(expiresAt)
                 .documentId(documentId)
                 .build();

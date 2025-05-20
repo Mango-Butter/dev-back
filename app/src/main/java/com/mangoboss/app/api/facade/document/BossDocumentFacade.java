@@ -13,13 +13,16 @@ import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import com.mangoboss.storage.document.DocumentEntity;
 import com.mangoboss.app.dto.document.response.StaffDocumentStatusResponse;
 import com.mangoboss.storage.document.DocumentType;
+import com.mangoboss.storage.document.RequiredDocumentEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,7 +75,7 @@ public class BossDocumentFacade {
                 .toList();
     }
 
-    public ViewPreSignedUrlResponse viewDocument(Long storeId, Long bossId, Long documentId) {
+    public ViewPreSignedUrlResponse viewDocument(final Long storeId, final Long bossId, final Long documentId) {
         storeService.isBossOfStore(storeId, bossId);
         final DocumentEntity document = documentService.getByDocumentId(documentId);
         return s3FileManager.generateViewPreSignedUrl(document.getFileKey());
@@ -94,19 +97,26 @@ public class BossDocumentFacade {
         storeService.isBossOfStore(storeId, bossId);
         staffService.validateStaffBelongsToStore(storeId, staffId);
 
-        final List<DocumentEntity> documents = documentService.findAllByStoreIdAndStaffId(storeId, staffId);
-        final Map<DocumentType, DocumentEntity> documentMap = documents.stream()
+        final Map<DocumentType, DocumentEntity> documentMap = documentService
+                .findAllByStoreIdAndStaffId(storeId, staffId)
+                .stream()
                 .collect(Collectors.toMap(DocumentEntity::getDocumentType, Function.identity()));
+
+        final Set<DocumentType> requiredDocumentTypes = requiredDocumentService.findAllByStoreId(storeId)
+                .stream()
+                .filter(RequiredDocumentEntity::isRequired)
+                .map(RequiredDocumentEntity::getDocumentType)
+                .collect(Collectors.toSet());
 
         return Arrays.stream(DocumentType.values())
                 .map(type -> {
                     final DocumentEntity doc = documentMap.get(type);
-                    return DocumentStatusResponse.of(
-                            type,
-                            doc != null,
-                            doc != null ? doc.getExpiresAt() : null,
-                            doc != null ? doc.getId() : null
-                    );
+                    final boolean isSubmitted = doc != null;
+                    final boolean isRequired = requiredDocumentTypes.contains(type);
+                    final LocalDate expiresAt = isSubmitted ? doc.getExpiresAt() : null;
+                    final Long documentId = isSubmitted ? doc.getId() : null;
+
+                    return DocumentStatusResponse.of(type, isSubmitted, isRequired, expiresAt, documentId);
                 })
                 .toList();
     }
