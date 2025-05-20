@@ -47,7 +47,7 @@ public class BossContractFacade {
         storeService.isBossOfStore(storeId, bossId);
         final UserEntity boss = userService.getUserById(bossId);
         final StoreEntity store = storeService.getStoreById(storeId);
-        final StaffEntity staff = staffService.getStaffBelongsToStore(storeId, request.staffId());
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, request.staffId());
 
         final ContractData contractData = ContractData.of(request.contractDataInput(), boss, store, staff);
         final ContractEntity contract = contractService.createContract(request.staffId(), request.bossSignatureKey(), contractData);
@@ -150,7 +150,7 @@ public class BossContractFacade {
 
     public List<ContractSimpleResponse> getContractsByStaff(final Long storeId, final Long bossId, final Long staffId) {
         storeService.isBossOfStore(storeId, bossId);
-        staffService.getStaffBelongsToStore(storeId, staffId);
+        staffService.validateStaffBelongsToStore(storeId, staffId);
 
         final List<ContractEntity> contracts = contractService.getContractsByStaffId(staffId);
         return contracts.stream()

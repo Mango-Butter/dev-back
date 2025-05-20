@@ -25,7 +25,7 @@ public class StaffService {
     }
 
     @Transactional(readOnly = true)
-    public StaffEntity getStaffBelongsToStore(final Long storeId, final Long staffId){
+    public StaffEntity validateStaffBelongsToStore(final Long storeId, final Long staffId){
         return staffRepository.getByIdAndStoreId(staffId, storeId);
     }
 

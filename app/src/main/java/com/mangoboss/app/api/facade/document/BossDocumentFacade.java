@@ -92,7 +92,7 @@ public class BossDocumentFacade {
 
     public List<DocumentStatusResponse> getDocumentStatusByStaff(final Long storeId, final Long bossId, final Long staffId) {
         storeService.isBossOfStore(storeId, bossId);
-        staffService.getStaffBelongsToStore(storeId, staffId);
+        staffService.validateStaffBelongsToStore(storeId, staffId);
 
         final List<DocumentEntity> documents = documentService.findAllByStoreIdAndStaffId(storeId, staffId);
         final Map<DocumentType, DocumentEntity> documentMap = documents.stream()
