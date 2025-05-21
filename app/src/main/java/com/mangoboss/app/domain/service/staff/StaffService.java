@@ -45,6 +45,11 @@ public class StaffService {
         return staffRepository.getByUserIdAndStoreId(userId, storeId);
     }
 
+    @Transactional(readOnly = true)
+    public StaffEntity getStaffById(final Long staffId) {
+        return staffRepository.getById(staffId);
+    }
+
     @Transactional
     public void updateHourlyWage(final Long staffId, final Integer hourlyWage) {
         final StaffEntity staff = staffRepository.getById(staffId);
