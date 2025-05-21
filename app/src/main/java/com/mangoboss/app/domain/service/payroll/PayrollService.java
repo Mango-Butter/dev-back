@@ -1,6 +1,8 @@
 package com.mangoboss.app.domain.service.payroll;
 
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.EstimatedPayrollRepository;
 import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
@@ -134,6 +136,13 @@ public class PayrollService {
 
     @Transactional
     public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate month){
+        if(payrollRepository.isNotTransferPending(storeId, month)){
+            throw new CustomException(CustomErrorInfo.PAYROLL_TRANSFER_ALREADY_STARTED);
+        }
         payrollRepository.deleteAllByStoreIdAndMonth(storeId, month);
+    }
+
+    public List<PayrollEntity> getConfirmedPayroll(final Long storeId, final LocalDate month) {
+        return payrollRepository.getAllByStoreIdAndMonth(storeId, month);
     }
 }

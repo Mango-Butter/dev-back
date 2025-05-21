@@ -16,5 +16,9 @@ public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long>
     List<PayrollEntity> findAllByTransferDateAndTransferStateIn(@Param("today") LocalDate today,
                                                                 @Param("transferStates") List<TransferState> transferStates);
 
+    Boolean existsByStoreIdAndMonthAndTransferStateNot(Long storeId, LocalDate month, TransferState transferState);
+
     void deleteAllByStoreIdAndMonth(Long storeId, LocalDate month);
+
+    List<PayrollEntity> getAllByStoreIdAndMonth(Long storeId, LocalDate month);
 }

@@ -3,6 +3,7 @@ package com.mangoboss.app.infra.persistence;
 import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollJpaRepository;
+import com.mangoboss.storage.payroll.TransferState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +28,15 @@ public class PayrollRepositoryImpl implements PayrollRepository {
     @Override
     public void deleteAllByStoreIdAndMonth(final Long storeId, final LocalDate month) {
         payrollJpaRepository.deleteAllByStoreIdAndMonth(storeId, month);
+    }
+
+    @Override
+    public boolean isNotTransferPending(final Long storeId, final LocalDate month) {
+        return payrollJpaRepository.existsByStoreIdAndMonthAndTransferStateNot(storeId, month, TransferState.PENDING);
+    }
+
+    @Override
+    public List<PayrollEntity> getAllByStoreIdAndMonth(final Long storeId, final LocalDate month){
+        return payrollJpaRepository.getAllByStoreIdAndMonth(storeId, month);
     }
 }

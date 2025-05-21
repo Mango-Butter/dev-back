@@ -91,6 +91,7 @@ public class PayrollSettingService {
         if (autoTransferEnabled && payrollSetting.isTransferAccountNotSet()) {
             throw new CustomException(CustomErrorInfo.TRANSFER_ACCOUNT_REQUIRED);
         }
+        // todo 해당 달의 payroll이 없어야 가능하게 하는 로직 추가
         return payrollSetting.updateAutoTransferEnabled(autoTransferEnabled, transferDate);
     }
 
