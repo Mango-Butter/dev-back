@@ -5,6 +5,7 @@ import com.mangoboss.app.domain.repository.EstimatedPayrollRepository;
 import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.PayrollAmount;
+import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
@@ -43,7 +44,7 @@ public class PayrollService {
                 attendances,
                 month
         );
-        EstimatedPayrollEntity estimatedPayroll =  EstimatedPayrollEntity.create(
+        EstimatedPayrollEntity estimatedPayroll = EstimatedPayrollEntity.create(
                 payrollAmount,
                 staff,
                 month
@@ -91,7 +92,7 @@ public class PayrollService {
     }
 
     private int calculateBaseAmount(final Integer totalWorkMinutes, final Integer hourlyWage) {
-        return (int)(((double) totalWorkMinutes / 60) * hourlyWage);
+        return (int) (((double) totalWorkMinutes / 60) * hourlyWage);
     }
 
     private Map<LocalDate, Integer> groupTimeByWorkDate(final Integer deductionUnit,
@@ -119,5 +120,20 @@ public class PayrollService {
                         weekly < weeklyAllowanceThresholdMinutes ? 0
                                 : (int) ((double) weekly / weeklyStandardMinutes * WEEKLY_ALLOWANCE_HOURS * hourlyWage))
                 .sum();
+    }
+
+    @Transactional
+    public List<PayrollEntity> confirmEstimatedPayroll(final Long storeId, final PayrollSettingEntity payrollSetting,
+                                                       final List<String> keys, final LocalDate month) {
+        List<EstimatedPayrollEntity> estimatedPayrolls = estimatedPayrollRepository.findAllByPayrollKeyIn(keys);
+        List<PayrollEntity> payrolls = estimatedPayrolls.stream()
+                .map(estimated -> estimated.createPayrollEntity(storeId, payrollSetting))
+                .toList();
+        return payrollRepository.saveAll(payrolls);
+    }
+
+    @Transactional
+    public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate month){
+        payrollRepository.deleteAllByStoreIdAndMonth(storeId, month);
     }
 }

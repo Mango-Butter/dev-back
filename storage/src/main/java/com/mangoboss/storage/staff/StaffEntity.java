@@ -75,4 +75,8 @@ public class StaffEntity extends BaseTimeEntity {
         this.bankCode = bankCode;
         this.account = account;
     }
+
+    public void updateHourlyWage(final Integer hourlyWage) {
+        this.hourlyWage = hourlyWage;
+    }
 }

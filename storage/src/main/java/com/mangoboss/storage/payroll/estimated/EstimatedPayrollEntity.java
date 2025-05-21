@@ -1,11 +1,8 @@
 package com.mangoboss.storage.payroll.estimated;
 
-import com.mangoboss.storage.payroll.PayrollAmount;
+import com.mangoboss.storage.payroll.*;
 import com.mangoboss.storage.staff.StaffEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,8 +20,9 @@ public class EstimatedPayrollEntity {
     @Column(nullable = false)
     private Long staffId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String bankCode;
+    private BankCode bankCode;
 
     @Column(nullable = false)
     private String account;
@@ -32,52 +30,28 @@ public class EstimatedPayrollEntity {
     @Column(nullable = false)
     private LocalDate month;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String withholdingType;
+    private WithholdingType withholdingType;
 
     @Column(nullable = false)
-    private Double totalTime;
-
-    @Column(nullable = false)
-    private Integer baseAmount;
-
-    @Column(nullable = false)
-    private Integer weeklyAllowance;
-
-    @Column(nullable = false)
-    private Integer totalAmount;
-
-    @Column(nullable = false)
-    private Integer withholdingTax;
-
-    @Column(nullable = false)
-    private Integer netAmount;
+    private PayrollAmount payrollAmount;
 
     @Builder
-    private EstimatedPayrollEntity(String key,
-                                    Long staffId,
-                                    String bankCode,
-                                    String account,
-                                    LocalDate month,
-                                    String withholdingType,
-                                    Double totalTime,
-                                    Integer baseAmount,
-                                    Integer weeklyAllowance,
-                                    Integer totalAmount,
-                                    Integer withholdingTax,
-                                    Integer netAmount) {
+    private EstimatedPayrollEntity(final String key,
+                                   final Long staffId,
+                                   final BankCode bankCode,
+                                   final String account,
+                                   final LocalDate month,
+                                   final WithholdingType withholdingType,
+                                   final PayrollAmount payrollAmount) {
         this.payrollKey = key;
         this.staffId = staffId;
         this.bankCode = bankCode;
         this.account = account;
         this.month = month;
         this.withholdingType = withholdingType;
-        this.totalTime = totalTime;
-        this.baseAmount = baseAmount;
-        this.weeklyAllowance = weeklyAllowance;
-        this.totalAmount = totalAmount;
-        this.withholdingTax = withholdingTax;
-        this.netAmount = netAmount;
+        this.payrollAmount = payrollAmount;
     }
 
     public static EstimatedPayrollEntity create(final PayrollAmount payrollAmount,
@@ -87,21 +61,30 @@ public class EstimatedPayrollEntity {
         return EstimatedPayrollEntity.builder()
                 .key(generateKey(staff.getId(), month))
                 .staffId(staff.getId())
-                .bankCode(staff.getBankCode().getDisplayName())
+                .bankCode(staff.getBankCode())
                 .account(staff.getAccount())
                 .month(month)
-                .withholdingType(staff.getWithholdingType().getLabel())
-                .totalTime(payrollAmount.getTotalTime())
-                .baseAmount(payrollAmount.getBaseAmount())
-                .weeklyAllowance(payrollAmount.getWeeklyAllowance())
-                .totalAmount(payrollAmount.getTotalAmount())
-                .withholdingTax(payrollAmount.getWithholdingTax())
-                .netAmount(payrollAmount.getNetAmount())
+                .withholdingType(staff.getWithholdingType())
+                .payrollAmount(payrollAmount)
                 .build();
     }
 
-    private static String generateKey(final Long staffId, final LocalDate month){
+    private static String generateKey(final Long staffId, final LocalDate month) {
         String formattedMonth = month.format(DateTimeFormatter.ofPattern("yyyy-MM"));
         return String.format("payroll:%d:%s", staffId, formattedMonth);
+    }
+
+    public PayrollEntity createPayrollEntity(final Long storeId, final PayrollSettingEntity setting) {
+        return PayrollEntity.create(
+                this.staffId,
+                storeId,
+                this.bankCode,
+                this.account,
+                setting.getTransferAccountEntity().getFinAccount(),
+                this.month,
+                this.month.withDayOfMonth(setting.getTransferDate()),
+                this.withholdingType,
+                this.payrollAmount
+        );
     }
 }

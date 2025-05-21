@@ -27,29 +27,30 @@ INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, overtime
 VALUES (1, false, 0, 0, null, 1);
 
 INSERT INTO required_document (store_id, document_type, is_required, created_at, modified_at)
-VALUES(1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (1, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (1, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (1, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (2, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (2, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (2, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (2, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (3, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (3, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (3, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-      (3, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (1, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (1, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (1, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (3, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (3, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (3, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (3, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, hourly_wage, created_at, modified_at)
+INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, withholding_type, hourly_wage, bank_code,
+                   account, created_at, modified_at)
 VALUES (1, 2, 1, '망알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        'NONE', 10030, 'NH', '3020000012816', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 3, 1, '고알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        'NONE', 10030, 'NH', '3020000013095', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (3, 4, 1, '심알바',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-        10030, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+        'NONE', 10030, 'NH', '3020000013094', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO schedule (schedule_id, staff_id, regular_group_id, work_date, start_time, end_time, store_id)
 VALUES (1, 1, null, '2025-04-01', '2025-04-01 09:00:00', '2025-04-01 15:30:00', 1),
@@ -64,13 +65,3 @@ VALUES (1, 1, '2025-04-01 09:00:00', '2025-04-01 15:30:00', 'NORMAL', 'NORMAL'),
        (3, 3, '2025-04-03 13:05:10', '2025-04-03 18:00:00', 'LATE', 'NORMAL'),
        (4, 4, null, null, 'ABSENT', 'ABSENT'),
        (5, 5, '2025-05-05 10:00:00', '2025-05-05 13:00:00', 'NORMAL', 'EARLY_LEAVE');
-
-INSERT INTO payroll (payroll_id, staff_id, store_id, month, transfer_date, period_start, period_end, total_amount,
-                     tax_deductions, net_amount, transfer_state, fin_account, withdrawal_bank_code, withdrawal_account,
-                     deposit_bank_code, deposit_account, retry_count)
-VALUES (1, 1, 1, '2025-04', '2025-05-19', '2025-04-01', '2025-04-30', 100000, '0', 100000, 'PENDING',
-        '00820100029430000000000027408', 'NH', '3020000013093', 'NH', '3020000013094', 0),
-       (2, 2, 1, '2025-04', '2025-05-19', '2025-04-01', '2025-04-30', 200000, '0', 200000, 'PENDING',
-        '00820100029430000000000027408', 'NH', '3020000013093', 'NH', '3020000012816', 0),
-       (3, 3, 1, '2025-04', '2025-05-19', '2025-04-01', '2025-04-30', 300000, '0', 300000, 'PENDING',
-        '00820100029430000000000027408', 'NH', '3020000013093', 'NH', '3020000013095', 0);

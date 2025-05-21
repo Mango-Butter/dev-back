@@ -1,5 +1,6 @@
 package com.mangoboss.app.dto.payroll.response;
 
+import com.mangoboss.storage.payroll.PayrollAmount;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
 import lombok.Builder;
 
@@ -19,19 +20,20 @@ public record PayrollSimpleResponse(
         Integer withholdingTax,
         Integer netAmount
 ) {
-    public static PayrollSimpleResponse of(final EstimatedPayrollEntity payroll) {
+    public static PayrollSimpleResponse of(final EstimatedPayrollEntity estimatedPayroll) {
+        PayrollAmount amount = estimatedPayroll.getPayrollAmount();
         return PayrollSimpleResponse.builder()
-                .key(payroll.getPayrollKey())
-                .bankCode(payroll.getBankCode())
-                .account(payroll.getAccount())
-                .month(payroll.getMonth())
-                .withholdingType(payroll.getWithholdingType())
-                .totalTime(payroll.getTotalTime())
-                .baseAmount(payroll.getBaseAmount())
-                .weeklyAllowance(payroll.getWeeklyAllowance())
-                .totalAmount(payroll.getTotalAmount())
-                .withholdingTax(payroll.getWithholdingTax())
-                .netAmount(payroll.getNetAmount())
+                .key(estimatedPayroll.getPayrollKey())
+                .bankCode(estimatedPayroll.getBankCode().getCode())
+                .account(estimatedPayroll.getAccount())
+                .month(estimatedPayroll.getMonth())
+                .withholdingType(estimatedPayroll.getWithholdingType().getLabel())
+                .totalTime(amount.getTotalTime())
+                .baseAmount(amount.getBaseAmount())
+                .weeklyAllowance(amount.getWeeklyAllowance())
+                .totalAmount(amount.getTotalAmount())
+                .withholdingTax(amount.getWithholdingTax())
+                .netAmount(amount.getNetAmount())
                 .build();
     }
 }
