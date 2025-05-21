@@ -31,8 +31,8 @@ public enum CustomErrorInfo {
     TRANSFER_DATE_REQUIRED(400, "자동 송금을 설정하려면 급여 지급일을 등록해야 합니다.", 400023),
     UNSUPPORTED_FILE_TYPE(400, "지원하지 않는 파일 형식입니다.", 400024),
     FILE_DECRYPTION_FAILED(400, "파일 복호화에 실패했습니다.", 400025),
-    TRANSFER_DATE_EXCEEDED_EXCEPTION(400,"이미 급여 지급일이 지났습니다.",400026),
-    AUTO_TRANSFER_IS_NOT_ENABLED(400,"자동 송금이 설정되어 있지 않습니다.",400027),
+    TRANSFER_DATE_EXCEEDED_EXCEPTION(400, "이미 급여 지급일이 지났습니다.", 400026),
+    AUTO_TRANSFER_IS_NOT_ENABLED(400, "자동 송금이 설정되어 있지 않습니다.", 400027),
     DOCUMENT_ALREADY_UPLOADED(400, "이미 업로드한 서류입니다.", 400028),
 
     // 401 Unauthorized
@@ -78,6 +78,7 @@ public enum CustomErrorInfo {
     CANNOT_MODIFY_PAST_SCHEDULE(409, "과거 스케줄은 수정이 불가합니다.", 409008),
     ATTENDANCE_DATE_MUST_BE_PAST(409, "근태는 과거에 대해서만 수동 추가할 수 있습니다.", 409009),
     INCOMPLETE_ATTENDANCE(409, "근태가 아직 완료되지 않았습니다.", 409010),
+    PAYROLL_TRANSFER_ALREADY_STARTED(409, "이미 자동송금이 시작되었습니다.", 409011),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),

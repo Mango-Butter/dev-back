@@ -11,4 +11,8 @@ public interface PayrollRepository {
     List<PayrollEntity> saveAll(List<PayrollEntity> payrolls);
 
     void deleteAllByStoreIdAndMonth(Long storeId, LocalDate month);
+
+    boolean isNotTransferPending(Long storeId, LocalDate month);
+
+    List<PayrollEntity> getAllByStoreIdAndMonth(Long storeId, LocalDate month);
 }

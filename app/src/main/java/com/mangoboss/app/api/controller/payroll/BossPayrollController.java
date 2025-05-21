@@ -14,6 +14,7 @@ import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,9 +54,16 @@ public class BossPayrollController {
 
     @PostMapping("/staffs")
     public void confirmEstimatedPayroll(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                                 @PathVariable Long storeId,
-                                                                                 @RequestBody @Valid ConfirmEstimatedPayrollRequest request) {
+                                        @PathVariable Long storeId,
+                                        @RequestBody @Valid ConfirmEstimatedPayrollRequest request) {
         final Long userId = userDetails.getUserId();
         bossPayrollFacade.confirmEstimatedPayroll(storeId, userId, request);
+    }
+
+    @GetMapping("/staffs/confirm")
+    public ListWrapperResponse<PayrollEstimatedResponse> getConfirmedPayrolls(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                              @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossPayrollFacade.getConfirmedPayroll(storeId, userId));
     }
 }

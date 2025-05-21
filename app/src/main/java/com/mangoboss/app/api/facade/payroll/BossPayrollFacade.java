@@ -13,6 +13,7 @@ import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollSimpleResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollEntity;
@@ -93,8 +94,20 @@ public class BossPayrollFacade {
         LocalDate month = today.withDayOfMonth(1);
 
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
-        payrollService.deletePayrollsByStoreIdAndMonth(storeId,month);
+        payrollService.deletePayrollsByStoreIdAndMonth(storeId, month);
         List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(storeId, payrollSetting, request.payrollKeys(), month);
+    }
+
+    public List<PayrollEstimatedResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        LocalDate today = LocalDate.now(clock);
+        LocalDate month = today.withDayOfMonth(1);
+
+        PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
+        List<PayrollEntity> confirmedPayroll = payrollService.getConfirmedPayroll(storeId, month);
+        return confirmedPayroll.stream()
+                .map(payroll -> PayrollEstimatedResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
+                .toList();
     }
 }
 
