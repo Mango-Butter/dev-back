@@ -2,6 +2,8 @@ package com.mangoboss.storage.payroll;
 
 import com.mangoboss.storage.store.StoreEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,8 @@ public class PayrollSettingEntity {
     @Column(nullable = false)
     private Boolean autoTransferEnabled = false;
 
+    @Min(1)
+    @Max(28)
     private Integer transferDate;
 
     @Column(nullable = false)

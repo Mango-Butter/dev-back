@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.payroll;
 
+import com.mangoboss.app.api.controller.payroll.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.service.attendance.AttendanceService;
@@ -14,6 +15,7 @@ import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.BankCode;
+import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.TransferAccountEntity;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
@@ -68,8 +70,8 @@ public class BossPayrollFacade {
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
 
         LocalDate today = LocalDate.now(clock);
-        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
-        LocalDate startDate = firstDayOfMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate month = today.withDayOfMonth(1);
+        LocalDate startDate = month.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate endDate = today.withDayOfMonth(today.lengthOfMonth());
 
         List<EstimatedPayrollEntity> payrolls = staffs.stream().map(staff -> {
@@ -77,12 +79,22 @@ public class BossPayrollFacade {
                     staff.getId(),
                     startDate,
                     endDate);
-            return payrollService.createEstimatedPayroll(staff, payrollSetting, attendances, firstDayOfMonth);
+            return payrollService.createEstimatedPayroll(staff, payrollSetting, attendances, month);
         }).toList();
 
         return payrolls.stream()
                 .map(estimated -> PayrollEstimatedResponse.of(estimated, staffService.getStaffById(estimated.getStaffId())))
                 .toList();
+    }
+
+    public void confirmEstimatedPayroll(final Long storeId, final Long bossId, final ConfirmEstimatedPayrollRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        LocalDate today = LocalDate.now(clock);
+        LocalDate month = today.withDayOfMonth(1);
+
+        PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
+        payrollService.deletePayrollsByStoreIdAndMonth(storeId,month);
+        List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(storeId, payrollSetting, request.payrollKeys(), month);
     }
 }
 

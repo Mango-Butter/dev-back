@@ -2,7 +2,8 @@ package com.mangoboss.app.api.controller.payroll;
 
 
 import com.mangoboss.app.api.facade.payroll.BossPayrollFacade;
-import com.mangoboss.app.common.exception.CustomUserDetails;
+
+import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
@@ -47,5 +48,13 @@ public class BossPayrollController {
                                                                                        @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossPayrollFacade.getEstimatedPayrollsForStaffs(storeId, userId));
+    }
+
+    @PostMapping("/staffs")
+    public void confirmEstimatedPayroll(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                 @PathVariable Long storeId,
+                                                                                 @RequestBody @Valid ConfirmEstimatedPayrollRequest request) {
+        final Long userId = userDetails.getUserId();
+        bossPayrollFacade.confirmEstimatedPayroll(storeId, userId, request);
     }
 }

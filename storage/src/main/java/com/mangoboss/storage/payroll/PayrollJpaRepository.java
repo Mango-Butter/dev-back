@@ -15,4 +15,6 @@ public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long>
     @Query("SELECT p FROM PayrollEntity p WHERE p.transferDate = :today AND p.transferState IN :transferStates")
     List<PayrollEntity> findAllByTransferDateAndTransferStateIn(@Param("today") LocalDate today,
                                                                 @Param("transferStates") List<TransferState> transferStates);
+
+    void deleteAllByStoreIdAndMonth(Long storeId, LocalDate month);
 }
