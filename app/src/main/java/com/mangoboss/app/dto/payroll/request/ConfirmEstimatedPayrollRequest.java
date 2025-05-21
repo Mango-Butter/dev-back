@@ -1,4 +1,4 @@
-package com.mangoboss.app.api.controller.payroll;
+package com.mangoboss.app.dto.payroll.request;
 
 import lombok.NonNull;
 

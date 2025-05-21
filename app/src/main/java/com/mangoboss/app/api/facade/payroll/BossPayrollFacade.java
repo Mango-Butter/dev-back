@@ -1,6 +1,6 @@
 package com.mangoboss.app.api.facade.payroll;
 
-import com.mangoboss.app.api.controller.payroll.ConfirmEstimatedPayrollRequest;
+import com.mangoboss.app.dto.payroll.request.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.service.attendance.AttendanceService;
