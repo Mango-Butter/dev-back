@@ -66,6 +66,10 @@ public class PayrollSettingEntity {
                 .build();
     }
 
+    public Boolean isAutoTransferEnabled() {
+        return this.autoTransferEnabled;
+    }
+
     public void registerTransferAccountEntity(final TransferAccountEntity transferAccountEntity) {
         this.transferAccountEntity = transferAccountEntity;
     }

@@ -2,6 +2,8 @@ package com.mangoboss.storage.staff;
 
 
 import com.mangoboss.storage.BaseTimeEntity;
+import com.mangoboss.storage.payroll.BankCode;
+import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.user.UserEntity;
 import jakarta.persistence.*;
@@ -29,8 +31,17 @@ public class StaffEntity extends BaseTimeEntity {
     @JoinColumn(name = "store_id")
     private StoreEntity store;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private WithholdingType withholdingType;
+
     @Column(nullable = false)
     private Integer hourlyWage;
+
+    @Enumerated(EnumType.STRING)
+    private BankCode bankCode;
+
+    private String account;
 
     @Column(nullable = false)
     private String name;
@@ -40,11 +51,12 @@ public class StaffEntity extends BaseTimeEntity {
 
     @Builder
     private StaffEntity(final String name, final String profileImageUrl, final UserEntity user, final StoreEntity store,
-                        final Integer hourlyWage) {
+                        final WithholdingType withholdingType, final Integer hourlyWage) {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.user = user;
         this.store = store;
+        this.withholdingType = withholdingType;
         this.hourlyWage = hourlyWage;
     }
 
@@ -54,11 +66,13 @@ public class StaffEntity extends BaseTimeEntity {
                 .profileImageUrl(user.getProfileImageUrl())
                 .user(user)
                 .store(store)
+                .withholdingType(WithholdingType.NONE)
                 .hourlyWage(10030)
                 .build();
     }
 
-    public void updateHourlyWage(final Integer newWage) {
-        this.hourlyWage = newWage;
+    public void updateAccount(final BankCode bankCode, final String account) {
+        this.bankCode = bankCode;
+        this.account = account;
     }
 }
