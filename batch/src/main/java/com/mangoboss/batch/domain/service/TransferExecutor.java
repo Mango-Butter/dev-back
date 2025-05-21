@@ -5,6 +5,7 @@ import com.mangoboss.batch.external.nhdevelopers.NhDevelopersClient;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.DrawingTransferResponse;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.InquireTransactionHistoryResponse;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.ReceivedTransferResponse;
+import com.mangoboss.storage.payroll.PayrollAmount;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.TransferState;
 import jakarta.persistence.EntityManager;
@@ -59,9 +60,10 @@ public class TransferExecutor {
         }
         try {
             markWithdrawn(payroll);
+            PayrollAmount amount = payroll.getPayrollAmount();
             DrawingTransferResponse response = nhDevelopersClient.drawingTransfer(
                     payroll.getFinAccount(),
-                    payroll.getNetAmount().toString(),
+                    amount.getNetAmount().toString(),
                     WITHDRAWN_PREFIX + payroll.getId()
             );
             markCompleted(payroll);
@@ -86,10 +88,11 @@ public class TransferExecutor {
         }
         try {
             markTransferred(payroll);
+            PayrollAmount amount = payroll.getPayrollAmount();
             ReceivedTransferResponse response = nhDevelopersClient.receivedTransfer(
                     payroll.getDepositBankCode().getCode(),
                     payroll.getDepositAccount(),
-                    payroll.getNetAmount().toString(),
+                    amount.getNetAmount().toString(),
                     TRANSFERRED_PREFIX + payroll.getId()
             );
             markCompleted(payroll);
