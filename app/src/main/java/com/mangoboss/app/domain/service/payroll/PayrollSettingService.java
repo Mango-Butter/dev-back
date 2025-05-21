@@ -5,9 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.PayrollSettingRepository;
 import com.mangoboss.app.domain.repository.TransferAccountRepository;
 import com.mangoboss.app.external.nhdevelopers.NhDevelopersClient;
-import com.mangoboss.app.external.nhdevelopers.dto.response.CheckFinAccountResponse;
 import com.mangoboss.app.external.nhdevelopers.dto.response.DepositorAccountNumberResponse;
-import com.mangoboss.app.external.nhdevelopers.dto.response.FinAccountDirectResponse;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.TransferAccountEntity;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +61,7 @@ public class PayrollSettingService {
                 bossName,
                 accountNumber,
                 finAccount
-                );
+        );
         payrollSetting.registerTransferAccountEntity(transferAccount);
         return transferAccountRepository.save(transferAccount);
     }
@@ -95,4 +94,15 @@ public class PayrollSettingService {
         return payrollSetting.updateAutoTransferEnabled(autoTransferEnabled, transferDate);
     }
 
+    public PayrollSettingEntity validateAutoTransferAndGetPayrollSetting(final Long storeId) {
+        LocalDate today = LocalDate.now(clock);
+        PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
+        if (!setting.isAutoTransferEnabled()) {
+            throw new CustomException(CustomErrorInfo.AUTO_TRANSFER_IS_NOT_ENABLED);
+        }
+        if (today.getDayOfMonth() > setting.getTransferDate()) {
+            throw new CustomException(CustomErrorInfo.TRANSFER_DATE_EXCEEDED_EXCEPTION);
+        }
+        return setting;
+    }
 }

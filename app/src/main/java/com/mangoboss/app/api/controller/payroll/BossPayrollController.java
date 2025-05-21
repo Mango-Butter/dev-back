@@ -2,10 +2,12 @@ package com.mangoboss.app.api.controller.payroll;
 
 
 import com.mangoboss.app.api.facade.payroll.BossPayrollFacade;
-import com.mangoboss.app.common.security.CustomUserDetails;
+import com.mangoboss.app.common.exception.CustomUserDetails;
+import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +40,12 @@ public class BossPayrollController {
                                                      @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
         return bossPayrollFacade.getPayrollSettings(storeId, userId);
+    }
+
+    @GetMapping("/staffs")
+    public ListWrapperResponse<PayrollEstimatedResponse> getEstimatedPayrollsForStaffs(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                       @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossPayrollFacade.getEstimatedPayrollsForStaffs(storeId, userId));
     }
 }
