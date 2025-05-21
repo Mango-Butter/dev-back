@@ -70,17 +70,16 @@ public class BossPayrollFacade {
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
 
-        LocalDate today = LocalDate.now(clock);
-        LocalDate month = today.withDayOfMonth(1);
-        LocalDate startDate = month.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
-        LocalDate endDate = today.withDayOfMonth(today.lengthOfMonth());
+        LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
+        LocalDate startDate = targetMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate endDate = targetMonth.withDayOfMonth(targetMonth.lengthOfMonth());
 
         List<EstimatedPayrollEntity> payrolls = staffs.stream().map(staff -> {
             List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(
                     staff.getId(),
                     startDate,
                     endDate);
-            return payrollService.createEstimatedPayroll(staff, payrollSetting, attendances, month);
+            return payrollService.createEstimatedPayroll(staff, payrollSetting, attendances, targetMonth);
         }).toList();
 
         return payrolls.stream()
@@ -90,21 +89,19 @@ public class BossPayrollFacade {
 
     public void confirmEstimatedPayroll(final Long storeId, final Long bossId, final ConfirmEstimatedPayrollRequest request) {
         storeService.isBossOfStore(storeId, bossId);
-        LocalDate today = LocalDate.now(clock);
-        LocalDate month = today.withDayOfMonth(1);
+        LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
-        payrollService.deletePayrollsByStoreIdAndMonth(storeId, month);
-        List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(storeId, payrollSetting, request.payrollKeys(), month);
+        payrollService.deletePayrollsByStoreIdAndMonth(storeId, targetMonth);
+        List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(storeId, payrollSetting, request.payrollKeys());
     }
 
     public List<PayrollEstimatedResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
-        LocalDate today = LocalDate.now(clock);
-        LocalDate month = today.withDayOfMonth(1);
+        LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
-        List<PayrollEntity> confirmedPayroll = payrollService.getConfirmedPayroll(storeId, month);
+        List<PayrollEntity> confirmedPayroll = payrollService.getConfirmedPayroll(storeId, targetMonth);
         return confirmedPayroll.stream()
                 .map(payroll -> PayrollEstimatedResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
                 .toList();

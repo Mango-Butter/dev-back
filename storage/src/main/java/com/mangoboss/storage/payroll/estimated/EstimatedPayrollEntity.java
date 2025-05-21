@@ -82,7 +82,7 @@ public class EstimatedPayrollEntity {
                 this.account,
                 setting.getTransferAccountEntity().getFinAccount(),
                 this.month,
-                this.month.withDayOfMonth(setting.getTransferDate()),
+                this.month.plusMonths(1).withDayOfMonth(setting.getTransferDate()),
                 this.withholdingType,
                 this.payrollAmount
         );

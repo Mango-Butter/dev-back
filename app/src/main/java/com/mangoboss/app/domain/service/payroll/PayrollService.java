@@ -39,17 +39,17 @@ public class PayrollService {
     public EstimatedPayrollEntity createEstimatedPayroll(final StaffEntity staff,
                                                          final PayrollSettingEntity setting,
                                                          final List<AttendanceEntity> attendances,
-                                                         final LocalDate month) {
+                                                         final LocalDate targetMonth) {
         PayrollAmount payrollAmount = createPayrollAmount(
                 staff,
                 setting.getDeductionUnit(),
                 attendances,
-                month
+                targetMonth
         );
         EstimatedPayrollEntity estimatedPayroll = EstimatedPayrollEntity.create(
                 payrollAmount,
                 staff,
-                month
+                targetMonth
         );
         return estimatedPayrollRepository.save(estimatedPayroll);
     }
@@ -57,10 +57,10 @@ public class PayrollService {
     public PayrollAmount createPayrollAmount(final StaffEntity staff,
                                              final Integer deductionUnit,
                                              final List<AttendanceEntity> attendances,
-                                             final LocalDate month) {
+                                             final LocalDate targetMonth) {
         Map<LocalDate, Integer> dailyWorkMinutesMap = groupTimeByWorkDate(deductionUnit, attendances);
         int weeklyAllowance = calculateWeeklyAllowance(dailyWorkMinutesMap, staff.getHourlyWage());
-        int totalWorkMinutes = calculateTotalTimeMinutes(dailyWorkMinutesMap, month);
+        int totalWorkMinutes = calculateTotalTimeMinutes(dailyWorkMinutesMap, targetMonth);
         int baseAmount = calculateBaseAmount(totalWorkMinutes, staff.getHourlyWage());
         int totalAmount = baseAmount + weeklyAllowance;
         int withholdingTax = calculateWithholdingTax(totalAmount, staff.getWithholdingType());
@@ -126,7 +126,7 @@ public class PayrollService {
 
     @Transactional
     public List<PayrollEntity> confirmEstimatedPayroll(final Long storeId, final PayrollSettingEntity payrollSetting,
-                                                       final List<String> keys, final LocalDate month) {
+                                                       final List<String> keys) {
         List<EstimatedPayrollEntity> estimatedPayrolls = estimatedPayrollRepository.findAllByPayrollKeyIn(keys);
         List<PayrollEntity> payrolls = estimatedPayrolls.stream()
                 .map(estimated -> estimated.createPayrollEntity(storeId, payrollSetting))
@@ -135,11 +135,11 @@ public class PayrollService {
     }
 
     @Transactional
-    public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate month){
-        if(payrollRepository.isNotTransferPending(storeId, month)){
+    public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate targetMonth){
+        if(payrollRepository.isNotTransferPending(storeId, targetMonth)){
             throw new CustomException(CustomErrorInfo.PAYROLL_TRANSFER_ALREADY_STARTED);
         }
-        payrollRepository.deleteAllByStoreIdAndMonth(storeId, month);
+        payrollRepository.deleteAllByStoreIdAndMonth(storeId, targetMonth);
     }
 
     public List<PayrollEntity> getConfirmedPayroll(final Long storeId, final LocalDate month) {
