@@ -37,7 +37,7 @@ public class AttendanceEntity extends BaseTimeEntity {
 
     @Builder
     private AttendanceEntity(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
-                            final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus, final ScheduleEntity schedule) {
+                             final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus, final ScheduleEntity schedule) {
         this.clockInTime = clockInTime;
         this.clockOutTime = clockOutTime;
         this.clockInStatus = clockInStatus;
@@ -81,5 +81,13 @@ public class AttendanceEntity extends BaseTimeEntity {
         this.clockInStatus = clockInStatus;
         this.clockOutStatus = clockOutStatus;
         return this;
+    }
+
+    public Integer calculateWorkTime(final Integer deductionUnit) {
+        if (clockInTime == null || clockOutTime == null) {
+            return 0;
+        }
+        long totalMinutes = java.time.Duration.between(clockInTime, clockOutTime).toMinutes();
+        return (int) (totalMinutes / deductionUnit) * deductionUnit;
     }
 }
