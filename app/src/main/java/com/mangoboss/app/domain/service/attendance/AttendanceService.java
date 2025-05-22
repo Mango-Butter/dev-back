@@ -88,7 +88,7 @@ public class AttendanceService {
     }
 
     private ClockInStatus determineClockInStatus(final LocalDateTime scheduledStartTime, final LocalDateTime clockInTime) {
-        return clockInTime.isBefore(scheduledStartTime) ? ClockInStatus.NORMAL : ClockInStatus.LATE;
+        return clockInTime.isAfter(scheduledStartTime) ? ClockInStatus.LATE : ClockInStatus.NORMAL;
     }
 
     private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {

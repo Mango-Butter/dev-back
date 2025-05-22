@@ -73,7 +73,8 @@ public class BossPayrollFacade {
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
         LocalDate startDate = targetMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate endDate = targetMonth.withDayOfMonth(targetMonth.lengthOfMonth());
-
+        System.out.println(startDate);
+        System.out.println(endDate);
         List<EstimatedPayrollEntity> payrolls = staffs.stream().map(staff -> {
             List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(
                     staff.getId(),
