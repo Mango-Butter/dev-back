@@ -131,18 +131,16 @@ public class BossContractFacade {
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
         List<ContractEntity> contracts = contractService.findAllByStoreId(storeId);
 
-        Map<Long, ContractEntity> contractMap = contracts.stream()
-                .collect(Collectors.toMap(ContractEntity::getStaffId, Function.identity()));
+        Map<Long, List<ContractEntity>> contractMap = contracts.stream()
+                .collect(Collectors.groupingBy(ContractEntity::getStaffId));
 
         return staffs.stream()
                 .map(staff -> {
-                    ContractEntity contract = contractMap.get(staff.getId());
-                    if (contract == null) {
-                        return ContractSummaryResponse.fromStaffOnly(staff);
-                    }
-                    return ContractSummaryResponse.fromEntity(contract, staff);
+                    List<ContractEntity> staffContracts = contractMap.getOrDefault(staff.getId(), List.of());
+                    return ContractSummaryResponse.of(staff, staffContracts);
                 })
                 .toList();
+
     }
 
     public List<ContractSimpleResponse> getContractsByStaff(final Long storeId, final Long bossId, final Long staffId) {
