@@ -83,6 +83,11 @@ public class ContractService {
         contractRepository.delete(contract);
     }
 
+    public void validateContractNotSignedByStaff(final ContractEntity contract) {
+        if (contract.getStaffSignatureKey() != null) {
+            throw new CustomException(CustomErrorInfo.STAFF_SIGNED_CONTRACT_CANNOT_BE_DELETED);
+        }
+    }
 
     public ContractData convertFromContractDataJson(final String contractDataJson) {
         return JsonConverter.fromJson(contractDataJson, ContractData.class);

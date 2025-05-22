@@ -34,6 +34,8 @@ public enum CustomErrorInfo {
     TRANSFER_DATE_EXCEEDED_EXCEPTION(400, "이미 급여 지급일이 지났습니다.", 400026),
     AUTO_TRANSFER_IS_NOT_ENABLED(400, "자동 송금이 설정되어 있지 않습니다.", 400027),
     DOCUMENT_ALREADY_UPLOADED(400, "이미 업로드한 서류입니다.", 400028),
+    STAFF_SIGNED_CONTRACT_CANNOT_BE_DELETED(400, "알바생이 서명한 근로계약서는 삭제할 수 없습니다.", 400029),
+
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

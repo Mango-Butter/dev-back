@@ -85,14 +85,11 @@ public class BossContractFacade {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
 
-        s3FileManager.deleteFile(contract.getFileKey());
-        if (contract.getStaffSignatureKey() != null) {
-            s3FileManager.deleteFile(contract.getStaffSignatureKey());
-        }
+        contractService.validateContractNotSignedByStaff(contract);
 
+        s3FileManager.deleteFile(contract.getFileKey());
         contractService.deleteContract(contractId);
     }
-
 
     public ContractTemplateResponse createContractTemplate(final Long storeId, final Long bossId, final ContractTemplateCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
