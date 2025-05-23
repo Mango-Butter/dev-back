@@ -30,4 +30,6 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
             "WHERE s.endTime <= :oneHourAgo " +
             "AND (a.clockOutStatus is NULL OR a is NULL) ")
     List<ScheduleEntity> findAllSchedulesWithoutClockOut(LocalDateTime oneHourAgo);
+
+    Boolean existsByRegularGroupId(Long regularGroupId);
 }

@@ -8,6 +8,7 @@ import com.mangoboss.storage.schedule.RegularGroupJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,13 +22,8 @@ public class RegularGroupRepositoryImpl implements RegularGroupRepository {
     }
 
     @Override
-    public List<RegularGroupEntity> findAllByStaffId(final Long staffId) {
-        return regularGroupJpaRepository.findAllByStaffId(staffId);
-    }
-
-    @Override
-    public List<RegularGroupEntity> findAllByStaffIds(final List<Long> staffIds) {
-        return regularGroupJpaRepository.findAllByStaffIdIn(staffIds);
+    public List<RegularGroupEntity> findActiveOrUpcomingByStaffId(final Long staffId, final LocalDate date) {
+        return regularGroupJpaRepository.findActiveOrUpcomingByStaffId(staffId, date);
     }
 
     @Override
