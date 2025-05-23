@@ -107,5 +107,10 @@ public class BossPayrollFacade {
                 .map(payroll -> PayrollEstimatedResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
                 .toList();
     }
+
+    public void deleteAccount(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        payrollSettingService.deleteAccount(storeId);
+    }
 }
 
