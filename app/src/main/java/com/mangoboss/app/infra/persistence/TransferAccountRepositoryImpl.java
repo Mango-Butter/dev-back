@@ -12,7 +12,12 @@ public class TransferAccountRepositoryImpl implements TransferAccountRepository 
     private final TransferAccountJpaRepository transferAccountJpaRepository;
 
     @Override
-    public TransferAccountEntity save(TransferAccountEntity transferAccountEntity) {
+    public TransferAccountEntity save(final TransferAccountEntity transferAccountEntity) {
         return transferAccountJpaRepository.save(transferAccountEntity);
+    }
+
+    @Override
+    public void deleteById(final Long id) {
+        transferAccountJpaRepository.deleteById(id);
     }
 }

@@ -4,4 +4,6 @@ import com.mangoboss.storage.payroll.TransferAccountEntity;
 
 public interface TransferAccountRepository {
     TransferAccountEntity save(TransferAccountEntity transferAccountEntity);
+
+    void deleteById(Long id);
 }

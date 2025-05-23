@@ -81,6 +81,7 @@ public enum CustomErrorInfo {
     ATTENDANCE_DATE_MUST_BE_PAST(409, "근태는 과거에 대해서만 수동 추가할 수 있습니다.", 409009),
     INCOMPLETE_ATTENDANCE(409, "근태가 아직 완료되지 않았습니다.", 409010),
     PAYROLL_TRANSFER_ALREADY_STARTED(409, "이미 자동송금이 시작되었습니다.", 409011),
+    AUTO_TRANSFER_ENABLED(409, "자동 송금이 켜져있어 계좌를 삭제할 수 없습니다.", 409012),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),

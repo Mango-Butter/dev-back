@@ -66,4 +66,11 @@ public class BossPayrollController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossPayrollFacade.getConfirmedPayroll(storeId, userId));
     }
+
+    @DeleteMapping("/account")
+    public void deleteAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
+                              @PathVariable Long storeId){
+        final Long userId = userDetails.getUserId();
+        bossPayrollFacade.deleteAccount(storeId, userId);
+    }
 }

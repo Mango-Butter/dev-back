@@ -91,7 +91,6 @@ public class PayrollSettingService {
         if (autoTransferEnabled && payrollSetting.isTransferAccountNotSet()) {
             throw new CustomException(CustomErrorInfo.TRANSFER_ACCOUNT_REQUIRED);
         }
-        // todo 해당 달의 payroll이 없어야 가능하게 하는 로직 추가
         return payrollSetting.updateAutoTransferEnabled(autoTransferEnabled, transferDate);
     }
 
@@ -105,5 +104,14 @@ public class PayrollSettingService {
             throw new CustomException(CustomErrorInfo.TRANSFER_DATE_EXCEEDED_EXCEPTION);
         }
         return setting;
+    }
+
+    @Transactional
+    public void deleteAccount(final Long storeId) {
+        PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
+        if(!setting.isAutoTransferEnabled()){
+            throw new CustomException(CustomErrorInfo.AUTO_TRANSFER_ENABLED);
+        }
+        transferAccountRepository.deleteById(setting.getTransferAccountEntity().getId());
     }
 }
