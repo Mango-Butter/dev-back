@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
     private static final int SCHEDULE_CREATE_LIMIT_MINUTES = 30;
     private static final int MAX_SCHEDULE_DURATION_HOURS = 16;
+    private static final int DAYS_IN_WEEK = 7;
     private final ScheduleRepository scheduleRepository;
     private final RegularGroupRepository regularGroupRepository;
     private final Clock clock;
@@ -70,7 +71,7 @@ public class ScheduleService {
     private void createRegularSchedules(final RegularGroupEntity regularGroup, final Long storeId) {
         final DayOfWeek start = regularGroup.getStartDate().getDayOfWeek();
         final DayOfWeek target = regularGroup.getDayOfWeek();
-        int daysToAdd = (target.getValue() - start.getValue() + 7) % 7;
+        int daysToAdd = (target.getValue() - start.getValue() + DAYS_IN_WEEK) % DAYS_IN_WEEK;
         LocalDate current = regularGroup.getStartDate().plusDays(daysToAdd);
 
         while (!current.isAfter(regularGroup.getEndDate())) {
@@ -93,7 +94,8 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public List<RegularGroupEntity> getRegularGroupsForStaff(final Long staffId) {
-        return regularGroupRepository.findAllByStaffId(staffId);
+        final LocalDate today = LocalDate.now(clock);
+        return regularGroupRepository.findActiveOrUpcomingByStaffId(staffId, today);
     }
 
     public void deleteScheduleById(final Long scheduleId) {
@@ -108,15 +110,15 @@ public class ScheduleService {
 
     public void terminateRegularGroup(final Long regularGroupId) {
         final RegularGroupEntity regularGroup = regularGroupRepository.getById(regularGroupId);
-        LocalDate nowDate = LocalDate.now(clock);
-        LocalDate tomorrow = nowDate.plusDays(1);
+        LocalDate today = LocalDate.now(clock);
+        LocalDate tomorrow = today.plusDays(1);
 
         scheduleRepository.deleteAllByRegularGroupIdAndWorkDateAfter(regularGroupId, tomorrow);
-        if (regularGroup.getStartDate().isAfter(nowDate)) {
+        if (!scheduleRepository.existsByRegularGroupId(regularGroupId)) {
             regularGroupRepository.delete(regularGroup);
             return;
         }
-        regularGroup.terminate(nowDate);
+        regularGroup.terminate(today);
     }
 
     @Transactional(readOnly = true)

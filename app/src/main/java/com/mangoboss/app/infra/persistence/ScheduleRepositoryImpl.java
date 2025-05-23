@@ -59,4 +59,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     public List<ScheduleEntity> findAllByStaffIdAndWorkDate(final Long staffId, final LocalDate date) {
         return scheduleJpaRepository.findAllByStaffIdAndWorkDate(staffId, date);
     }
+
+    @Override
+    public Boolean existsByRegularGroupId(final Long regularGroupId) {
+        return scheduleJpaRepository.existsByRegularGroupId(regularGroupId);
+    }
 }

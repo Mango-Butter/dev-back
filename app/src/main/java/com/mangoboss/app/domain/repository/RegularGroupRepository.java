@@ -2,15 +2,14 @@ package com.mangoboss.app.domain.repository;
 
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface RegularGroupRepository {
 
     RegularGroupEntity save(RegularGroupEntity regularGroup);
 
-    List<RegularGroupEntity> findAllByStaffId(Long storeId);
-
-    List<RegularGroupEntity> findAllByStaffIds(List<Long> staffIds);
+    List<RegularGroupEntity> findActiveOrUpcomingByStaffId(Long storeId, LocalDate date);
 
     RegularGroupEntity getById(Long id);
 
