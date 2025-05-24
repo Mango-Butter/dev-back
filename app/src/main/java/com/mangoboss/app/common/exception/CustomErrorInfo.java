@@ -35,6 +35,10 @@ public enum CustomErrorInfo {
     AUTO_TRANSFER_IS_NOT_ENABLED(400, "자동 송금이 설정되어 있지 않습니다.", 400027),
     DOCUMENT_ALREADY_UPLOADED(400, "이미 업로드한 서류입니다.", 400028),
     STAFF_SIGNED_CONTRACT_CANNOT_BE_DELETED(400, "알바생이 서명한 근로계약서는 삭제할 수 없습니다.", 400029),
+    INVALID_REPEAT_DAYS(400, "매주 반복은 반복 요일이 필요합니다.", 400030),
+    INVALID_REPEAT_DATES(400, "월간 반복은 반복 날짜가 필요합니다.", 400031),
+    INVALID_ONCE_DATE(400, "한번 만은 마감 기한이 필요합니다.", 400032),
+    TASK_ROUTINE_STRATEGY_NOT_FOUND(400, "유효하지 않은 반복 설정입니다.", 400033),
 
 
     // 401 Unauthorized
