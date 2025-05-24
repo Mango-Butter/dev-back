@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum S3FileType {
     CONTRACT("contracts/"),
     SIGNATURE("signatures/"),
-    DOCUMENT("documents/");
+    DOCUMENT("documents/"),
+    TASK("tasks/");
 
     private final String folder;
 }

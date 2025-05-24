@@ -137,8 +137,6 @@ public class S3FileManager {
                 .bucket(contractBucketName)
                 .key(key)
                 .contentType(contentType)
-                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
-                .ssekmsKeyId(kmsKeyId)
                 .build();
 
         final PutObjectPresignRequest preSignRequest = PutObjectPresignRequest.builder()
