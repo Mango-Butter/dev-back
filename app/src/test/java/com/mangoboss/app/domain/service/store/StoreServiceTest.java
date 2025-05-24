@@ -35,19 +35,20 @@ class StoreServiceTest {
         // given
         Long storeId = 1L;
         StoreEntity store = mock(StoreEntity.class);
-        StoreUpdateRequest request = StoreUpdateRequest.builder()
-                .address("서울시 강남구")
-                .storeType(StoreType.CAFE)
-                .build();
+        String address = "서울시 강남구";
+        StoreType storeType = mock(StoreType.class);
+        Integer overtimeLimit = 10;
+
         when(storeRepository.getById(storeId)).thenReturn(store);
 
         // when
-        storeService.updateStoreInfo(storeId, request.address(), request.storeType());
+        storeService.updateStoreInfo(storeId, address, storeType, overtimeLimit);
 
         // then
         verify(store).updateInfo(
-                request.address(),
-                request.storeType()
+                address,
+                storeType,
+                overtimeLimit
         );
     }
 
@@ -128,16 +129,19 @@ class StoreServiceTest {
     void GPS_출퇴근_설정을_변경할_수_있다() {
         // given
         Long storeId = 1L;
-        GpsRegisterRequest request = new GpsRegisterRequest("경기도 수원시", 37.1234, 127.5678, 100);
+        String address = "서울시 강남구";
+        Double gpsLatitude = 37.1234;
+        Double gpsLongitude = 127.5678;
+        Integer gpsRangeMeters = 100;
         StoreEntity store = mock(StoreEntity.class);
         when(storeRepository.getById(storeId)).thenReturn(store);
-        when(store.updateGpsSettings(request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters())).thenReturn(store);
+        when(store.updateGpsSettings(address, gpsLatitude, gpsLongitude, gpsRangeMeters)).thenReturn(store);
 
         // when
-        StoreEntity updatedStore = storeService.updateGpsSettings(storeId, request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
+        StoreEntity updatedStore = storeService.updateGpsSettings(storeId, address, gpsLatitude, gpsLongitude, gpsRangeMeters);
 
         // then
-        verify(store).updateGpsSettings(request.address(), request.gpsLatitude(), request.gpsLongitude(), request.gpsRangeMeters());
+        verify(store).updateGpsSettings(address, gpsLatitude, gpsLongitude, gpsRangeMeters);
         assertThat(updatedStore).isSameAs(store);
     }
 }
