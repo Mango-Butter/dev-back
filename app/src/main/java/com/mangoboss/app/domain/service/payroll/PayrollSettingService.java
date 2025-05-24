@@ -76,10 +76,9 @@ public class PayrollSettingService {
     public void updatePayrollSettings(final PayrollSettingEntity payrollSetting,
                                       final Boolean autoTransferEnabled,
                                       final Integer transferDate,
-                                      final Integer overtimeLimit,
                                       final Integer deductionUnit) {
         updateAutoTransferEnabled(payrollSetting, autoTransferEnabled, transferDate)
-                .updatePayrollPolicy(overtimeLimit, deductionUnit);
+                .updateDeductionUnit(deductionUnit);
     }
 
     private PayrollSettingEntity updateAutoTransferEnabled(final PayrollSettingEntity payrollSetting,

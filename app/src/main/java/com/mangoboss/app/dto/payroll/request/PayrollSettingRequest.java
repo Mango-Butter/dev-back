@@ -15,7 +15,7 @@ public record PayrollSettingRequest(
         @Max(28)
         Integer transferDate,
 
-        Integer overtimeLimit,
+        Integer imit,
 
         @NonNull
         DeductionUnit deductionUnit

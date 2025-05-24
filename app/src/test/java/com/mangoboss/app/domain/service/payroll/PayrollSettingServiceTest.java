@@ -51,7 +51,7 @@ class PayrollSettingServiceTest {
         // when
         // then
         assertThatThrownBy(() -> payrollSettingService.updatePayrollSettings(
-                payrollSetting, true, 60, 10, 30))
+                payrollSetting, true, 60, 10))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.TRANSFER_ACCOUNT_REQUIRED.getMessage());
     }
@@ -64,7 +64,7 @@ class PayrollSettingServiceTest {
         // when
         // then
         assertThatThrownBy(() -> payrollSettingService.updatePayrollSettings(
-                payrollSetting, true, null, 10, 30))
+                payrollSetting, true, null, 10))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.TRANSFER_DATE_REQUIRED.getMessage());
     }
@@ -74,14 +74,14 @@ class PayrollSettingServiceTest {
         // given
         PayrollSettingEntity payrollSetting = mock(PayrollSettingEntity.class);
         when(payrollSetting.updateAutoTransferEnabled(false, null)).thenReturn(payrollSetting);
-        when(payrollSetting.updatePayrollPolicy(10, 30)).thenReturn(payrollSetting);
+        when(payrollSetting.updateDeductionUnit(10)).thenReturn(payrollSetting);
 
         // when
         payrollSettingService.updatePayrollSettings(
-                payrollSetting, false, null, 10, 30);
+                payrollSetting, false, null, 10);
 
         // then
         verify(payrollSetting).updateAutoTransferEnabled(false, null);
-        verify(payrollSetting).updatePayrollPolicy(10, 30);
+        verify(payrollSetting).updateDeductionUnit(10);
     }
 }

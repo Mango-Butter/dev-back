@@ -2,18 +2,18 @@ package com.mangoboss.app.dto.attendance.request;
 
 import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.staff.StaffEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Builder
 public record AttendanceManualAddRequest(
-        @NonNull
+        @NotNull
         Long staffId,
 
-        @NonNull
+        @NotNull
         LocalDate workDate,
 
         LocalTime clockInTime,

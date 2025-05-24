@@ -27,9 +27,6 @@ public class PayrollSettingEntity {
     private Integer transferDate;
 
     @Column(nullable = false)
-    private Integer overtimeLimit;
-
-    @Column(nullable = false)
     private Integer deductionUnit;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -44,14 +41,12 @@ public class PayrollSettingEntity {
     private PayrollSettingEntity(
             final Boolean autoTransferEnabled,
             final Integer transferDate,
-            final Integer overtimeLimit,
             final Integer deductionUnit,
             final TransferAccountEntity transferAccountEntity,
             final StoreEntity store
     ) {
         this.autoTransferEnabled = autoTransferEnabled;
         this.transferDate = transferDate;
-        this.overtimeLimit = overtimeLimit;
         this.deductionUnit = deductionUnit;
         this.transferAccountEntity = transferAccountEntity;
         this.store = store;
@@ -63,7 +58,6 @@ public class PayrollSettingEntity {
         return PayrollSettingEntity.builder()
                 .autoTransferEnabled(false)
                 .transferDate(null)
-                .overtimeLimit(0)
                 .deductionUnit(0)
                 .transferAccountEntity(null)
                 .store(store)
@@ -91,8 +85,7 @@ public class PayrollSettingEntity {
         return this;
     }
 
-    public PayrollSettingEntity updatePayrollPolicy(final Integer overtimeLimit, final Integer deductionUnit) {
-        this.overtimeLimit = overtimeLimit;
+    public PayrollSettingEntity updateDeductionUnit(final Integer deductionUnit) {
         this.deductionUnit = deductionUnit;
         return this;
     }

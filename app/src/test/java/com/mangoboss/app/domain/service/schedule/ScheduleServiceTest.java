@@ -285,11 +285,11 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void 고정근무_시작날짜가_오늘_이후이면_고정근무_자체를_삭제한다() {
+    void 고정근무에_해당하는_스케줄이_없으면_고정근무_자체를_삭제한다() {
         //given
         Long groupId = 1L;
         RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
-        when(regularGroup.getStartDate()).thenReturn(LocalDate.now(fixedClock).plusDays(2));
+        when(scheduleRepository.existsByRegularGroupId(groupId)).thenReturn(false);
         when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
 
         //when
@@ -302,11 +302,11 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void 고정근무_시작날짜가_오늘_이전이면_고정근무_종료날짜가_내일이_된다() {
+    void 고정근무에_해당하는_스케줄이_있으면_고정근무는_endDate를_마감한다() {
         //given
         Long groupId = 1L;
         RegularGroupEntity regularGroup = mock(RegularGroupEntity.class);
-        when(regularGroup.getStartDate()).thenReturn(LocalDate.now(fixedClock).minusDays(2));
+        when(scheduleRepository.existsByRegularGroupId(groupId)).thenReturn(true);
         when(regularGroupRepository.getById(groupId)).thenReturn(regularGroup);
 
         //when
@@ -317,4 +317,5 @@ class ScheduleServiceTest {
         verify(regularGroupRepository, never()).delete(regularGroup);
         verify(regularGroup).terminate(eq(LocalDate.now(fixedClock)));
     }
+
 }

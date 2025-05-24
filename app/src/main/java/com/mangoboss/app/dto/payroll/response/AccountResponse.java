@@ -6,14 +6,12 @@ import lombok.Builder;
 @Builder
 public record AccountResponse (
         String bankName,
-        String accountNumber,
-        String accountHolder
+        String accountNumber
 ){
     public static AccountResponse fromEntity(final TransferAccountEntity transferAccount) {
         return AccountResponse.builder()
                 .bankName(transferAccount.getBankCode().getDisplayName())
                 .accountNumber(transferAccount.getAccountNumber())
-                .accountHolder(transferAccount.getAccountHolder())
                 .build();
     }
 }

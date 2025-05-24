@@ -56,7 +56,6 @@ public class BossPayrollFacade {
                 store.getPayrollSetting(),
                 request.autoTransferEnabled(),
                 request.transferDate(),
-                request.overtimeLimit(),
                 request.deductionUnit().getValue());
     }
 

@@ -80,13 +80,14 @@ class AttendanceServiceTest {
     void 퇴근_정상_기록() {
         // given
         Long staffId = 1L;
+        Integer overtimeLimit = 0;
         when(schedule.getEndTime()).thenReturn(fixedNow.withSecond(0).withNano(0));
         when(schedule.getAttendance()).thenReturn(attendance);
         when(attendance.isAlreadyClockedOut()).thenReturn(false);
         when(scheduleRepository.getByIdAndStaffId(schedule.getId(), staffId)).thenReturn(schedule);
 
         // when
-        attendanceService.recordClockOut(staffId, schedule.getId());
+        attendanceService.recordClockOut(staffId, schedule.getId(), overtimeLimit);
 
         // then
         verify(attendance).recordClockOut(eq(fixedNow), eq(ClockOutStatus.NORMAL));
@@ -96,13 +97,14 @@ class AttendanceServiceTest {
     void 조기퇴근은_EARLY_LEAVE로_기록된다() {
         // given
         Long staffId = 1L;
+        Integer overtimeLimit = 0;
         when(schedule.getEndTime()).thenReturn(fixedNow.plusMinutes(10));
         when(schedule.getAttendance()).thenReturn(attendance);
         when(attendance.isAlreadyClockedOut()).thenReturn(false);
         when(scheduleRepository.getByIdAndStaffId(schedule.getId(), staffId)).thenReturn(schedule);
 
         // when
-        attendanceService.recordClockOut(staffId, schedule.getId());
+        attendanceService.recordClockOut(staffId, schedule.getId(), overtimeLimit);
 
         // then
         verify(attendance).recordClockOut(eq(fixedNow), eq(ClockOutStatus.EARLY_LEAVE));
@@ -112,29 +114,48 @@ class AttendanceServiceTest {
     void 연장근무는_OVERTIME으로_기록된다() {
         // given
         Long staffId = 1L;
+        Integer overtimeLimit = 30;
         when(schedule.getEndTime()).thenReturn(fixedNow.minusMinutes(15));
         when(schedule.getAttendance()).thenReturn(attendance);
         when(attendance.isAlreadyClockedOut()).thenReturn(false);
         when(scheduleRepository.getByIdAndStaffId(schedule.getId(), staffId)).thenReturn(schedule);
 
         // when
-        attendanceService.recordClockOut(staffId, schedule.getId());
+        attendanceService.recordClockOut(staffId, schedule.getId(), overtimeLimit);
 
         // then
         verify(attendance).recordClockOut(eq(fixedNow), eq(ClockOutStatus.OVERTIME));
     }
 
     @Test
+    void 연장근무가_설정되어_있지_않으면_연장근무해도_OVERTIME으로_기록되지_않는다() {
+        // given
+        Long staffId = 1L;
+        Integer overtimeLimit = 0;
+        when(schedule.getEndTime()).thenReturn(fixedNow.minusMinutes(15));
+        when(schedule.getAttendance()).thenReturn(attendance);
+        when(attendance.isAlreadyClockedOut()).thenReturn(false);
+        when(scheduleRepository.getByIdAndStaffId(schedule.getId(), staffId)).thenReturn(schedule);
+
+        // when
+        attendanceService.recordClockOut(staffId, schedule.getId(), overtimeLimit);
+
+        // then
+        verify(attendance).recordClockOut(eq(fixedNow.minusMinutes(15)), eq(ClockOutStatus.NORMAL));
+    }
+
+    @Test
     void 이미_퇴근했으면_예외() {
         // given
         Long staffId = 1L;
+        Integer overtimeLimit = 0;
         when(schedule.getAttendance()).thenReturn(attendance);
         when(attendance.isAlreadyClockedOut()).thenReturn(true);
         when(scheduleRepository.getByIdAndStaffId(schedule.getId(), staffId)).thenReturn(schedule);
 
         // when
         // then
-        assertThatThrownBy(() -> attendanceService.recordClockOut(staffId, schedule.getId()))
+        assertThatThrownBy(() -> attendanceService.recordClockOut(staffId, schedule.getId(), overtimeLimit))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.ALREADY_CLOCKED_OUT.getMessage());
     }
@@ -205,9 +226,10 @@ class AttendanceServiceTest {
         LocalDateTime clockInTime = LocalDateTime.of(2024, 5, 5, 9, 0);
         LocalDateTime clockOutTime = LocalDateTime.of(2024, 5, 5, 15, 0);
         ClockInStatus clockInStatus = ClockInStatus.NORMAL;
+        Integer overtimeLimit = 0;
 
         // when
-        AttendanceEntity result = attendanceService.updateAttendance(schedule, clockInTime, clockOutTime, clockInStatus);
+        AttendanceEntity result = attendanceService.updateAttendance(schedule, overtimeLimit, clockInTime, clockOutTime, clockInStatus);
 
         // then
         assertThat(result.getClockInTime()).isEqualTo(clockInTime);
@@ -227,12 +249,13 @@ class AttendanceServiceTest {
         LocalDateTime clockInTime = LocalDateTime.of(2024, 5, 5, 9, 0);
         LocalDateTime clockOutTime = LocalDateTime.of(2024, 5, 5, 15, 0);
         ClockInStatus clockInStatus = ClockInStatus.NORMAL;
+        Integer overtimeLimit = 0;
 
         when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
 
         // when
         // then
-        assertThatThrownBy(() -> attendanceService.updateAttendance(schedule, clockInTime, clockOutTime, clockInStatus));
+        assertThatThrownBy(() -> attendanceService.updateAttendance(schedule, overtimeLimit, clockInTime, clockOutTime, clockInStatus));
     }
 
     @Test
@@ -249,8 +272,8 @@ class AttendanceServiceTest {
         attendanceService.deleteAttendanceWithSchedule(scheduleId);
 
         // then
-        verify(attendanceRepository,times(1)).delete(attendance);
-        verify(scheduleRepository,times(1)).delete(schedule);
+        verify(attendanceRepository, times(1)).delete(attendance);
+        verify(scheduleRepository, times(1)).delete(schedule);
     }
 
     @Test
@@ -265,7 +288,7 @@ class AttendanceServiceTest {
 
         // when
         // then
-        assertThatThrownBy(()-> attendanceService.deleteAttendanceWithSchedule(scheduleId))
+        assertThatThrownBy(() -> attendanceService.deleteAttendanceWithSchedule(scheduleId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.INCOMPLETE_ATTENDANCE.getMessage());
     }

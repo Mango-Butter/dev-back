@@ -10,7 +10,6 @@ public record PayrollSettingResponse(
         AccountResponse account,
         Boolean autoTransferEnabled,
         Integer transferDate,
-        Integer overtimeLimit,
         DeductionUnit deductionUnit
 ) {
     public static PayrollSettingResponse fromEntity(final PayrollSettingEntity payrollSetting) {
@@ -19,7 +18,6 @@ public record PayrollSettingResponse(
             return PayrollSettingResponse.builder()
                     .autoTransferEnabled(payrollSetting.getAutoTransferEnabled())
                     .transferDate(payrollSetting.getTransferDate())
-                    .overtimeLimit(payrollSetting.getTransferDate())
                     .deductionUnit(DeductionUnit.getDeductionUnit(payrollSetting.getDeductionUnit()))
                     .build();
         }
@@ -27,7 +25,6 @@ public record PayrollSettingResponse(
                 .account(AccountResponse.fromEntity(transferAccount))
                 .autoTransferEnabled(payrollSetting.getAutoTransferEnabled())
                 .transferDate(payrollSetting.getTransferDate())
-                .overtimeLimit(payrollSetting.getTransferDate())
                 .deductionUnit(DeductionUnit.getDeductionUnit(payrollSetting.getDeductionUnit()))
                 .build();
     }

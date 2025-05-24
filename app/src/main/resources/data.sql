@@ -20,23 +20,23 @@ VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111'
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO store (store_id, boss_id, name, address, business_number, store_type, invite_code,
-                   attendance_method, gps_range_meters, gps_latitude, gps_longitude, qr_code,
+                   attendance_method, gps_range_meters, gps_latitude, gps_longitude, qr_code, overtime_limit,
                    created_at, modified_at)
 VALUES (1, 1, '망고쥬스', '경기도 수원시 영통구 월드컵로 206', '1248210324', 'CAFE', 'ABC123', 'QR', 10, 37.2843727, 127.0443767,
-        '123456ABCDEF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '123456ABCDEF', 30, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 1, '망고코코넛', '경기 수원시 팔달구 아주로 37', '1248210324', 'CAFE', '3A4C78', 'QR', 15, 37.2822024, 127.0463244,
-        'JUADEFSE2392', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        'JUADEFSE2392', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (3, 1, '스몰하노이', '경기도 고양시 일산서구 성저로 92', '1953100092', 'RESTAURANT', 'BJJ38L', 'QR', 15, 37.685024, 126.757285,
-        'KOP22WT78JUC', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+        'KOP22WT78JUC',0,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO transfer_account (transfer_id, bank_code, account_number, account_holder, fin_account,
                               created_at, modified_at)
 VALUES (1, 'NH', '3020000012816', '망고보스', '00820100029430000000000027417', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, overtime_limit, deduction_unit,
+INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit,
                              transfer_date, transfer_account_id, store_id)
-VALUES (1, true, 30, 10, 22, 1, 1),
-       (2, false, 0, 10, null, null, 2),
-       (3, false, 0, 10, null, null, 3);
+VALUES (1, true, 10, 22, 1, 1),
+       (2, false, 10, null, null, 2),
+       (3, false, 10, null, null, 3);
 
 INSERT INTO required_document (store_id, document_type, is_required, created_at, modified_at)
 VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

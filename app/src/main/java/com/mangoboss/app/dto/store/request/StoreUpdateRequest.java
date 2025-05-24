@@ -11,5 +11,8 @@ public record StoreUpdateRequest(
         String address,
 
         @NotNull
-        StoreType storeType
+        StoreType storeType,
+
+        @NotNull
+        Integer overtimeLimit
 ) {}
