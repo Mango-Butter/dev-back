@@ -58,13 +58,17 @@ public class StoreEntity extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String qrCode;
 
+    @Column(nullable = false)
+    private Integer overtimeLimit;
+
     @OneToOne(mappedBy = "store", fetch = FetchType.LAZY)
     private PayrollSettingEntity payrollSetting;
 
     @Builder
     private StoreEntity(final UserEntity boss, final String name, final String address, final String businessNumber,
                         final StoreType storeType, final String inviteCode, final AttendanceMethod attendanceMethod,
-                        final Integer gpsRangeMeters, final Double gpsLatitude, final Double gpsLongitude, final String qrCode) {
+                        final Integer gpsRangeMeters, final Double gpsLatitude, final Double gpsLongitude, final String qrCode,
+                        final Integer overtimeLimit) {
         this.boss = boss;
         this.name = name;
         this.address = address;
@@ -76,6 +80,7 @@ public class StoreEntity extends BaseTimeEntity {
         this.gpsLatitude = gpsLatitude;
         this.gpsLongitude = gpsLongitude;
         this.qrCode = qrCode;
+        this.overtimeLimit = overtimeLimit;
     }
 
     public static StoreEntity create(final UserEntity boss, final String name, final String address,
@@ -93,12 +98,14 @@ public class StoreEntity extends BaseTimeEntity {
                 .gpsLatitude(gpsLatitude)
                 .gpsLongitude(gpsLongitude)
                 .qrCode(qrCode)
+                .overtimeLimit(0)
                 .build();
     }
 
-    public void updateInfo(final String address, final StoreType storeType) {
+    public void updateInfo(final String address, final StoreType storeType, final Integer overtimeLimit) {
         this.address = address;
         this.storeType = storeType;
+        this.overtimeLimit = overtimeLimit;
     }
 
     public void updateInviteCode(final String inviteCode) {

@@ -31,7 +31,7 @@ public class StoreService {
     private final ExternalBusinessApiClient externalBusinessApiClient;
 
     @Transactional(readOnly = true)
-    public StoreEntity isBossOfStore(final Long storeId, final Long userId){
+    public StoreEntity isBossOfStore(final Long storeId, final Long userId) {
         return storeRepository.getByIdAndBossId(storeId, userId);
     }
 
@@ -57,7 +57,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public StoreEntity getStoreById(final Long storeId){
+    public StoreEntity getStoreById(final Long storeId) {
         return storeRepository.getById(storeId);
     }
 
@@ -98,9 +98,9 @@ public class StoreService {
         return storeRepository.findAllByBossId(bossId);
     }
 
-    public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType) {
+    public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType, final Integer overtimeLimit) {
         final StoreEntity store = getStoreById(storeId);
-        store.updateInfo(address, storeType);
+        store.updateInfo(address, storeType, overtimeLimit);
     }
 
     public String reissueInviteCode(final Long storeId) {
