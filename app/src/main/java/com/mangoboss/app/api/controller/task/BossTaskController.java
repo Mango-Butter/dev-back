@@ -2,6 +2,7 @@ package com.mangoboss.app.api.controller.task;
 
 import com.mangoboss.app.api.facade.task.BossTaskFacade;
 import com.mangoboss.app.common.security.CustomUserDetails;
+import com.mangoboss.app.dto.task.request.SingleTaskCreateRequest;
 import com.mangoboss.app.dto.task.request.TaskRoutineBaseRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,13 @@ public class BossTaskController {
                                   @RequestBody @Valid TaskRoutineBaseRequest request) {
         final Long userId = userDetails.getUserId();
         bossTaskFacade.createTaskRoutine(userId, storeId, request);
+    }
+
+    @PostMapping
+    public void createSingleTask(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                 @PathVariable final Long storeId,
+                                 @RequestBody @Valid SingleTaskCreateRequest request) {
+        final Long userId = userDetails.getUserId();
+        bossTaskFacade.createSingleTask(userId, storeId, request);
     }
 }

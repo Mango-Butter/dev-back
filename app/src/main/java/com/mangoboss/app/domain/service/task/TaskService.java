@@ -4,6 +4,7 @@ import com.mangoboss.app.domain.service.task.strategy.TaskRoutineGenerationStrat
 import com.mangoboss.app.domain.service.task.context.TaskGenerationStrategyFactory;
 import com.mangoboss.app.domain.repository.TaskRepository;
 import com.mangoboss.app.domain.repository.TaskRoutineRepository;
+import com.mangoboss.app.dto.task.request.SingleTaskCreateRequest;
 import com.mangoboss.app.dto.task.request.TaskRoutineBaseRequest;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskRoutineEntity;
@@ -27,5 +28,20 @@ public class TaskService {
 
         taskRoutineRepository.save(routine);
         taskRepository.saveAll(tasks);
+    }
+
+    public void createSingleTask(final Long storeId, final SingleTaskCreateRequest request) {
+        final TaskEntity task = TaskEntity.create(
+                storeId,
+                request.taskDate(),
+                request.startTime(),
+                request.endTime(),
+                request.title(),
+                request.description(),
+                request.verificationType(),
+                request.referenceImageFileKey()
+        );
+
+        taskRepository.save(task);
     }
 }
