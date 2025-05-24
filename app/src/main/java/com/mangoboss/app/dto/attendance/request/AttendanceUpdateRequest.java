@@ -1,8 +1,8 @@
 package com.mangoboss.app.dto.attendance.request;
 
 import com.mangoboss.storage.attendance.ClockInStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public record AttendanceUpdateRequest(
 
         LocalTime clockOutTime,
 
-        @NonNull
+        @NotNull
         ClockInStatus clockInStatus
 ) {
     public LocalDateTime toClockInDateTime(final LocalDate workDate) {
