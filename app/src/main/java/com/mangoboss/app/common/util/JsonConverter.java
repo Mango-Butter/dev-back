@@ -1,5 +1,6 @@
 package com.mangoboss.app.common.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -27,6 +28,14 @@ public class JsonConverter {
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new CustomException(CustomErrorInfo.JSON_CONVERT_FAILED);
+        }
+    }
+
+    public static <T> T fromJson(final String json, final TypeReference<T> typeRef) {
+        try {
+            return objectMapper.readValue(json, typeRef);
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorInfo.JSON_PARSE_FAILED);
         }
     }
 }
