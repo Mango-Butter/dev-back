@@ -2,6 +2,7 @@ package com.mangoboss.app.domain.service.attendance;
 
 import java.time.*;
 import java.util.List;
+import java.util.Map;
 
 import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
@@ -11,6 +12,7 @@ import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.store.StoreEntity;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
@@ -24,12 +26,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AttendanceService {
 
+    private static final long CLOCK_ALLOWED_MINUTES = 10;
+
     private final AttendanceRepository attendanceRepository;
     private final ScheduleRepository scheduleRepository;
     private final Clock clock;
 
-    private static final long OVERTIME_THRESHOLD_MINUTES = 30;  //todo 설정 이후에는 삭제해야 함.
-    private static final long CLOCK_ALLOWED_MINUTES = 10;
+    private record ClockOutResult(LocalDateTime clockOutTime, ClockOutStatus status) {
+    }
+
+    private record ClockInResult(LocalDateTime clockInTime, ClockInStatus status) {
+    }
 
     public AttendanceEntity recordClockIn(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
@@ -37,23 +44,22 @@ public class AttendanceService {
 
         validateNotClockedIn(schedule);
         validateScheduleNotEnded(schedule.getEndTime(), now);
-        final LocalDateTime clockInTime = verifyClockInTime(schedule.getStartTime(), now);
-        final ClockInStatus clockInStatus = determineClockInStatus(schedule.getStartTime(), clockInTime);
-
-        final AttendanceEntity attendance = AttendanceEntity.createForClockIn(schedule, clockInTime, clockInStatus);
+        final ClockInResult clockInResult = verifyClockInTime(schedule.getStartTime(), now);
+        final AttendanceEntity attendance = AttendanceEntity.createForClockIn(
+                schedule, clockInResult.clockInTime, clockInResult.status
+        );
         return attendanceRepository.save(attendance);
     }
 
-    public void recordClockOut(final Long staffId, final Long scheduleId) {
+    public void recordClockOut(final Long staffId, final Long scheduleId, final Integer overtimeLimit) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
 
         final AttendanceEntity attendance = validateClockedIn(schedule);
         validateNotClockedOut(attendance);
-        final LocalDateTime clockOutTime = verifyClockOutTime(schedule.getEndTime(), now);
-        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), now);
+        final ClockOutResult clockOutResult = verifyClockOutTime(schedule.getEndTime(), now, overtimeLimit);
 
-        attendance.recordClockOut(clockOutTime, clockOutStatus);
+        attendance.recordClockOut(clockOutResult.clockOutTime, clockOutResult.status);
     }
 
     private AttendanceEntity validateClockedIn(final ScheduleEntity schedule) {
@@ -87,40 +93,37 @@ public class AttendanceService {
         }
     }
 
-    private ClockInStatus determineClockInStatus(final LocalDateTime scheduledStartTime, final LocalDateTime clockInTime) {
-        return clockInTime.isAfter(scheduledStartTime) ? ClockInStatus.LATE : ClockInStatus.NORMAL;
-    }
-
-    private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
-        final LocalDateTime limitTime = scheduledEndTime.plusMinutes(CLOCK_ALLOWED_MINUTES);
+    private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime, final Integer overtimeLimit) {
+        final LocalDateTime limitTime = scheduledEndTime.plusMinutes(overtimeLimit);
         if (clockOutTime.isBefore(scheduledEndTime)) {
             return ClockOutStatus.EARLY_LEAVE;
         }
-        if (clockOutTime.isAfter(limitTime)) {  // todo 매장이 초과근무 허용할때만
+        if (clockOutTime.isAfter(limitTime)) {
             return ClockOutStatus.OVERTIME;
         }
 
         return ClockOutStatus.NORMAL;
     }
 
-    private LocalDateTime verifyClockInTime(final LocalDateTime scheduleStartTime, final LocalDateTime now) {
+    private ClockInResult verifyClockInTime(final LocalDateTime scheduleStartTime, final LocalDateTime now) {
         if (now.isBefore(scheduleStartTime.minusMinutes(CLOCK_ALLOWED_MINUTES))) {
             throw new CustomException(CustomErrorInfo.EARLY_CLOCK_IN);
         }
-        return now.isBefore(scheduleStartTime) ? scheduleStartTime : now;
+        return now.isBefore(scheduleStartTime) ? new ClockInResult(scheduleStartTime, ClockInStatus.NORMAL)
+                : new ClockInResult(now, ClockInStatus.LATE);
     }
 
-    private LocalDateTime verifyClockOutTime(final LocalDateTime scheduleEndTime, final LocalDateTime now) {
+    private ClockOutResult verifyClockOutTime(final LocalDateTime scheduleEndTime, final LocalDateTime now, final Integer overtimeLimit) {
         if (now.isBefore(scheduleEndTime)) {
-            return now;
+            return new ClockOutResult(now, ClockOutStatus.EARLY_LEAVE);
         }
         if (now.isBefore(scheduleEndTime.plusMinutes(CLOCK_ALLOWED_MINUTES))) {
-            return scheduleEndTime;
+            return new ClockOutResult(now, ClockOutStatus.NORMAL);
         }
-        if (now.isBefore(scheduleEndTime.plusMinutes(OVERTIME_THRESHOLD_MINUTES))) {
-            return now;
+        if (now.isBefore(scheduleEndTime.plusMinutes(overtimeLimit))) {
+            return new ClockOutResult(now, ClockOutStatus.OVERTIME);
         }
-        return scheduleEndTime.plusMinutes(OVERTIME_THRESHOLD_MINUTES);
+        return new ClockOutResult(scheduleEndTime, ClockOutStatus.NORMAL);
     }
 
     @Transactional(readOnly = true)
@@ -148,13 +151,13 @@ public class AttendanceService {
         return attendanceRepository.save(attendance);
     }
 
-    public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
+    public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final Integer overtimeLimit, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
         if (clockInStatus.equals(ClockInStatus.ABSENT)) {
             return attendance.update(null, null, ClockInStatus.ABSENT, ClockOutStatus.ABSENT);
         }
         validateClockedOut(attendance);
-        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime);
+        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime, overtimeLimit);
         return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
     }
 
