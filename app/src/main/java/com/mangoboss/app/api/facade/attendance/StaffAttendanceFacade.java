@@ -42,7 +42,7 @@ public class StaffAttendanceFacade {
         final StoreEntity store = staff.getStore();
         attendanceStrategyContext.validate(store, request);
 
-        attendanceService.recordClockOut(staff.getId(), request.scheduleId());
+        attendanceService.recordClockOut(staff.getId(), request.scheduleId(), store.getOvertimeLimit());
     }
 
     public List<WorkResponse> getTodayWorks(final Long storeId, final Long userId) {
