@@ -4,6 +4,7 @@ import com.mangoboss.app.api.facade.task.BossTaskFacade;
 import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.task.request.SingleTaskCreateRequest;
 import com.mangoboss.app.dto.task.request.TaskRoutineBaseRequest;
+import com.mangoboss.app.dto.s3.response.UploadPreSignedUrlResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,5 +33,14 @@ public class BossTaskController {
                                  @RequestBody @Valid SingleTaskCreateRequest request) {
         final Long userId = userDetails.getUserId();
         bossTaskFacade.createSingleTask(userId, storeId, request);
+    }
+
+    @GetMapping("/reference-image/upload-url")
+    public UploadPreSignedUrlResponse generateUploadUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @PathVariable final Long storeId,
+                                                        @RequestParam final String extension,
+                                                        @RequestParam final String contentType) {
+        final Long userId = userDetails.getUserId();
+        return bossTaskFacade.generateReferenceImageUploadUrl(userId, storeId, extension, contentType);
     }
 }
