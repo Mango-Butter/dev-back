@@ -9,16 +9,18 @@ public record ReceivedTransferRequest(
         String Bncd,
         String Acno,
         String Tram,
-        String DractOtlt
+        String DractOtlt,
+        String MractOtlt
 ) {
     public static ReceivedTransferRequest create(final CommonPartHeaderRequest header, final String bncd,
-                                                 final String acno, final String tram, final String dractOtlt) {
+                                                 final String acno, final String tram, final String dractOtlt, final String mractOtlt) {
         return ReceivedTransferRequest.builder()
                 .Header(header)
                 .Bncd(bncd)
                 .Acno(acno)
                 .Tram(tram)
                 .DractOtlt(dractOtlt)
+                .MractOtlt(mractOtlt)
                 .build();
     }
 }

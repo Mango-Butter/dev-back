@@ -88,12 +88,12 @@ public class BossPayrollFacade {
     }
 
     public void confirmEstimatedPayroll(final Long storeId, final Long bossId, final ConfirmEstimatedPayrollRequest request) {
-        storeService.isBossOfStore(storeId, bossId);
+        StoreEntity store = storeService.isBossOfStore(storeId, bossId);
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
         payrollService.deletePayrollsByStoreIdAndMonth(storeId, targetMonth);
-        List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(storeId, payrollSetting, request.payrollKeys());
+        List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(store, payrollSetting, request.payrollKeys());
     }
 
     public List<PayrollEstimatedResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
