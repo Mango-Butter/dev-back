@@ -2,6 +2,7 @@ package com.mangoboss.app.domain.service.task;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.TaskLogRepository;
 import com.mangoboss.app.domain.repository.TaskRepository;
 import com.mangoboss.app.domain.repository.TaskRoutineRepository;
@@ -22,6 +23,7 @@ public class TaskService {
     private final TaskRoutineRepository taskRoutineRepository;
     private final TaskRepository taskRepository;
     private final TaskLogRepository taskLogRepository;
+    private final S3FileManager s3FileManager;
 
     @Transactional
     public void saveTaskRoutineWithTasks(final TaskRoutineEntity taskRoutine, final List<TaskEntity> tasks) {
@@ -43,6 +45,19 @@ public class TaskService {
         final TaskLogEntity taskLog = TaskLogEntity.create(task, staffId, taskLogImageUrl);
 
         taskLogRepository.save(taskLog);
+    }
+
+    @Transactional
+    public void deleteTaskLog(final Long storeId, final Long taskId, final Long staffId) {
+        final TaskEntity task = taskRepository.getTaskByIdAndStoreId(taskId, storeId);
+        final TaskLogEntity taskLog = taskLogRepository.getTaskLogByTaskIdAndStaffId(task.getId(), staffId);
+
+        final String imageUrl = taskLog.getTaskLogImageUrl();
+        if (imageUrl != null && !imageUrl.isBlank()) {
+            final String key = s3FileManager.extractKeyFromUrl(imageUrl, s3FileManager.getTaskBaseUrl());
+            s3FileManager.deleteFileFromTaskBucket(key);
+        }
+        taskLogRepository.delete(taskLog);
     }
 
     public void validateTaskLogImageRequirement(final TaskEntity task, final String taskLogImageUrl) {

@@ -27,6 +27,14 @@ public class StaffTaskController {
         staffTaskFacade.completeTask(storeId, taskId, userId, request);
     }
 
+    @DeleteMapping("/{taskId}/completion")
+    public void cancelCompleteTask(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                   @PathVariable final Long storeId,
+                                   @PathVariable final Long taskId) {
+        final Long userId = userDetails.getUserId();
+        staffTaskFacade.cancelCompleteTask(storeId, taskId, userId);
+    }
+
     @GetMapping("/task-log-image/upload-url")
     public UploadPreSignedUrlResponse generateReportImageUploadUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                    @PathVariable final Long storeId,

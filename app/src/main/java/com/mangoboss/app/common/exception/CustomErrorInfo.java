@@ -62,6 +62,7 @@ public enum CustomErrorInfo {
     ATTENDANCE_NOT_BELONG_TO_STAFF(403, "근태 기록이 해당 알바생의 것이 아닙니다.", 403004),
     CONTRACT_NOT_BELONG_TO_STAFF(403, "이 근로계약서는 해당 알바생의 것이 아닙니다.", 403005),
     DOCUMENT_NOT_BELONG_TO_STAFF(403, "이 서류는 해당 알바생의 서류가 아닙니다.", 403006),
+    FORBIDDEN_TASK_LOG_DELETE(403, "해당 업무 완료 기록을 삭제할 권한이 없습니다.", 403007),
 
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
@@ -76,6 +77,8 @@ public enum CustomErrorInfo {
     CONTRACT_TEMPLATE_NOT_FOUND(404, "존재하지 않는 근로계약서 템플릿입니다.", 404009),
     REQUIRED_DOCUMENT_NOT_FOUND(404, "요청한 제출 서류 설정이 존재하지 않습니다.", 404010),
     DOCUMENT_NOT_FOUND(404, "해당 문서를 찾을 수 없습니다.", 404011),
+    TASK_NOT_FOUND(404, "존재하지 않는 업무입니다.", 404012),
+    TASK_LOG_NOT_FOUND(404, "완료된 업무 기록이 없습니다.", 404013),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),

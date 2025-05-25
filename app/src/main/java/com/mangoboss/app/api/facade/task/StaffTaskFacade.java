@@ -22,6 +22,11 @@ public class StaffTaskFacade {
         taskService.completeTask(storeId, taskId, userId, request.reportImageUrl());
     }
 
+    public void cancelCompleteTask(final Long storeId, final Long taskId, final Long userId) {
+        staffService.getVerifiedStaff(userId, storeId);
+        taskService.deleteTaskLog(storeId, taskId, userId);
+    }
+
     public UploadPreSignedUrlResponse generateReportImageUploadUrl(final Long storeId, final Long userId,
                                                                    final String extension, final String contentType) {
         staffService.getVerifiedStaff(userId, storeId);
