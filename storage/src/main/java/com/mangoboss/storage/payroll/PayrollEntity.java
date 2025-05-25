@@ -30,12 +30,21 @@ public class PayrollEntity extends BaseTimeEntity {
     @Column(name = "store_id", nullable = false)
     private Long storeId;
 
+    @Column(nullable = false)
+    private String storeName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BankCode depositBankCode;
 
     @Column(nullable = false)
     private String depositAccount;
+
+    @Column(nullable = false)
+    private BankCode withdrawalBankcode;
+
+    @Column(nullable = false)
+    private String withdrawalAccount;
 
     @Column(nullable = false)
     private String finAccount;
@@ -68,8 +77,11 @@ public class PayrollEntity extends BaseTimeEntity {
     private PayrollEntity(
             final Long staffId,
             final Long storeId,
+            final String storeName,
             final BankCode depositBankCode,
             final String depositAccount,
+            final BankCode withdrawlBankcode,
+            final String withdrawalAccount,
             final String finAccount,
             final LocalDate month,
             final LocalDate transferDate,
@@ -80,8 +92,11 @@ public class PayrollEntity extends BaseTimeEntity {
     ) {
         this.staffId = staffId;
         this.storeId = storeId;
+        this.storeName = storeName;
         this.depositBankCode = depositBankCode;
         this.depositAccount = depositAccount;
+        this.withdrawalBankcode = withdrawlBankcode;
+        this.withdrawalAccount = withdrawalAccount;
         this.finAccount = finAccount;
         this.month = month;
         this.transferDate = transferDate;
@@ -94,8 +109,11 @@ public class PayrollEntity extends BaseTimeEntity {
     public static PayrollEntity create(
             final Long staffId,
             final Long storeId,
+            final String storeName,
             final BankCode depositBankCode,
             final String depositAccount,
+            final BankCode withdrawlBankcode,
+            final String withdrawalAccount,
             final String finAccount,
             final LocalDate month,
             final LocalDate transferDate,
@@ -105,8 +123,11 @@ public class PayrollEntity extends BaseTimeEntity {
         return PayrollEntity.builder()
                 .staffId(staffId)
                 .storeId(storeId)
+                .storeName(storeName)
                 .depositBankCode(depositBankCode)
                 .depositAccount(depositAccount)
+                .withdrawlBankcode(withdrawlBankcode)
+                .withdrawalAccount(withdrawalAccount)
                 .finAccount(finAccount)
                 .month(month)
                 .transferDate(transferDate)
