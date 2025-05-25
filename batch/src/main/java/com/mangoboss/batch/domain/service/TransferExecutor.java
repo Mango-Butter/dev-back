@@ -5,6 +5,7 @@ import com.mangoboss.batch.external.nhdevelopers.NhDevelopersClient;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.DrawingTransferResponse;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.InquireTransactionHistoryResponse;
 import com.mangoboss.batch.external.nhdevelopers.dto.response.ReceivedTransferResponse;
+import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollAmount;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.TransferState;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeoutException;
 @Service
 @RequiredArgsConstructor
 public class TransferExecutor {
-    private static final String WITHDRAWN_PREFIX = "withdrawn_";
+    private static final String WITHDRAWN_PREFIX = "MangoBoss";
     private static final String TRANSFERRED_PREFIX = "transferred_";
     private static final String TMS_DSNC = "A";
     private static final String LNSQ = "DESC";
@@ -46,7 +47,7 @@ public class TransferExecutor {
     private String mangobossAccount;
 
     @Value("${external.nh.mangoboss-bankcode}")
-    private String mangobossBankcode;
+    private BankCode mangobossBankcode;
 
     @Transactional
     @Retryable(
@@ -68,7 +69,11 @@ public class TransferExecutor {
             );
             markCompleted(payroll);
         } catch (Exception e) {
-            if (isTransactionRecorded(WITHDRAWN_PREFIX + payroll.getId())) {
+            if (isTransactionRecorded(
+                    WITHDRAWN_PREFIX + payroll.getId(),
+                    payroll.getWithdrawalBankcode(),
+                    payroll.getWithdrawalAccount()
+            )) {
                 markCompleted(payroll);
                 return;
             }
@@ -93,12 +98,17 @@ public class TransferExecutor {
                     payroll.getDepositBankCode().getCode(),
                     payroll.getDepositAccount(),
                     amount.getNetAmount().toString(),
-                    TRANSFERRED_PREFIX + payroll.getId()
+                    TRANSFERRED_PREFIX + payroll.getId(),
+                    payroll.getStoreName()
             );
             markCompleted(payroll);
 
         } catch (Exception e) {
-            if (isTransactionRecorded(TRANSFERRED_PREFIX + payroll.getId())) {
+            if (isTransactionRecorded(
+                    TRANSFERRED_PREFIX + payroll.getId(),
+                    mangobossBankcode,
+                    mangobossAccount
+            )) {
                 markCompleted(payroll);
                 return;
             }
@@ -108,15 +118,15 @@ public class TransferExecutor {
 
     @Recover
     public void recover(final Exception e, final PayrollEntity payroll) {
-        log.warn(CustomErrorInfo.FAILURE_RETRY.getMessage(), e);
+        log.warn("[{}] payrollId = {}", CustomErrorInfo.FAILURE_RETRY.getMessage(), payroll.getId(), e);
         markFailed(payroll);
     }
 
-    public Boolean isTransactionRecorded(final String bnprCntn) {
+    public Boolean isTransactionRecorded(final String bnprCntn, final BankCode bankCode, final String account) {
         String insymd = LocalDate.now(clock).minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String ineymd = LocalDate.now(clock).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         InquireTransactionHistoryResponse response = nhDevelopersClient.inquireTransaction(
-                mangobossBankcode, mangobossAccount, insymd, ineymd, TMS_DSNC, LNSQ, DMCNT
+                bankCode.getCode(), account, insymd, ineymd, TMS_DSNC, LNSQ, DMCNT
         );
         return response.REC().stream()
                 .anyMatch(item -> item.BnprCntn().equals(bnprCntn));

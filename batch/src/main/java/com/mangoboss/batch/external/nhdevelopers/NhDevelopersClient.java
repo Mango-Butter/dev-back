@@ -66,9 +66,10 @@ public class NhDevelopersClient {
     public ReceivedTransferResponse receivedTransfer(final String bncd,
                                                      final String acno,
                                                      final String tram,
-                                                     final String dractOtlt) {
+                                                     final String dractOtlt,
+                                                     final String mractOtlt) {
         final CommonPartHeaderRequest requestHeader = headerFactory.create(ApiName.RECEIVED_TRANSFER_ACCOUNT_NUMBER, apiSvcCd, clock);
-        final ReceivedTransferRequest request = ReceivedTransferRequest.create(requestHeader, bncd, acno, tram, dractOtlt);
+        final ReceivedTransferRequest request = ReceivedTransferRequest.create(requestHeader, bncd, acno, tram, dractOtlt, mractOtlt);
         ReceivedTransferResponse response = webClient
                 .post()
                 .uri(nhUri(ApiName.RECEIVED_TRANSFER_ACCOUNT_NUMBER.getName()))
@@ -77,7 +78,6 @@ public class NhDevelopersClient {
                 .retrieve()
                 .bodyToMono(ReceivedTransferResponse.class)
                 .block();
-        System.out.println(response);
         if (response.Header().Rpcd().equals(SUCCESS_RPCD)) {
             return response;
         }
@@ -103,8 +103,6 @@ public class NhDevelopersClient {
                 .retrieve()
                 .bodyToMono(InquireTransactionHistoryResponse.class)
                 .block();
-        System.out.println(response);
-
         if (response.Header().Rpcd().equals(SUCCESS_RPCD)) {
             return response;
         }

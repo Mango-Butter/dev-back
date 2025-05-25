@@ -12,6 +12,7 @@ import com.mangoboss.storage.payroll.PayrollSettingEntity;
 import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
 import com.mangoboss.storage.staff.StaffEntity;
+import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,11 +126,11 @@ public class PayrollService {
     }
 
     @Transactional
-    public List<PayrollEntity> confirmEstimatedPayroll(final Long storeId, final PayrollSettingEntity payrollSetting,
+    public List<PayrollEntity> confirmEstimatedPayroll(final StoreEntity store, final PayrollSettingEntity payrollSetting,
                                                        final List<String> keys) {
         List<EstimatedPayrollEntity> estimatedPayrolls = estimatedPayrollRepository.findAllByPayrollKeyIn(keys);
         List<PayrollEntity> payrolls = estimatedPayrolls.stream()
-                .map(estimated -> estimated.createPayrollEntity(storeId, payrollSetting))
+                .map(estimated -> estimated.createPayrollEntity(store, payrollSetting))
                 .toList();
         return payrollRepository.saveAll(payrolls);
     }
