@@ -1,5 +1,7 @@
 package com.mangoboss.app.infra.persistence;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.TaskRepository;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskJpaRepository;
@@ -23,4 +25,9 @@ public class TaskRepositoryImpl implements TaskRepository {
         taskJpaRepository.saveAll(entities);
     }
 
+    @Override
+    public TaskEntity getTaskByIdAndStoreId(Long id, Long storeId) {
+        return taskJpaRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.STORE_TASK_MISMATCH));
+    }
 }

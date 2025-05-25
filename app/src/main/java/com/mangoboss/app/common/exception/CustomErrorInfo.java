@@ -43,7 +43,10 @@ public enum CustomErrorInfo {
     UNSUPPORTED_REPEAT_DATES_FOR_WEEKLY(400, "매주 반복에서는 repeatDates를 사용할 수 없습니다.", 400035),
     UNSUPPORTED_REPEAT_RULE_FOR_DAILY(400, "매일 반복에서는 repeatRule의 repeatDays 또는 repeatDates를 사용할 수 없습니다.", 400036),
     INVALID_REPEAT_DATE_RANGE(400, "반복 날짜는 1일부터 31일까지여야 합니다.", 400037),
-
+    TASK_LOG_IMAGE_REQUIRED(400, "업무 수행 이미지가 필요합니다.", 400038),
+    STORE_TASK_MISMATCH(400, "해당 매장의 업무가 아닙니다.", 400039),
+    INVALID_S3_URL(400,"유효하지 않은 S3 URL입니다.", 400040),
+    ALREADY_COMPLETED_TASK(400,"이미 완료된 업무입니다.", 400041),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),

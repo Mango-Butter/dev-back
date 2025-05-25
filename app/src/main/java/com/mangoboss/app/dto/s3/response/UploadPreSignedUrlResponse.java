@@ -7,18 +7,19 @@ import java.time.LocalDateTime;
 @Builder
 public record UploadPreSignedUrlResponse(
         String uploadUrl,
-        String fileKey,
+        String publicUrl,
         LocalDateTime expiresAt
 ) {
     public static UploadPreSignedUrlResponse of(
             final String uploadUrl,
-            final LocalDateTime expiresAt,
-            final String fileKey
+            final String publicUrl,
+            final LocalDateTime expiresAt
+
     ) {
         return UploadPreSignedUrlResponse.builder()
                 .uploadUrl(uploadUrl)
+                .publicUrl(publicUrl)
                 .expiresAt(expiresAt)
-                .fileKey(fileKey)
                 .build();
     }
 }
