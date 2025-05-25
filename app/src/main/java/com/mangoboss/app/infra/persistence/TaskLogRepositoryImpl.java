@@ -8,6 +8,7 @@ import com.mangoboss.storage.task.TaskLogJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,6 +24,12 @@ public class TaskLogRepositoryImpl implements TaskLogRepository {
     @Override
     public Optional<TaskLogEntity> findByTaskIdAndStaffId(final Long taskId, final Long staffId) {
         return taskLogJpaRepository.findByTaskIdAndStaffId(taskId, staffId);
+    }
+
+    @Override
+    public TaskLogEntity getTaskLogByTaskIdAndStaffId(Long taskId, Long staffId) {
+        return taskLogJpaRepository.findByTaskIdAndStaffId(taskId, staffId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.FORBIDDEN_TASK_LOG_DELETE));
     }
 
     @Override

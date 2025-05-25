@@ -158,6 +158,18 @@ public class S3FileManager {
         return UploadPreSignedUrlResponse.of(uploadUrl, publicUrl, LocalDateTime.now(clock).plusMinutes(uploadExpirationMinutes));
     }
 
+    public void deleteFileFromTaskBucket(final String key) {
+        try {
+            final DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(taskBucketName)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(deleteRequest);
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorInfo.FILE_DELETE_FAILED);
+        }
+    }
+
     public String generateFileKey(final S3FileType fileType, String extension) {
         return fileType.getFolder() + UUID.randomUUID() + "." + extension;
     }
@@ -174,5 +186,12 @@ public class S3FileManager {
         } catch (Exception e) {
             throw new CustomException(CustomErrorInfo.S3_OBJECT_FETCH_FAILED);
         }
+    }
+
+    public String extractKeyFromUrl(final String url, final String baseUrl) {
+        if (!url.startsWith(baseUrl)) {
+            throw new CustomException(CustomErrorInfo.INVALID_S3_URL);
+        }
+        return url.substring(baseUrl.length());
     }
 }
