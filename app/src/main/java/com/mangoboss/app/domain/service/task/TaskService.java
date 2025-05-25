@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -58,6 +59,14 @@ public class TaskService {
             s3FileManager.deleteFileFromTaskBucket(key);
         }
         taskLogRepository.delete(taskLog);
+    }
+
+    public List<TaskEntity> getTasksByDate(final Long storeId, final LocalDate date) {
+        return taskRepository.findByStoreIdAndTaskDate(storeId, date);
+    }
+
+    public List<TaskLogEntity> getTaskLogsByTaskIds(final List<Long> taskIds) {
+        return taskLogRepository.findByTaskIds(taskIds);
     }
 
     public void validateTaskLogImageRequirement(final TaskEntity task, final String taskLogImageUrl) {
