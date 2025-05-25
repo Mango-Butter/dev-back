@@ -36,3 +36,6 @@ external:
 cron:
   clock-out: ${CRON_CLOCK_OUT:*/30 * * * * *}
   transfer: ${CRON_TRANSFER:*/30 * * * * *}
+
+transfer:
+  max-retry: ${MAX_RETRY:3}
