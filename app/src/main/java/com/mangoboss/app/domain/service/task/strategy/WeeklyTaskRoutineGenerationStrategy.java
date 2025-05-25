@@ -1,22 +1,16 @@
 package com.mangoboss.app.domain.service.task.strategy;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.mangoboss.app.common.util.JsonConverter;
-import com.mangoboss.app.dto.task.request.RepeatDayTime;
-import com.mangoboss.app.dto.task.request.TaskRoutineBaseRequest;
-import com.mangoboss.app.dto.task.request.WeeklyTaskRoutineCreateRequest;
+import com.mangoboss.app.common.validator.RepeatRuleValidator;
+import com.mangoboss.app.dto.task.request.TaskRoutineCreateRequest;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskRoutineEntity;
 import com.mangoboss.storage.task.TaskRoutineRepeatType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
-@RequiredArgsConstructor
 public class WeeklyTaskRoutineGenerationStrategy implements TaskRoutineGenerationStrategy {
 
     @Override
@@ -25,38 +19,34 @@ public class WeeklyTaskRoutineGenerationStrategy implements TaskRoutineGeneratio
     }
 
     @Override
-    public TaskRoutineEntity generateTaskRoutine(final TaskRoutineBaseRequest request, final Long storeId) {
-        final WeeklyTaskRoutineCreateRequest weeklyTaskRoutineCreateRequest = (WeeklyTaskRoutineCreateRequest) request;
+    public TaskRoutineEntity generateTaskRoutine(final TaskRoutineCreateRequest request, final Long storeId) {
+        RepeatRuleValidator.validateWeeklyRepeatDays(request.repeatRule());
+
         return TaskRoutineEntity.createWeekly(
                 storeId,
-                weeklyTaskRoutineCreateRequest.title(),
-                weeklyTaskRoutineCreateRequest.description(),
-                JsonConverter.toJson(weeklyTaskRoutineCreateRequest.repeatDayTimes()),
-                weeklyTaskRoutineCreateRequest.startDate(),
-                weeklyTaskRoutineCreateRequest.endDate(),
-                weeklyTaskRoutineCreateRequest.verificationType(),
-                weeklyTaskRoutineCreateRequest.referenceImageFileKey()
+                request.title(),
+                request.description(),
+                request.repeatRule().repeatDays(),
+                request.startDate(),
+                request.endDate(),
+                request.startTime(),
+                request.endTime(),
+                request.photoRequired(),
+                request.referenceImageUrl()
         );
     }
 
     @Override
-    public List<TaskEntity> generateTasks(TaskRoutineEntity routine, Long storeId) {
-        final List<TaskEntity> tasks = new ArrayList<>();
-        final List<RepeatDayTime> repeatDayTimes = JsonConverter.fromJson(
-                routine.getRepeatDays(),
-                new TypeReference<>() {}
-        );
-
-        LocalDate date = routine.getStartDate();
-        while (!date.isAfter(routine.getEndDate())) {
-            for (RepeatDayTime repeat : repeatDayTimes) {
-                if (date.getDayOfWeek() == repeat.dayOfWeek()) {
-                    tasks.add(TaskEntity.createFromTaskRoutine(routine, storeId, date, repeat.startTime(), repeat.endTime()));
-                }
-            }
-            date = date.plusDays(1);
-        }
-
-        return tasks;
+    public List<TaskEntity> generateTasks(final TaskRoutineEntity routine, final Long storeId) {
+        return Stream.iterate(routine.getStartDate(), date -> !date.isAfter(routine.getEndDate()), date -> date.plusDays(1))
+                .filter(date -> routine.getRepeatDays().contains(date.getDayOfWeek()))
+                .map(date -> TaskEntity.createFromTaskRoutine(
+                        routine,
+                        storeId,
+                        date,
+                        date.atTime(routine.getStartTime()),
+                        date.atTime(routine.getEndTime())
+                ))
+                .toList();
     }
 }

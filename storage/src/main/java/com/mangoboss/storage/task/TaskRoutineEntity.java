@@ -1,14 +1,18 @@
 package com.mangoboss.storage.task;
 
 import com.mangoboss.storage.BaseTimeEntity;
+import com.mangoboss.storage.task.converter.DayOfWeekListConverter;
+import com.mangoboss.storage.task.converter.IntegerListConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,17 +31,18 @@ public class TaskRoutineEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskRoutineRepeatType repeatType;
 
-    @Column(columnDefinition = "json")
-    private String repeatDays;
+    @Convert(converter = DayOfWeekListConverter.class)
+    private List<DayOfWeek> repeatDays;
 
-    @Column(columnDefinition = "json")
-    private String repeatDates;
+    @Convert(converter = IntegerListConverter.class)
+    private List<Integer> repeatDates;
 
     @Column(nullable = false)
     private LocalDate startDate;
@@ -45,18 +50,16 @@ public class TaskRoutineEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate endDate;
 
-
-    @Column(name = "start_time")
+    @Column(nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(nullable = false)
     private LocalTime endTime;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TaskLogVerificationType verificationType;
+    private boolean photoRequired;
 
-    private String referenceImageFileKey;
+    private String referenceImageUrl;
 
     @Builder
     private TaskRoutineEntity(
@@ -64,14 +67,14 @@ public class TaskRoutineEntity extends BaseTimeEntity {
             final String title,
             final String description,
             final TaskRoutineRepeatType repeatType,
-            final String repeatDays,
-            final String repeatDates,
+            final List<DayOfWeek> repeatDays,
+            final List<Integer> repeatDates,
             final LocalTime startTime,
             final LocalTime endTime,
             final LocalDate startDate,
             final LocalDate endDate,
-            final TaskLogVerificationType verificationType,
-            final String referenceImageFileKey
+            final boolean photoRequired,
+            final String referenceImageUrl
     ) {
         this.storeId = storeId;
         this.title = title;
@@ -83,14 +86,14 @@ public class TaskRoutineEntity extends BaseTimeEntity {
         this.endTime = endTime;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.verificationType = verificationType;
-        this.referenceImageFileKey = referenceImageFileKey;
+        this.photoRequired = photoRequired;
+        this.referenceImageUrl = referenceImageUrl;
     }
 
     public static TaskRoutineEntity createDaily(final Long storeId, final String title, final String description,
                                                 final LocalDate startDate, final LocalDate endDate,
                                                 final LocalTime startTime, final LocalTime endTime,
-                                                final TaskLogVerificationType verificationType, final String referenceImageFileKey) {
+                                                final boolean photoRequired, final String referenceImageUrl) {
         return TaskRoutineEntity.builder()
                 .storeId(storeId)
                 .title(title)
@@ -100,41 +103,65 @@ public class TaskRoutineEntity extends BaseTimeEntity {
                 .endDate(endDate)
                 .startTime(startTime)
                 .endTime(endTime)
-                .verificationType(verificationType)
-                .referenceImageFileKey(referenceImageFileKey)
+                .photoRequired(photoRequired)
+                .referenceImageUrl(referenceImageUrl)
                 .build();
     }
 
-    public static TaskRoutineEntity createWeekly(final Long storeId, final String title, final String description, final String repeatDaysJson,
-                                                 final LocalDate startDate, final LocalDate endDate,
-                                                 final TaskLogVerificationType verificationType, final String referenceImageFileKey) {
+    public static TaskRoutineEntity createWeekly(
+            final Long storeId,
+            final String title,
+            final String description,
+            final List<DayOfWeek> repeatDays,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final LocalTime startTime,
+            final LocalTime endTime,
+            final boolean photoRequired,
+            final String referenceImageUrl
+    ) {
         return TaskRoutineEntity.builder()
                 .storeId(storeId)
                 .title(title)
                 .description(description)
                 .repeatType(TaskRoutineRepeatType.WEEKLY)
-                .repeatDays(repeatDaysJson)
+                .repeatDays(repeatDays)
                 .startDate(startDate)
                 .endDate(endDate)
-                .verificationType(verificationType)
-                .referenceImageFileKey(referenceImageFileKey)
+                .startTime(startTime)
+                .endTime(endTime)
+                .photoRequired(photoRequired)
+                .referenceImageUrl(referenceImageUrl)
                 .build();
     }
 
-    public static TaskRoutineEntity createMonthly(final Long storeId, final String title, final String description, final String repeatDatesJson,
-                                                  final LocalDate startDate, final LocalDate endDate,
-                                                  final TaskLogVerificationType verificationType, final String referenceImageFileKey) {
+    public static TaskRoutineEntity createMonthly(
+            final Long storeId,
+            final String title,
+            final String description,
+            final List<Integer> repeatDates,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final LocalTime startTime,
+            final LocalTime endTime,
+            final boolean photoRequired,
+            final String referenceImageUrl
+    ) {
         return TaskRoutineEntity.builder()
                 .storeId(storeId)
                 .title(title)
                 .description(description)
                 .repeatType(TaskRoutineRepeatType.MONTHLY)
-                .repeatDates(repeatDatesJson)
+                .repeatDates(repeatDates)
                 .startDate(startDate)
                 .endDate(endDate)
-                .verificationType(verificationType)
-                .referenceImageFileKey(referenceImageFileKey)
+                .startTime(startTime)
+                .endTime(endTime)
+                .photoRequired(photoRequired)
+                .referenceImageUrl(referenceImageUrl)
                 .build();
     }
+
+
 }
 
