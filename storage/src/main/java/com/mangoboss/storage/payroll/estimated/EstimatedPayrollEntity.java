@@ -2,6 +2,7 @@ package com.mangoboss.storage.payroll.estimated;
 
 import com.mangoboss.storage.payroll.*;
 import com.mangoboss.storage.staff.StaffEntity;
+import com.mangoboss.storage.store.StoreEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -74,13 +75,17 @@ public class EstimatedPayrollEntity {
         return String.format("payroll:%d:%s", staffId, formattedMonth);
     }
 
-    public PayrollEntity createPayrollEntity(final Long storeId, final PayrollSettingEntity setting) {
+    public PayrollEntity createPayrollEntity(final StoreEntity store, final PayrollSettingEntity setting) {
+        TransferAccountEntity transferAccount = setting.getTransferAccountEntity();
         return PayrollEntity.create(
                 this.staffId,
-                storeId,
+                store.getId(),
+                store.getName(),
                 this.bankCode,
                 this.account,
-                setting.getTransferAccountEntity().getFinAccount(),
+                transferAccount.getBankCode(),
+                transferAccount.getAccountNumber(),
+                transferAccount.getFinAccount(),
                 this.month,
                 this.month.plusMonths(1).withDayOfMonth(setting.getTransferDate()),
                 this.withholdingType,
