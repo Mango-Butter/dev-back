@@ -9,7 +9,8 @@ public enum S3FileType {
     CONTRACT("contracts/"),
     SIGNATURE("signatures/"),
     DOCUMENT("documents/"),
-    TASK("tasks/");
+    TASK_REFERENCE("tasks/reference/"),
+    TASK_REPORT("tasks/report/");
 
     private final String folder;
 }

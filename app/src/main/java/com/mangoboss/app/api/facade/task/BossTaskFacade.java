@@ -44,7 +44,7 @@ public class BossTaskFacade {
     public UploadPreSignedUrlResponse generateReferenceImageUploadUrl(final Long storeId, final Long bossId,
                                                                       final String extension, final String contentType) {
         storeService.isBossOfStore(storeId, bossId);
-        final String key = s3FileManager.generateFileKey(S3FileType.TASK, extension);
+        final String key = s3FileManager.generateFileKey(S3FileType.TASK_REFERENCE, extension);
         return s3FileManager.generateUploadPreSignedUrl(key, contentType);
     }
 }

@@ -59,6 +59,8 @@ cloud:
     s3:
       contract-bucket: ${AWS_S3_CONTRACT_BUCKET:test-bucket}
       kms-key-id: ${AWS_KMS_KEY_ID:dummy-kms-key}
+      task-bucket: ${AWS_S3_TASK_BUCKET:test-bucket}
+      task-base-url: ${AWS_S3_TASK_BASE_URL:https://example.com}
 
 pdf:
   font-path: ${PDF_FONT_PATH:fonts/NotoSansKR-Regular.ttf}

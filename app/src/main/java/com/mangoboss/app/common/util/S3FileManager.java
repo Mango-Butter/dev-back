@@ -33,6 +33,14 @@ public class S3FileManager {
     @Value("${cloud.aws.s3.contract-bucket}")
     private String contractBucketName;
 
+    @Getter
+    @Value("${cloud.aws.s3.task-bucket}")
+    private String taskBucketName;
+
+    @Getter
+    @Value("${cloud.aws.s3.task-base-url}")
+    private String taskBaseUrl;
+
     @Value("${cloud.aws.s3.kms-key-id}")
     private String kmsKeyId;
 
@@ -134,7 +142,7 @@ public class S3FileManager {
     // 업로드용 presingedUrl
     public UploadPreSignedUrlResponse generateUploadPreSignedUrl(final String key, final String contentType) {
         final PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(contractBucketName)
+                .bucket(taskBucketName)
                 .key(key)
                 .contentType(contentType)
                 .build();
@@ -144,9 +152,10 @@ public class S3FileManager {
                 .putObjectRequest(putObjectRequest)
                 .build();
 
-        final String url = s3Presigner.presignPutObject(preSignRequest).url().toString();
+        final String uploadUrl = s3Presigner.presignPutObject(preSignRequest).url().toString();
+        final String publicUrl = taskBaseUrl + key;
 
-        return UploadPreSignedUrlResponse.of(url, LocalDateTime.now(clock).plusMinutes(uploadExpirationMinutes), key);
+        return UploadPreSignedUrlResponse.of(uploadUrl, publicUrl, LocalDateTime.now(clock).plusMinutes(uploadExpirationMinutes));
     }
 
     public String generateFileKey(final S3FileType fileType, String extension) {

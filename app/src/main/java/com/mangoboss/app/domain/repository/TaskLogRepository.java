@@ -1,0 +1,11 @@
+package com.mangoboss.app.domain.repository;
+
+import com.mangoboss.storage.task.TaskLogEntity;
+
+import java.util.Optional;
+
+public interface TaskLogRepository {
+    void save(TaskLogEntity taskLog);
+    Optional<TaskLogEntity> findByTaskIdAndStaffId(Long taskId, Long staffId);
+    void delete(TaskLogEntity taskLog);
+}

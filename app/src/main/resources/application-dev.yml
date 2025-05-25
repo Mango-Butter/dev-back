@@ -61,6 +61,8 @@ cloud:
       static: ap-northeast-2
     s3:
       contract-bucket: ${AWS_S3_CONTRACT_BUCKET}
+      task-bucket: ${AWS_S3_TASK_BUCKET}
+      task-base-url: ${AWS_S3_TASK_BASE_URL}
       kms-key-id: ${AWS_KMS_KEY_ID}
 
 pdf:
