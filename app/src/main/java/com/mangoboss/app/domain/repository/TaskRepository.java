@@ -9,4 +9,5 @@ public interface TaskRepository {
     void save(TaskEntity entity);
     void saveAll(List<TaskEntity> entities);
     TaskEntity getTaskByIdAndStoreId(Long id, Long storeId);
+    List<TaskEntity> findByStoreIdAndTaskDate(Long storeId, LocalDate taskDate);
 }

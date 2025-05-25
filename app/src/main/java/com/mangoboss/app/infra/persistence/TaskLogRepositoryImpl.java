@@ -36,5 +36,10 @@ public class TaskLogRepositoryImpl implements TaskLogRepository {
     public void delete(TaskLogEntity taskLog) {
         taskLogJpaRepository.delete(taskLog);
     }
+
+    @Override
+    public List<TaskLogEntity> findByTaskIds(final List<Long> taskIds) {
+        return taskLogJpaRepository.findByTaskIdIn(taskIds);
+    }
 }
 

@@ -8,6 +8,7 @@ import com.mangoboss.storage.task.TaskJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -30,4 +31,10 @@ public class TaskRepositoryImpl implements TaskRepository {
         return taskJpaRepository.findByIdAndStoreId(id, storeId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.STORE_TASK_MISMATCH));
     }
+
+    @Override
+    public List<TaskEntity> findByStoreIdAndTaskDate(Long storeId, LocalDate taskDate) {
+        return taskJpaRepository.findByStoreIdAndTaskDate(storeId, taskDate);
+    }
+
 }
