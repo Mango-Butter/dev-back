@@ -1,24 +1,45 @@
 package com.mangoboss.app.dto.task.request;
 
-import com.mangoboss.storage.task.TaskLogVerificationType;
+import com.mangoboss.storage.task.TaskEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Builder
 public record SingleTaskCreateRequest(
-        @NotBlank String title,
+        @NotBlank
+        String title,
+
+        @NotBlank
         String description,
 
-        @NotNull LocalDate taskDate,
+        @NotNull
+        LocalDate taskDate,
 
-        @NotNull LocalTime startTime,
-        @NotNull LocalTime endTime,
+        @NotNull
+        LocalDateTime startTime,
 
-        @NotNull TaskLogVerificationType verificationType,
+        @NotNull
+        LocalDateTime endTime,
 
-        String referenceImageFileKey
-) {}
+        @NotNull
+        boolean photoRequired,
+
+        String referenceImageUrl
+) {
+        public TaskEntity toEntity(final Long storeId) {
+                return TaskEntity.create(
+                        storeId,
+                        taskDate,
+                        startTime,
+                        endTime,
+                        title,
+                        description,
+                        photoRequired,
+                        referenceImageUrl
+                );
+        }
+}

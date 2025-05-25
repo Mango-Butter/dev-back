@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "task")
@@ -31,31 +31,33 @@ public class TaskEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String description;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TaskLogVerificationType verificationType;
+    private boolean photoRequired;
 
     private String referenceImageUrl;
 
     @Column(nullable = false)
     private LocalDate taskDate;
 
-    private LocalTime startTime;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
-    private LocalTime endTime;
+    @Column(nullable = false)
+    private LocalDateTime endTime;
 
     @Builder
     public TaskEntity(
             TaskRoutineEntity taskRoutine,
             Long storeId,
             LocalDate taskDate,
-            LocalTime startTime,
-            LocalTime endTime,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
             String title,
             String description,
-            TaskLogVerificationType verificationType,
+            boolean photoRequired,
             String referenceImageUrl
     ) {
         this.taskRoutine = taskRoutine;
@@ -65,7 +67,7 @@ public class TaskEntity extends BaseTimeEntity {
         this.endTime = endTime;
         this.title = title;
         this.description = description;
-        this.verificationType = verificationType;
+        this.photoRequired = photoRequired;
         this.referenceImageUrl = referenceImageUrl;
     }
 
@@ -73,8 +75,8 @@ public class TaskEntity extends BaseTimeEntity {
             final TaskRoutineEntity routine,
             final Long storeId,
             final LocalDate taskDate,
-            final LocalTime startTime,
-            final LocalTime endTime
+            final LocalDateTime startTime,
+            final LocalDateTime endTime
     ) {
         return TaskEntity.builder()
                 .taskRoutine(routine)
@@ -84,20 +86,20 @@ public class TaskEntity extends BaseTimeEntity {
                 .endTime(endTime)
                 .title(routine.getTitle())
                 .description(routine.getDescription())
-                .verificationType(routine.getVerificationType())
-                .referenceImageUrl(routine.getReferenceImageFileKey())
+                .photoRequired(routine.isPhotoRequired())
+                .referenceImageUrl(routine.getReferenceImageUrl())
                 .build();
     }
 
     public static TaskEntity create(
             final Long storeId,
             final LocalDate taskDate,
-            final LocalTime startTime,
-            final LocalTime endTime,
+            final LocalDateTime startTime,
+            final LocalDateTime endTime,
             final String title,
             final String description,
-            final TaskLogVerificationType verificationType,
-            final String referenceImageFileKey
+            final boolean photoRequired,
+            final String referenceImageUrl
     ) {
         return TaskEntity.builder()
                 .storeId(storeId)
@@ -106,8 +108,8 @@ public class TaskEntity extends BaseTimeEntity {
                 .endTime(endTime)
                 .title(title)
                 .description(description)
-                .verificationType(verificationType)
-                .referenceImageUrl(referenceImageFileKey)
+                .photoRequired(photoRequired)
+                .referenceImageUrl(referenceImageUrl)
                 .build();
     }
 }

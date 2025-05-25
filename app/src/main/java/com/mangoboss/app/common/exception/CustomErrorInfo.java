@@ -39,6 +39,10 @@ public enum CustomErrorInfo {
     INVALID_REPEAT_DATES(400, "월간 반복은 반복 날짜가 필요합니다.", 400031),
     INVALID_ONCE_DATE(400, "한번 만은 마감 기한이 필요합니다.", 400032),
     TASK_ROUTINE_STRATEGY_NOT_FOUND(400, "유효하지 않은 반복 설정입니다.", 400033),
+    UNSUPPORTED_REPEAT_DAYS_FOR_MONTHLY(400, "매달 반복에서는 repeatDays를 사용할 수 없습니다.", 400034),
+    UNSUPPORTED_REPEAT_DATES_FOR_WEEKLY(400, "매주 반복에서는 repeatDates를 사용할 수 없습니다.", 400035),
+    UNSUPPORTED_REPEAT_RULE_FOR_DAILY(400, "매일 반복에서는 repeatRule의 repeatDays 또는 repeatDates를 사용할 수 없습니다.", 400036),
+    INVALID_REPEAT_DATE_RANGE(400, "반복 날짜는 1일부터 31일까지여야 합니다.", 400037),
 
 
     // 401 Unauthorized
