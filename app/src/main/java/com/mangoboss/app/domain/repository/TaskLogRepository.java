@@ -11,4 +11,5 @@ public interface TaskLogRepository {
     TaskLogEntity getTaskLogByTaskIdAndStaffId(Long taskId, Long staffId);
     void delete(TaskLogEntity taskLog);
     List<TaskLogEntity> findByTaskIds(List<Long> taskIds);
+    Optional<TaskLogEntity> findTaskLogByTaskId(Long taskId);
 }

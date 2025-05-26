@@ -55,4 +55,12 @@ public class StaffTaskController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(staffTaskFacade.getTasksByDate(storeId, userId, date));
     }
+
+    @GetMapping("/{taskId}")
+    public AssignedTaskResponse getTaskDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                            @PathVariable final Long storeId,
+                                            @PathVariable final Long taskId) {
+        final Long userId = userDetails.getUserId();
+        return staffTaskFacade.getTaskDetail(storeId, userId, taskId);
+    }
 }

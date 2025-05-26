@@ -75,4 +75,20 @@ public class StaffTaskFacade {
                 })
                 .toList();
     }
+
+    public AssignedTaskResponse getTaskDetail(final Long storeId, final Long userId, final Long taskId) {
+        staffService.getVerifiedStaff(userId, storeId);
+
+        final TaskEntity task = taskService.getTaskById(taskId);
+
+        final TaskLogDetailResponse taskLogResponse = taskService.findTaskLogByTaskId(task.getId())
+                .map(log -> TaskLogDetailResponse.of(
+                        log.getTaskLogImageUrl(),
+                        log.getCreatedAt(),
+                        StaffSimpleResponse.fromEntity(staffService.getStaffById(log.getStaffId()))
+                ))
+                .orElse(null);
+
+        return AssignedTaskResponse.of(task, taskLogResponse);
+    }
 }

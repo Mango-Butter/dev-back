@@ -10,5 +10,7 @@ public interface TaskLogJpaRepository extends JpaRepository<TaskLogEntity, Long>
     Optional<TaskLogEntity> findByTaskIdAndStaffId(Long taskId, Long staffId);
 
     List<TaskLogEntity> findByTaskIdIn(List<Long> taskIds);
+
+    Optional<TaskLogEntity> findByTaskId(Long taskId);
 }
 
