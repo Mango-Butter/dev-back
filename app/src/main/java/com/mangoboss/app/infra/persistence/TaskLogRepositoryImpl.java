@@ -41,5 +41,10 @@ public class TaskLogRepositoryImpl implements TaskLogRepository {
     public List<TaskLogEntity> findByTaskIds(final List<Long> taskIds) {
         return taskLogJpaRepository.findByTaskIdIn(taskIds);
     }
+
+    @Override
+    public Optional<TaskLogEntity> findTaskLogByTaskId(Long taskId) {
+        return taskLogJpaRepository.findByTaskId(taskId);
+    }
 }
 

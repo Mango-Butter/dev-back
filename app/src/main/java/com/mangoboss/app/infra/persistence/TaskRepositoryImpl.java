@@ -37,4 +37,9 @@ public class TaskRepositoryImpl implements TaskRepository {
         return taskJpaRepository.findByStoreIdAndTaskDate(storeId, taskDate);
     }
 
+    @Override
+    public TaskEntity getTaskById(Long id) {
+        return taskJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.TASK_NOT_FOUND));
+    }
 }

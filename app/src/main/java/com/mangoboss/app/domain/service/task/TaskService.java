@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -80,5 +81,13 @@ public class TaskService {
         if (alreadyCompleted) {
             throw new CustomException(CustomErrorInfo.ALREADY_COMPLETED_TASK);
         }
+    }
+
+    public TaskEntity getTaskById(final Long taskId) {
+        return taskRepository.getTaskById(taskId);
+    }
+
+    public Optional<TaskLogEntity> findTaskLogByTaskId(final Long taskId) {
+        return taskLogRepository.findTaskLogByTaskId(taskId);
     }
 }

@@ -89,4 +89,20 @@ public class BossTaskFacade {
                 })
                 .toList();
     }
+
+    public AssignedTaskResponse getTaskDetail(final Long storeId, final Long userId, final Long taskId) {
+        storeService.isBossOfStore(storeId, userId);
+
+        final TaskEntity task = taskService.getTaskById(taskId);
+
+        final TaskLogDetailResponse taskLogResponse = taskService.findTaskLogByTaskId(task.getId())
+                .map(log -> TaskLogDetailResponse.of(
+                        log.getTaskLogImageUrl(),
+                        log.getCreatedAt(),
+                        StaffSimpleResponse.fromEntity(staffService.getStaffById(log.getStaffId()))
+                ))
+                .orElse(null);
+
+        return AssignedTaskResponse.of(task, taskLogResponse);
+    }
 }

@@ -55,4 +55,12 @@ public class BossTaskController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossTaskFacade.getTasksByDate(storeId, userId, date));
     }
+
+    @GetMapping("/{taskId}")
+    public AssignedTaskResponse getTaskDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @PathVariable final Long storeId,
+                                              @PathVariable final Long taskId) {
+        final Long userId = userDetails.getUserId();
+        return bossTaskFacade.getTaskDetail(storeId, userId, taskId);
+    }
 }
