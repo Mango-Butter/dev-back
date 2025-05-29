@@ -42,4 +42,9 @@ public class TaskRepositoryImpl implements TaskRepository {
         return taskJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.TASK_NOT_FOUND));
     }
+
+    @Override
+    public void delete(TaskEntity task) {
+        taskJpaRepository.delete(task);
+    }
 }
