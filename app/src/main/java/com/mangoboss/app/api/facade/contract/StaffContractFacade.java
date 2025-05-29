@@ -57,6 +57,9 @@ public class StaffContractFacade {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
+
+        contractService.validatePdfIntegrity(contract);
+
         return s3FileManager.generateViewPreSignedUrl(contract.getFileKey());
     }
 
@@ -64,6 +67,9 @@ public class StaffContractFacade {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validateContractBelongsToStaff(contract.getStaffId(), staff.getId());
+
+        contractService.validatePdfIntegrity(contract);
+
         return s3FileManager.generateDownloadPreSignedUrl(contract.getFileKey());
     }
 

@@ -1,5 +1,6 @@
 package com.mangoboss.app.common.util;
 
+import com.mangoboss.app.common.constant.ContentType;
 import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
@@ -68,6 +69,16 @@ public class S3FileManager {
         s3Client.putObject(request, RequestBody.fromBytes(fileData));
     }
 
+    public void upload(String key, byte[] fileBytes, ContentType contentType) {
+        final PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(contractBucketName)
+                .key(key)
+                .contentType(contentType.getMimeType())
+                .build();
+
+        s3Client.putObject(request, RequestBody.fromBytes(fileBytes));
+    }
+
     public void deleteFile(final String key) {
         try {
             final DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
@@ -89,7 +100,7 @@ public class S3FileManager {
     }
 
     // s3에서 서명 파일 가져옴
-    private byte[] fetchAsBytes(final String key) {
+    public byte[] fetchAsBytes(final String key) {
         try {
             final ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(
                     GetObjectRequest.builder()
