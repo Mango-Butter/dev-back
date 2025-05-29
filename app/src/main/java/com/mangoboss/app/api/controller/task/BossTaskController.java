@@ -7,6 +7,7 @@ import com.mangoboss.app.dto.task.request.SingleTaskCreateRequest;
 import com.mangoboss.app.dto.s3.response.UploadPreSignedUrlResponse;
 import com.mangoboss.app.dto.task.request.TaskRoutineCreateRequest;
 import com.mangoboss.app.dto.task.response.AssignedTaskResponse;
+import com.mangoboss.app.dto.task.response.TaskRoutineResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,5 +71,12 @@ public class BossTaskController {
                                  @PathVariable final Long taskId) {
         final Long userId = userDetails.getUserId();
         bossTaskFacade.deleteSingleTask(storeId, userId, taskId);
+    }
+
+    @GetMapping("/task-routines")
+    public ListWrapperResponse<TaskRoutineResponse> getTaskRoutines(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                    @PathVariable final Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossTaskFacade.getTaskRoutines(storeId, userId));
     }
 }

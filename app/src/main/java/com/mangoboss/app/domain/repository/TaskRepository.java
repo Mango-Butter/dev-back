@@ -11,5 +11,6 @@ public interface TaskRepository {
     TaskEntity getTaskByIdAndStoreId(Long id, Long storeId);
     List<TaskEntity> findByStoreIdAndTaskDate(Long storeId, LocalDate taskDate);
     TaskEntity getTaskById(Long id);
+    TaskEntity getById(Long id);
     void delete(TaskEntity task);
 }

@@ -13,6 +13,7 @@ import com.mangoboss.app.dto.s3.response.UploadPreSignedUrlResponse;
 import com.mangoboss.app.dto.task.request.TaskRoutineCreateRequest;
 import com.mangoboss.app.dto.task.response.AssignedTaskResponse;
 import com.mangoboss.app.dto.task.response.TaskLogDetailResponse;
+import com.mangoboss.app.dto.task.response.TaskRoutineResponse;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskLogEntity;
 import com.mangoboss.storage.task.TaskRoutineEntity;
@@ -109,5 +110,12 @@ public class BossTaskFacade {
     public void deleteSingleTask(final Long storeId, final Long bossId, final Long taskId) {
         storeService.isBossOfStore(storeId, bossId);
         taskService.deleteSingleTask(storeId, taskId);
+    }
+
+    public List<TaskRoutineResponse> getTaskRoutines(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return taskService.getTaskRoutinesByStoreId(storeId).stream()
+                .map(TaskRoutineResponse::fromEntity)
+                .toList();
     }
 }
