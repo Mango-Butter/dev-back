@@ -18,6 +18,9 @@ public record PayrollSettingRequest(
         Integer imit,
 
         @NonNull
-        DeductionUnit deductionUnit
+        DeductionUnit deductionUnit,
+
+        @NonNull
+        Integer commutingAllowance
 ) {
 }

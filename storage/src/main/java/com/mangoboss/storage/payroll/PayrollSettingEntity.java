@@ -23,11 +23,14 @@ public class PayrollSettingEntity {
     private Boolean autoTransferEnabled = false;
 
     @Min(1)
-    @Max(28)
+    @Max(31)
     private Integer transferDate;
 
     @Column(nullable = false)
     private Integer deductionUnit;
+
+    @Column(nullable = false)
+    private Integer commutingAllowance;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transfer_account_id")
@@ -42,12 +45,14 @@ public class PayrollSettingEntity {
             final Boolean autoTransferEnabled,
             final Integer transferDate,
             final Integer deductionUnit,
+            final Integer commutingAllowance,
             final TransferAccountEntity transferAccountEntity,
             final StoreEntity store
     ) {
         this.autoTransferEnabled = autoTransferEnabled;
         this.transferDate = transferDate;
         this.deductionUnit = deductionUnit;
+        this.commutingAllowance = commutingAllowance;
         this.transferAccountEntity = transferAccountEntity;
         this.store = store;
     }
@@ -59,6 +64,7 @@ public class PayrollSettingEntity {
                 .autoTransferEnabled(false)
                 .transferDate(null)
                 .deductionUnit(0)
+                .commutingAllowance(0)
                 .transferAccountEntity(null)
                 .store(store)
                 .build();
@@ -85,8 +91,10 @@ public class PayrollSettingEntity {
         return this;
     }
 
-    public PayrollSettingEntity updateDeductionUnit(final Integer deductionUnit) {
+    public PayrollSettingEntity updatePolicy(final Integer deductionUnit,
+                                             final Integer commutingAllowance) {
         this.deductionUnit = deductionUnit;
+        this.commutingAllowance = commutingAllowance;
         return this;
     }
 }

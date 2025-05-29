@@ -43,7 +43,7 @@ public class PayrollService {
                                                          final LocalDate targetMonth) {
         PayrollAmount payrollAmount = createPayrollAmount(
                 staff,
-                setting.getDeductionUnit(),
+                setting,
                 attendances,
                 targetMonth
         );
@@ -56,11 +56,12 @@ public class PayrollService {
     }
 
     public PayrollAmount createPayrollAmount(final StaffEntity staff,
-                                             final Integer deductionUnit,
+                                             final PayrollSettingEntity payrollSetting,
                                              final List<AttendanceEntity> attendances,
                                              final LocalDate targetMonth) {
-        Map<LocalDate, Integer> dailyWorkMinutesMap = groupTimeByWorkDate(deductionUnit, attendances);
+        Map<LocalDate, Integer> dailyWorkMinutesMap = groupTimeByWorkDate(payrollSetting.getDeductionUnit(), attendances);
         int weeklyAllowance = calculateWeeklyAllowance(dailyWorkMinutesMap, staff.getHourlyWage());
+        int totalCommutingAllowance = calculateCommutingAllowance(dailyWorkMinutesMap, payrollSetting.getCommutingAllowance());
         int totalWorkMinutes = calculateTotalTimeMinutes(dailyWorkMinutesMap, targetMonth);
         int baseAmount = calculateBaseAmount(totalWorkMinutes, staff.getHourlyWage());
         int totalAmount = baseAmount + weeklyAllowance;
@@ -72,6 +73,7 @@ public class PayrollService {
                 totalTime,
                 baseAmount,
                 weeklyAllowance,
+                totalCommutingAllowance,
                 totalAmount,
                 withholdingTax,
                 netAmount
@@ -125,6 +127,10 @@ public class PayrollService {
                 .sum();
     }
 
+    private int calculateCommutingAllowance(final Map<LocalDate, Integer> dailyWorkMinutesMap, final Integer commutingAllowance) {
+        return commutingAllowance * dailyWorkMinutesMap.size();
+    }
+
     @Transactional
     public List<PayrollEntity> confirmEstimatedPayroll(final StoreEntity store, final PayrollSettingEntity payrollSetting,
                                                        final List<String> keys) {
@@ -136,8 +142,8 @@ public class PayrollService {
     }
 
     @Transactional
-    public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate targetMonth){
-        if(payrollRepository.isNotTransferPending(storeId, targetMonth)){
+    public void deletePayrollsByStoreIdAndMonth(final Long storeId, final LocalDate targetMonth) {
+        if (payrollRepository.isNotTransferPending(storeId, targetMonth)) {
             throw new CustomException(CustomErrorInfo.PAYROLL_TRANSFER_ALREADY_STARTED);
         }
         payrollRepository.deleteAllByStoreIdAndMonth(storeId, targetMonth);

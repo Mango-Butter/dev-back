@@ -18,8 +18,9 @@ public class EstimatedPayrollEntity {
     @Column(nullable = false)
     private String payrollKey; // payroll:staffId:yyyy-MM
 
-    @Column(nullable = false)
-    private Long staffId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_id", nullable = false)
+    private StaffEntity staff;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -40,14 +41,14 @@ public class EstimatedPayrollEntity {
 
     @Builder
     private EstimatedPayrollEntity(final String key,
-                                   final Long staffId,
+                                   final StaffEntity staff,
                                    final BankCode bankCode,
                                    final String account,
                                    final LocalDate month,
                                    final WithholdingType withholdingType,
                                    final PayrollAmount payrollAmount) {
         this.payrollKey = key;
-        this.staffId = staffId;
+        this.staff = staff;
         this.bankCode = bankCode;
         this.account = account;
         this.month = month;
@@ -61,7 +62,7 @@ public class EstimatedPayrollEntity {
     ) {
         return EstimatedPayrollEntity.builder()
                 .key(generateKey(staff.getId(), month))
-                .staffId(staff.getId())
+                .staff(staff)
                 .bankCode(staff.getBankCode())
                 .account(staff.getAccount())
                 .month(month)
@@ -78,11 +79,14 @@ public class EstimatedPayrollEntity {
     public PayrollEntity createPayrollEntity(final StoreEntity store, final PayrollSettingEntity setting) {
         TransferAccountEntity transferAccount = setting.getTransferAccountEntity();
         return PayrollEntity.create(
-                this.staffId,
+                this.staff.getId(),
                 store.getId(),
                 store.getName(),
+                store.getBusinessNumber(),
+                store.getBoss().getName(),
                 this.bankCode,
                 this.account,
+                this.staff.getName(),
                 transferAccount.getBankCode(),
                 transferAccount.getAccountNumber(),
                 transferAccount.getFinAccount(),

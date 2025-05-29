@@ -21,6 +21,9 @@ public class PayrollAmount {
     private Integer weeklyAllowance;
 
     @Column(nullable = false)
+    private Integer totalCommutingAllowance;
+
+    @Column(nullable = false)
     private Integer totalAmount;
 
     @Column(nullable = false)
@@ -34,6 +37,7 @@ public class PayrollAmount {
             final Double totalTime,
             final Integer baseAmount,
             final Integer weeklyAllowance,
+            final Integer totalCommutingAllowance,
             final Integer totalAmount,
             final Integer withholdingTax,
             final Integer netAmount
@@ -41,6 +45,7 @@ public class PayrollAmount {
         this.totalTime = totalTime;
         this.baseAmount = baseAmount;
         this.weeklyAllowance = weeklyAllowance;
+        this.totalCommutingAllowance = totalCommutingAllowance;
         this.totalAmount = totalAmount;
         this.withholdingTax = withholdingTax;
         this.netAmount = netAmount;
@@ -50,6 +55,7 @@ public class PayrollAmount {
             final Double totalTime,
             final Integer baseAmount,
             final Integer weeklyAllowance,
+            final Integer totalCommutingAllowance,
             final Integer totalAmount,
             final Integer withholdingTax,
             final Integer netAmount
@@ -58,6 +64,7 @@ public class PayrollAmount {
                 .totalTime(totalTime)
                 .baseAmount(baseAmount)
                 .weeklyAllowance(weeklyAllowance)
+                .totalCommutingAllowance(totalCommutingAllowance)
                 .totalAmount(totalAmount)
                 .withholdingTax(withholdingTax)
                 .netAmount(netAmount)

@@ -33,12 +33,21 @@ public class PayrollEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String storeName;
 
+    @Column(nullable = false)
+    private String businessNumber;
+
+    @Column(nullable = false)
+    private String staffName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BankCode depositBankCode;
 
     @Column(nullable = false)
     private String depositAccount;
+
+    @Column(nullable = false)
+    private String bossName;
 
     @Column(nullable = false)
     private BankCode withdrawalBankcode;
@@ -78,8 +87,11 @@ public class PayrollEntity extends BaseTimeEntity {
             final Long staffId,
             final Long storeId,
             final String storeName,
+            final String businessNumber,
+            final String staffName,
             final BankCode depositBankCode,
             final String depositAccount,
+            final String bossName,
             final BankCode withdrawlBankcode,
             final String withdrawalAccount,
             final String finAccount,
@@ -93,8 +105,11 @@ public class PayrollEntity extends BaseTimeEntity {
         this.staffId = staffId;
         this.storeId = storeId;
         this.storeName = storeName;
+        this.businessNumber = businessNumber;
+        this.staffName = staffName;
         this.depositBankCode = depositBankCode;
         this.depositAccount = depositAccount;
+        this.bossName = bossName;
         this.withdrawalBankcode = withdrawlBankcode;
         this.withdrawalAccount = withdrawalAccount;
         this.finAccount = finAccount;
@@ -110,8 +125,11 @@ public class PayrollEntity extends BaseTimeEntity {
             final Long staffId,
             final Long storeId,
             final String storeName,
+            final String businessNumber,
+            final String staffName,
             final BankCode depositBankCode,
             final String depositAccount,
+            final String bossName,
             final BankCode withdrawlBankcode,
             final String withdrawalAccount,
             final String finAccount,
@@ -124,8 +142,11 @@ public class PayrollEntity extends BaseTimeEntity {
                 .staffId(staffId)
                 .storeId(storeId)
                 .storeName(storeName)
+                .businessNumber(businessNumber)
+                .staffName(staffName)
                 .depositBankCode(depositBankCode)
                 .depositAccount(depositAccount)
+                .bossName(bossName)
                 .withdrawlBankcode(withdrawlBankcode)
                 .withdrawalAccount(withdrawalAccount)
                 .finAccount(finAccount)
