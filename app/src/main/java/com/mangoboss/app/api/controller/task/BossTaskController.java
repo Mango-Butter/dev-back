@@ -63,4 +63,12 @@ public class BossTaskController {
         final Long userId = userDetails.getUserId();
         return bossTaskFacade.getTaskDetail(storeId, userId, taskId);
     }
+
+    @DeleteMapping("/{taskId}")
+    public void deleteSingleTask(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                 @PathVariable final Long storeId,
+                                 @PathVariable final Long taskId) {
+        final Long userId = userDetails.getUserId();
+        bossTaskFacade.deleteSingleTask(storeId, userId, taskId);
+    }
 }

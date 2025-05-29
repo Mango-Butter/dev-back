@@ -105,4 +105,9 @@ public class BossTaskFacade {
 
         return AssignedTaskResponse.of(task, taskLogResponse);
     }
+
+    public void deleteSingleTask(final Long storeId, final Long bossId, final Long taskId) {
+        storeService.isBossOfStore(storeId, bossId);
+        taskService.deleteSingleTask(storeId, taskId);
+    }
 }

@@ -83,6 +83,16 @@ public class TaskService {
         }
     }
 
+    @Transactional
+    public void deleteSingleTask(final Long storeId, final Long taskId) {
+        final TaskEntity task = taskRepository.getTaskByIdAndStoreId(taskId, storeId);
+
+        final Optional<TaskLogEntity> taskLogOpt = taskLogRepository.findTaskLogByTaskId(taskId);
+        taskLogOpt.ifPresent(taskLogRepository::delete);
+
+        taskRepository.delete(task);
+    }
+
     public TaskEntity getTaskById(final Long taskId) {
         return taskRepository.getTaskById(taskId);
     }

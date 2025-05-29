@@ -17,4 +17,9 @@ public class TaskRoutineRepositoryImpl implements TaskRoutineRepository {
     public void save(TaskRoutineEntity entity) {
         taskRoutineJpaRepository.save(entity);
     }
+
+    @Override
+    public void delete(final TaskRoutineEntity routine) {
+        taskRoutineJpaRepository.delete(routine);
+    }
 }
