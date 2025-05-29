@@ -10,7 +10,8 @@ public record PayrollSettingResponse(
         AccountResponse account,
         Boolean autoTransferEnabled,
         Integer transferDate,
-        DeductionUnit deductionUnit
+        DeductionUnit deductionUnit,
+        Integer commutingAllowance
 ) {
     public static PayrollSettingResponse fromEntity(final PayrollSettingEntity payrollSetting) {
         final TransferAccountEntity transferAccount = payrollSetting.getTransferAccountEntity();
@@ -19,6 +20,7 @@ public record PayrollSettingResponse(
                     .autoTransferEnabled(payrollSetting.getAutoTransferEnabled())
                     .transferDate(payrollSetting.getTransferDate())
                     .deductionUnit(DeductionUnit.getDeductionUnit(payrollSetting.getDeductionUnit()))
+                    .commutingAllowance(payrollSetting.getCommutingAllowance())
                     .build();
         }
         return PayrollSettingResponse.builder()
@@ -26,6 +28,7 @@ public record PayrollSettingResponse(
                 .autoTransferEnabled(payrollSetting.getAutoTransferEnabled())
                 .transferDate(payrollSetting.getTransferDate())
                 .deductionUnit(DeductionUnit.getDeductionUnit(payrollSetting.getDeductionUnit()))
+                .commutingAllowance(payrollSetting.getCommutingAllowance())
                 .build();
     }
 }

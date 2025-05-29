@@ -32,11 +32,11 @@ INSERT INTO transfer_account (transfer_id, bank_code, account_number, account_ho
                               created_at, modified_at)
 VALUES (1, 'NH', '3020000012816', '망고보스', '00820100029430000000000027417', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit,
+INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit, commuting_allowance,
                              transfer_date, transfer_account_id, store_id)
-VALUES (1, true, 10, 22, 1, 1),
-       (2, false, 10, null, null, 2),
-       (3, false, 10, null, null, 3);
+VALUES (1, true, 10, 3000, 22, 1, 1),
+       (2, false, 10, 0, null, null, 2),
+       (3, false, 10, 0, null, null, 3);
 
 INSERT INTO required_document (store_id, document_type, is_required, created_at, modified_at)
 VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

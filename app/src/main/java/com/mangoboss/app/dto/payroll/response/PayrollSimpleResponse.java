@@ -17,6 +17,7 @@ public record PayrollSimpleResponse(
         Double totalTime,
         Integer baseAmount,
         Integer weeklyAllowance,
+        Integer totalCommutingAllowance,
         Integer totalAmount,
         Integer withholdingTax,
         Integer netAmount
@@ -32,6 +33,7 @@ public record PayrollSimpleResponse(
                 .totalTime(amount.getTotalTime())
                 .baseAmount(amount.getBaseAmount())
                 .weeklyAllowance(amount.getWeeklyAllowance())
+                .totalCommutingAllowance(amount.getTotalCommutingAllowance())
                 .totalAmount(amount.getTotalAmount())
                 .withholdingTax(amount.getWithholdingTax())
                 .netAmount(amount.getNetAmount())
@@ -49,6 +51,7 @@ public record PayrollSimpleResponse(
                 .totalTime(amount.getTotalTime())
                 .baseAmount(amount.getBaseAmount())
                 .weeklyAllowance(amount.getWeeklyAllowance())
+                .totalCommutingAllowance(amount.getTotalCommutingAllowance())
                 .totalAmount(amount.getTotalAmount())
                 .withholdingTax(amount.getWithholdingTax())
                 .netAmount(amount.getNetAmount())

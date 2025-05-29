@@ -13,7 +13,6 @@ import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollSimpleResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollEntity;
@@ -56,7 +55,9 @@ public class BossPayrollFacade {
                 store.getPayrollSetting(),
                 request.autoTransferEnabled(),
                 request.transferDate(),
-                request.deductionUnit().getValue());
+                request.deductionUnit().getValue(),
+                request.commutingAllowance()
+        );
     }
 
     public PayrollSettingResponse getPayrollSettings(final Long storeId, final Long bossId) {
@@ -83,7 +84,7 @@ public class BossPayrollFacade {
         }).toList();
 
         return payrolls.stream()
-                .map(estimated -> PayrollEstimatedResponse.of(estimated, staffService.getStaffById(estimated.getStaffId())))
+                .map(estimated -> PayrollEstimatedResponse.of(estimated, staffService.getStaffById(estimated.getStaff().getId())))
                 .toList();
     }
 
