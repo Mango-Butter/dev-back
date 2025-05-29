@@ -65,6 +65,9 @@ public enum CustomErrorInfo {
     DOCUMENT_NOT_BELONG_TO_STAFF(403, "이 서류는 해당 알바생의 서류가 아닙니다.", 403006),
     FORBIDDEN_TASK_LOG_DELETE(403, "해당 업무 완료 기록을 삭제할 권한이 없습니다.", 403007),
 
+    // 422 Unprocessable Entity
+    CONTRACT_PDF_TAMPERED(422, "계약서 PDF의 무결성이 손상되었습니다.", 422001),
+
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
@@ -113,7 +116,8 @@ public enum CustomErrorInfo {
     EXTERNAL_API_LOGICAL_FAILURE(500, "외부 서비스 요청은 성공했지만 처리에 실패했습니다.", 500011),
     UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500012),
     FILE_UPLOAD_FAILED(500, "파일 업로드에 실패했습니다.", 500013),
-    FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500014);
+    FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500014),
+    DIGEST_FAILURE(500, "SHA-256 해시 생성에 실패했습니다", 500015);
 
     private final int statusCode;
     private final String message;

@@ -5,6 +5,7 @@ import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.security.EncryptedFileDecoder;
+import com.mangoboss.app.common.util.DigestUtil;
 import com.mangoboss.app.common.util.JsonConverter;
 import com.mangoboss.app.common.util.PdfGenerator;
 import com.mangoboss.app.common.util.S3FileManager;
@@ -49,15 +50,14 @@ public class ContractService {
     @Transactional
     public ContractEntity createContract(final Long staffId, final String bossSignatureKey, final ContractData contractData) {
         final byte[] pdfBytes = generateContractPdf(contractData, bossSignatureKey);
-
         final String fileKey = s3FileManager.generateFileKey(S3FileType.CONTRACT, ContentType.PDF.getExtension());
-
         s3FileManager.upload(pdfBytes, fileKey, ContentType.PDF.getMimeType());
 
         final String contractDataJson = convertToContractDataJson(contractData);
+        final String pdfHash = DigestUtil.sha256(pdfBytes);
 
         final LocalDateTime now = LocalDateTime.now(clock);
-        final ContractEntity contract = ContractEntity.create(staffId, fileKey, contractDataJson, bossSignatureKey, now);
+        final ContractEntity contract = ContractEntity.create(staffId, fileKey, contractDataJson, bossSignatureKey, now, pdfHash);
         return contractRepository.save(contract);
     }
 
@@ -71,13 +71,16 @@ public class ContractService {
         final String existingFileKey = contract.getFileKey();
         s3FileManager.upload(pdfBytes, existingFileKey, ContentType.PDF.getMimeType());
 
-        return contract.completeStaffSign(existingFileKey, staffSignatureKey, LocalDateTime.now(clock));
+        final String staffSignedPdfHash = DigestUtil.sha256(pdfBytes);
+
+        return contract.completeStaffSign(existingFileKey, staffSignatureKey, LocalDateTime.now(clock), staffSignedPdfHash);
     }
 
     public ContractEntity getContractById(final Long contractId) {
         return contractRepository.getContractById(contractId);
     }
 
+    @Transactional
     public void deleteContract(final Long contractId) {
         final ContractEntity contract = getContractById(contractId);
         contractRepository.delete(contract);
@@ -86,6 +89,15 @@ public class ContractService {
     public void validateContractNotSignedByStaff(final ContractEntity contract) {
         if (contract.getStaffSignatureKey() != null) {
             throw new CustomException(CustomErrorInfo.STAFF_SIGNED_CONTRACT_CANNOT_BE_DELETED);
+        }
+    }
+
+    public void validatePdfIntegrity(final ContractEntity contract) {
+        final byte[] pdfBytes = s3FileManager.fetchAsBytes(contract.getFileKey());
+        final String currentHash = DigestUtil.sha256(pdfBytes);
+
+        if (!currentHash.equals(contract.getPdfHash())) {
+            throw new CustomException(CustomErrorInfo.CONTRACT_PDF_TAMPERED);
         }
     }
 

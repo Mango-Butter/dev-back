@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,12 +56,14 @@ public class BossContractFacade {
     public ViewPreSignedUrlResponse getContractViewUrl(final Long storeId, final Long bossId, final Long contractId) {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
+        contractService.validatePdfIntegrity(contract);
         return s3FileManager.generateViewPreSignedUrl(contract.getFileKey());
     }
 
     public DownloadPreSignedUrlResponse getContractDownloadUrl(final Long storeId, final Long bossId, final Long contractId) {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
+        contractService.validatePdfIntegrity(contract);
         return s3FileManager.generateDownloadPreSignedUrl(contract.getFileKey());
     }
 
