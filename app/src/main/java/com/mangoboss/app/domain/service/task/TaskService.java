@@ -93,6 +93,10 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    public List<TaskRoutineEntity> getTaskRoutinesByStoreId(final Long storeId) {
+        return taskRoutineRepository.findAllByStoreId(storeId);
+    }
+
     public TaskEntity getTaskById(final Long taskId) {
         return taskRepository.getTaskById(taskId);
     }
