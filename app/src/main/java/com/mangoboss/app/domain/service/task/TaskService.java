@@ -6,6 +6,7 @@ import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.TaskLogRepository;
 import com.mangoboss.app.domain.repository.TaskRepository;
 import com.mangoboss.app.domain.repository.TaskRoutineRepository;
+import com.mangoboss.app.dto.task.request.TaskRoutineDeleteOption;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskLogEntity;
 import com.mangoboss.storage.task.TaskRoutineEntity;
@@ -95,6 +96,22 @@ public class TaskService {
 
     public List<TaskRoutineEntity> getTaskRoutinesByStoreId(final Long storeId) {
         return taskRoutineRepository.findAllByStoreId(storeId);
+    }
+
+    @Transactional
+    public void deleteTaskRoutine(final Long storeId, final Long taskRoutineId, final String deleteOptionRaw) {
+        final TaskRoutineDeleteOption deleteOption = TaskRoutineDeleteOption.from(deleteOptionRaw);
+        final TaskRoutineEntity routine = taskRoutineRepository.getByIdAndStoreId(taskRoutineId, storeId);
+
+        switch (deleteOption) {
+            case ALL -> taskRepository.deleteAllByTaskRoutineId(taskRoutineId);
+            case PENDING -> {
+                taskRepository.deleteAllByTaskRoutineIdAndNotCompleted(taskRoutineId);
+                taskRepository.deleteRoutineReferenceForCompletedTasks(taskRoutineId);
+            }
+        }
+
+        taskRoutineRepository.delete(routine);
     }
 
     public TaskEntity getTaskById(final Long taskId) {

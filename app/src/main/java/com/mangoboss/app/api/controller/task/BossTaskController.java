@@ -79,4 +79,13 @@ public class BossTaskController {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossTaskFacade.getTaskRoutines(storeId, userId));
     }
+
+    @DeleteMapping("/task-routines/{taskRoutineId}")
+    public void deleteTaskRoutine(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @PathVariable final Long storeId,
+                                  @PathVariable final Long taskRoutineId,
+                                  @RequestParam String deleteOption) {
+        final Long userId = userDetails.getUserId();
+        bossTaskFacade.deleteTaskRoutine(storeId, userId, taskRoutineId, deleteOption);
+    }
 }

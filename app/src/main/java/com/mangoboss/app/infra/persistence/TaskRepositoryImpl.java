@@ -50,6 +50,21 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public void deleteAllByTaskRoutineId(final Long routineId) {
+        taskJpaRepository.deleteAllByTaskRoutineId(routineId);
+    }
+
+    @Override
+    public void deleteAllByTaskRoutineIdAndNotCompleted(final Long routineId) {
+        taskJpaRepository.deleteAllByTaskRoutineIdAndNotCompleted(routineId);
+    }
+
+    @Override
+    public void deleteRoutineReferenceForCompletedTasks(final Long routineId) {
+        taskJpaRepository.clearRoutineReferenceForCompletedTasks(routineId);
+    }
+
+    @Override
     public void delete(TaskEntity task) {
         taskJpaRepository.delete(task);
     }

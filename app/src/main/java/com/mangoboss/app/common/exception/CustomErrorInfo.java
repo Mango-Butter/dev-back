@@ -47,6 +47,7 @@ public enum CustomErrorInfo {
     STORE_TASK_MISMATCH(400, "해당 매장의 업무가 아닙니다.", 400039),
     INVALID_S3_URL(400,"유효하지 않은 S3 URL입니다.", 400040),
     ALREADY_COMPLETED_TASK(400,"이미 완료된 업무입니다.", 400041),
+    INVALID_DELETE_OPTION(400, "삭제 옵션이 올바르지 않습니다.", 40036),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -79,6 +80,7 @@ public enum CustomErrorInfo {
     DOCUMENT_NOT_FOUND(404, "해당 문서를 찾을 수 없습니다.", 404011),
     TASK_NOT_FOUND(404, "존재하지 않는 업무입니다.", 404012),
     TASK_LOG_NOT_FOUND(404, "완료된 업무 기록이 없습니다.", 404013),
+    TASK_ROUTINE_NOT_FOUND(404, "해당 반복 업무를 찾을 수 없습니다.", 404014),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
