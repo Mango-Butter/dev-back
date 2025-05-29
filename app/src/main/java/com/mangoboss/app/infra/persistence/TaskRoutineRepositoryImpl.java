@@ -23,6 +23,12 @@ public class TaskRoutineRepositoryImpl implements TaskRoutineRepository {
     }
 
     @Override
+    public TaskRoutineEntity getByIdAndStoreId(final Long routineId, final Long storeId) {
+        return taskRoutineJpaRepository.findByIdAndStoreId(routineId, storeId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.TASK_ROUTINE_NOT_FOUND));
+    }
+
+    @Override
     public List<TaskRoutineEntity> findAllByStoreId(final Long storeId) {
         return taskRoutineJpaRepository.findAllByStoreId(storeId);
     }

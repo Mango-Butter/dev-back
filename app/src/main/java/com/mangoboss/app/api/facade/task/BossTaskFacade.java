@@ -118,4 +118,10 @@ public class BossTaskFacade {
                 .map(TaskRoutineResponse::fromEntity)
                 .toList();
     }
+
+    public void deleteTaskRoutine(final Long storeId, final Long bossId,
+                                  final Long taskRoutineId, final String deleteOption) {
+        storeService.isBossOfStore(storeId, bossId);
+        taskService.deleteTaskRoutine(storeId, taskRoutineId, deleteOption);
+    }
 }
