@@ -40,6 +40,9 @@ dependencies {
 
     implementation("com.itextpdf:itext7-core:7.2.5")
     implementation("com.itextpdf:html2pdf:4.0.4")
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.4.0'
 }
 
 tasks.named('test') {
