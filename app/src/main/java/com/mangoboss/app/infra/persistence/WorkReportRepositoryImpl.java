@@ -20,7 +20,7 @@ public class WorkReportRepositoryImpl implements WorkReportRepository {
 
     @Override
     public WorkReportEntity getByStoreIdAndWorkReportId(Long storeId, Long workReportId) {
-        return workReportJpaRepository.findByStoreIdAndWorkReportId(storeId, workReportId)
+        return workReportJpaRepository.findByStoreIdAndId(storeId, workReportId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.WORK_REPORT_NOT_FOUND));
     }
 

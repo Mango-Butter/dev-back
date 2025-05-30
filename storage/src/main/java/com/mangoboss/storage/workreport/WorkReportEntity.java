@@ -29,20 +29,26 @@ public class WorkReportEntity extends BaseTimeEntity {
 
     private String reportImageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_type", nullable = false)
+    private WorkReportTargetType targetType;
+
     @Builder
-    public WorkReportEntity(final Long storeId, final Long staffId, final String content, final String reportImageUrl) {
+    public WorkReportEntity(final Long storeId, final Long staffId, final String content, final String reportImageUrl, final WorkReportTargetType targetType) {
         this.storeId = storeId;
         this.staffId = staffId;
         this.content = content;
         this.reportImageUrl = reportImageUrl;
+        this.targetType = targetType;
     }
 
-    public static WorkReportEntity create(final Long storeId, final Long staffId, final String content, final String reportImageUrl) {
+    public static WorkReportEntity create(final Long storeId, final Long staffId, final String content, final String reportImageUrl, final WorkReportTargetType targetType) {
         return WorkReportEntity.builder()
                 .storeId(storeId)
                 .staffId(staffId)
                 .content(content)
                 .reportImageUrl(reportImageUrl)
+                .targetType(targetType)
                 .build();
     }
 }
