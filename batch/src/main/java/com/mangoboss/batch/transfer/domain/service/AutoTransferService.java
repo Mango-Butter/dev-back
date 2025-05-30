@@ -25,11 +25,14 @@ public class AutoTransferService {
 
     private final PayrollRepository payrollRepository;
     private final PayslipRepository payslipRepository;
-    private final TransferExecutor transferExecutor;
+    private final TransferHandler transferExecutor;
     private final Clock clock;
 
     @Value("${transfer.max-retry}")
     private Integer maxRetry;
+
+    @Value("${transfer.payroll-batch-size}")
+    private Integer batchSize;
 
     @Transactional
     public void autoTransfer() {
@@ -39,7 +42,7 @@ public class AutoTransferService {
                 today,
                 List.of(TransferState.PENDING, TransferState.FAILED_WITHDRAW, TransferState.FAILED_TRANSFERRED),
                 maxRetry,
-                PageRequest.of(0, 10)
+                PageRequest.of(0, batchSize)
         );
         payrollsForDrawing.forEach(payroll -> {
             transferExecutor.drawingTransferWithRetry(payroll);

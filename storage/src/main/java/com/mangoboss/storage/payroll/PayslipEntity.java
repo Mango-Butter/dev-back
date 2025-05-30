@@ -20,19 +20,20 @@ public class PayslipEntity extends BaseTimeEntity {
     @JoinColumn(name = "payroll_id")
     private PayrollEntity payroll;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PayslipState payslipState;
 
     @Column(nullable = false)
     private Integer retryCount;
 
-    private String payslipPdfUrl;
+    private String payslipPdfKey;
 
     @Builder
-    private PayslipEntity(final PayrollEntity payroll, final PayslipState payslipState, final Integer retryCount, final String payslipPdfUrl) {
+    private PayslipEntity(final PayrollEntity payroll, final PayslipState payslipState, final Integer retryCount, final String payslipPdfKey) {
         this.payroll = payroll;
         this.payslipState = payslipState;
-        this.payslipPdfUrl = payslipPdfUrl;
+        this.payslipPdfKey = payslipPdfKey;
         this.retryCount = retryCount;
     }
 
@@ -41,7 +42,12 @@ public class PayslipEntity extends BaseTimeEntity {
                 .payroll(payroll)
                 .payslipState(PayslipState.PENDING)
                 .retryCount(0)
-                .payslipPdfUrl(null)
+                .payslipPdfKey(null)
                 .build();
+    }
+
+    public void savePayslipPdfKey(final String payslipPdfKey) {
+        this.payslipPdfKey = payslipPdfKey;
+        this.payslipState = PayslipState.COMPLETED;
     }
 }

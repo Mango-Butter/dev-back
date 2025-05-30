@@ -15,11 +15,11 @@ public interface PayslipJpaRepository extends JpaRepository<PayslipEntity, Long>
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             SELECT p FROM PayslipEntity p
-            WHERE p.payslipState = :state AND p.retryCount < :maxRetry
+            WHERE p.payslipState IN :payslipStates AND p.retryCount < :maxRetry
             ORDER BY p.createdAt ASC
             """)
-    List<PayrollEntity> findAllByPayslipState(
-            @Param("payslipState") PayslipState state,
+    List<PayslipEntity> findAllByPayslipState(
+            @Param("payslipStates") List<PayslipState> states,
             @Param("maxRetry") Integer maxRetry,
             Pageable pageable
     );
