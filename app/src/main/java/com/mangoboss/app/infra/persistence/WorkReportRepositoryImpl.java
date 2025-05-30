@@ -5,6 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.WorkReportRepository;
 import com.mangoboss.storage.workreport.WorkReportEntity;
 import com.mangoboss.storage.workreport.WorkReportJpaRepository;
+import com.mangoboss.storage.workreport.WorkReportTargetType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,11 @@ import java.util.List;
 public class WorkReportRepositoryImpl implements WorkReportRepository {
 
     private final WorkReportJpaRepository workReportJpaRepository;
+
+    @Override
+    public WorkReportEntity save(final WorkReportEntity entity) {
+        return workReportJpaRepository.save(entity);
+    }
 
     @Override
     public WorkReportEntity getByStoreIdAndWorkReportId(Long storeId, Long workReportId) {
