@@ -60,3 +60,6 @@ cloud:
     s3:
       private-bucket: ${AWS_S3_PRIVATE_BUCKET}
       kms-key-id: ${AWS_KMS_KEY_ID}
+
+firebase:
+  key-path: firebase/firebase-admin-sdk.json
