@@ -4,6 +4,7 @@ import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollJpaRepository;
 import com.mangoboss.storage.payroll.TransferState;
+import com.mangoboss.storage.payroll.projection.PayrollWithPayslipProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,4 +40,16 @@ public class PayrollRepositoryImpl implements PayrollRepository {
     public List<PayrollEntity> getAllByStoreIdAndMonth(final Long storeId, final LocalDate month){
         return payrollJpaRepository.getAllByStoreIdAndMonth(storeId, month);
     }
+
+    @Override
+    public List<PayrollEntity> findAllByStoreIdAndMonthBetween(final Long storeId, final LocalDate start, final LocalDate end){
+        return payrollJpaRepository.findAllByStoreIdAndMonthBetween(storeId, start, end);
+    }
+
+    @Override
+    public boolean isTransferStarted(final Long storeId, final LocalDate start, final LocalDate end) {
+        return payrollJpaRepository.existsByStoreIdAndMonthBetweenAndTransferStateNot(storeId, start, end, TransferState.PENDING);
+    }
+
+
 }
