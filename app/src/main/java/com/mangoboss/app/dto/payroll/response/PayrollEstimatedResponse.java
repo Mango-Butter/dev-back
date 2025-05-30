@@ -1,27 +1,43 @@
 package com.mangoboss.app.dto.payroll.response;
 
-import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
+import com.mangoboss.storage.payroll.PayrollAmount;
 import com.mangoboss.storage.payroll.PayrollEntity;
+import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import lombok.Builder;
 
-@Builder
-public record PayrollEstimatedResponse (
-        StaffSimpleResponse staff,
-        PayrollSimpleResponse payroll
-){
-    public static PayrollEstimatedResponse of(final EstimatedPayrollEntity estimatedPayroll, final StaffEntity staff){
-        return PayrollEstimatedResponse.builder()
-                .staff(StaffSimpleResponse.fromEntity(staff))
-                .payroll(PayrollSimpleResponse.of(estimatedPayroll))
-                .build();
-    }
+import java.time.LocalDate;
 
-    public static PayrollEstimatedResponse of(final PayrollEntity payroll, final StaffEntity staff){
+@Builder
+public record PayrollEstimatedResponse(
+        String key,
+        String bankCode,
+        String account,
+        LocalDate month,
+        WithholdingType withholdingType,
+        Double totalTime,
+        Integer baseAmount,
+        Integer weeklyAllowance,
+        Integer totalCommutingAllowance,
+        Integer totalAmount,
+        Integer withholdingTax,
+        Integer netAmount
+) {
+    public static PayrollEstimatedResponse of(final EstimatedPayrollEntity estimatedPayroll) {
+        PayrollAmount amount = estimatedPayroll.getPayrollAmount();
         return PayrollEstimatedResponse.builder()
-                .staff(StaffSimpleResponse.fromEntity(staff))
-                .payroll(PayrollSimpleResponse.of(payroll))
+                .key(estimatedPayroll.getPayrollKey())
+                .bankCode(estimatedPayroll.getBankCode().getDisplayName())
+                .account(estimatedPayroll.getAccount())
+                .month(estimatedPayroll.getMonth())
+                .withholdingType(estimatedPayroll.getWithholdingType())
+                .totalTime(amount.getTotalTime())
+                .baseAmount(amount.getBaseAmount())
+                .weeklyAllowance(amount.getWeeklyAllowance())
+                .totalCommutingAllowance(amount.getTotalCommutingAllowance())
+                .totalAmount(amount.getTotalAmount())
+                .withholdingTax(amount.getWithholdingTax())
+                .netAmount(amount.getNetAmount())
                 .build();
     }
 }

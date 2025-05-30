@@ -9,13 +9,16 @@ import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollEstimatedWithStaffResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollWithStaffResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.YearMonth;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,10 +49,10 @@ public class BossPayrollController {
     }
 
     @GetMapping("/staffs")
-    public ListWrapperResponse<PayrollEstimatedResponse> getEstimatedPayrollsForStaffs(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ListWrapperResponse<PayrollEstimatedWithStaffResponse> getEstimatedPayrolls(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                                        @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
-        return ListWrapperResponse.of(bossPayrollFacade.getEstimatedPayrollsForStaffs(storeId, userId));
+        return ListWrapperResponse.of(bossPayrollFacade.getEstimatedPayrolls(storeId, userId));
     }
 
     @PostMapping("/staffs")
@@ -60,17 +63,25 @@ public class BossPayrollController {
         bossPayrollFacade.confirmEstimatedPayroll(storeId, userId, request);
     }
 
-    @GetMapping("/staffs/confirm")
-    public ListWrapperResponse<PayrollEstimatedResponse> getConfirmedPayrolls(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                              @PathVariable Long storeId) {
+    @GetMapping("/confirm")
+    public ListWrapperResponse<PayrollWithStaffResponse> getConfirmedPayrolls(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                       @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossPayrollFacade.getConfirmedPayroll(storeId, userId));
     }
 
+
     @DeleteMapping("/account")
     public void deleteAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
-                              @PathVariable Long storeId){
+                              @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
         bossPayrollFacade.deleteAccount(storeId, userId);
+    }
+
+    @GetMapping
+    public ListWrapperResponse<PayrollWithStaffResponse> getPayrollsByMonth(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                            @PathVariable Long storeId, @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth){
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossPayrollFacade.getPayrollsByMonth(storeId, userId, yearMonth));
     }
 }

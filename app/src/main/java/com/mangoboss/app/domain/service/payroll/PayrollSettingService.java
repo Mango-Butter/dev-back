@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 @Service
 @RequiredArgsConstructor
@@ -79,7 +80,7 @@ public class PayrollSettingService {
                                       final Integer deductionUnit,
                                       final Integer commutingAllowance) {
         updateAutoTransferEnabled(payrollSetting, autoTransferEnabled, transferDate)
-                .updatePolicy(deductionUnit,commutingAllowance);
+                .updatePolicy(deductionUnit, commutingAllowance);
     }
 
     private PayrollSettingEntity updateAutoTransferEnabled(final PayrollSettingEntity payrollSetting,
@@ -106,10 +107,22 @@ public class PayrollSettingService {
         return setting;
     }
 
+    public void isTransferDateBefore(final Long storeId, final YearMonth yearMonth) {
+        LocalDate today = LocalDate.now(clock);
+        PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
+        YearMonth thisMonth = YearMonth.from(today);
+        if (yearMonth.isBefore(thisMonth)) {
+            return;
+        }
+        if (yearMonth.isAfter(thisMonth) || today.getDayOfMonth() > setting.getTransferDate()) {
+            throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
+        }
+    }
+
     @Transactional
     public void deleteAccount(final Long storeId) {
         PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
-        if(!setting.isAutoTransferEnabled()){
+        if (!setting.isAutoTransferEnabled()) {
             throw new CustomException(CustomErrorInfo.AUTO_TRANSFER_ENABLED);
         }
         transferAccountRepository.deleteById(setting.getTransferAccountEntity().getId());

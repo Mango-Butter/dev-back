@@ -11,8 +11,9 @@ import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollEstimatedResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollEstimatedWithStaffResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollWithStaffResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollEntity;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class BossPayrollFacade {
         return PayrollSettingResponse.fromEntity(store.getPayrollSetting());
     }
 
-    public List<PayrollEstimatedResponse> getEstimatedPayrollsForStaffs(final Long storeId, final Long bossId) {
+    public List<PayrollEstimatedWithStaffResponse> getEstimatedPayrolls(final Long storeId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
@@ -73,8 +75,6 @@ public class BossPayrollFacade {
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
         LocalDate startDate = targetMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate endDate = targetMonth.withDayOfMonth(targetMonth.lengthOfMonth());
-        System.out.println(startDate);
-        System.out.println(endDate);
         List<EstimatedPayrollEntity> payrolls = staffs.stream().map(staff -> {
             List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(
                     staff.getId(),
@@ -84,7 +84,7 @@ public class BossPayrollFacade {
         }).toList();
 
         return payrolls.stream()
-                .map(estimated -> PayrollEstimatedResponse.of(estimated, staffService.getStaffById(estimated.getStaff().getId())))
+                .map(estimated -> PayrollEstimatedWithStaffResponse.of(estimated, staffService.getStaffById(estimated.getStaff().getId())))
                 .toList();
     }
 
@@ -97,20 +97,29 @@ public class BossPayrollFacade {
         List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(store, payrollSetting, request.payrollKeys());
     }
 
-    public List<PayrollEstimatedResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
+    public List<PayrollWithStaffResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
         PayrollSettingEntity payrollSetting = payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
         List<PayrollEntity> confirmedPayroll = payrollService.getConfirmedPayroll(storeId, targetMonth);
         return confirmedPayroll.stream()
-                .map(payroll -> PayrollEstimatedResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
+                .map(payroll -> PayrollWithStaffResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
                 .toList();
     }
 
     public void deleteAccount(final Long storeId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
         payrollSettingService.deleteAccount(storeId);
+    }
+
+    public List<PayrollWithStaffResponse> getPayrollsByMonth(final Long storeId, final Long bossId, final YearMonth yearMonth) {
+        storeService.isBossOfStore(storeId, bossId);
+        payrollSettingService.isTransferDateBefore(storeId, yearMonth);
+        List<PayrollEntity> payrolls = payrollService.getPayrollsByMonth(storeId, yearMonth);
+        return payrolls.stream()
+                .map(payroll -> PayrollWithStaffResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
+                .toList();
     }
 }
 

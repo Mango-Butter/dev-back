@@ -3,22 +3,24 @@ package com.mangoboss.app.domain.service.payroll;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.EstimatedPayrollRepository;
 import com.mangoboss.app.domain.repository.PayrollRepository;
+import com.mangoboss.app.domain.repository.PayslipRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
-import com.mangoboss.storage.payroll.PayrollAmount;
-import com.mangoboss.storage.payroll.PayrollEntity;
-import com.mangoboss.storage.payroll.PayrollSettingEntity;
-import com.mangoboss.storage.payroll.WithholdingType;
+import com.mangoboss.storage.payroll.*;
 import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
+import com.mangoboss.storage.payroll.projection.PayrollWithPayslipProjection;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ public class PayrollService {
 
     private final PayrollRepository payrollRepository;
     private final EstimatedPayrollRepository estimatedPayrollRepository;
+    private final S3FileManager s3FileManager;
+    private final Clock clock;
 
     @Transactional
     public EstimatedPayrollEntity createEstimatedPayroll(final StaffEntity staff,
@@ -151,5 +155,23 @@ public class PayrollService {
 
     public List<PayrollEntity> getConfirmedPayroll(final Long storeId, final LocalDate month) {
         return payrollRepository.getAllByStoreIdAndMonth(storeId, month);
+    }
+
+    public List<PayrollEntity> getPayrollsByMonth(final Long storeId, final YearMonth yearMonth) {
+        LocalDate today = LocalDate.now(clock);
+        if (yearMonth.isBefore(YearMonth.from(today)) || hasStartedTransfer(storeId, yearMonth)) {
+            return payrollRepository.findAllByStoreIdAndMonthBetween(
+                    storeId,
+                    yearMonth.atDay(1),
+                    yearMonth.atEndOfMonth()
+            );
+        }
+        throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
+    }
+
+    public boolean hasStartedTransfer(final Long storeId, final YearMonth yearMonth) {
+        LocalDate start = yearMonth.atDay(1);
+        LocalDate end = yearMonth.atEndOfMonth();
+        return payrollRepository.isTransferStarted(storeId, start, end);
     }
 }

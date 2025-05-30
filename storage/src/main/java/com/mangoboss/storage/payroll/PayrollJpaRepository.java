@@ -1,5 +1,6 @@
 package com.mangoboss.storage.payroll;
 
+import com.mangoboss.storage.payroll.projection.PayrollWithPayslipProjection;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,10 @@ public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long>
     void deleteAllByStoreIdAndMonth(Long storeId, LocalDate month);
 
     List<PayrollEntity> getAllByStoreIdAndMonth(Long storeId, LocalDate month);
+
+    List<PayrollEntity> findAllByStoreIdAndMonthBetween(Long storeId, LocalDate start, LocalDate end);
+
+    boolean existsByStoreIdAndMonthBetweenAndTransferStateNot(
+            Long storeId, LocalDate start, LocalDate end, TransferState state);
+
 }
