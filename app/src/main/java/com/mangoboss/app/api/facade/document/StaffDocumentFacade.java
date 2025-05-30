@@ -1,6 +1,6 @@
 package com.mangoboss.app.api.facade.document;
 
-import com.mangoboss.app.common.util.S3FileManager;
+import com.mangoboss.app.common.util.S3PreSignedUrlManager;
 import com.mangoboss.app.domain.service.document.DocumentService;
 import com.mangoboss.app.domain.service.document.RequiredDocumentService;
 import com.mangoboss.app.domain.service.staff.StaffService;
@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StaffDocumentFacade {
 
-    private final S3FileManager s3FileManager;
     private final DocumentService documentService;
     private final StaffService staffService;
     private final RequiredDocumentService requiredDocumentService;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public void uploadDocument(final Long storeId, final Long userId, final DocumentUploadRequest request) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
@@ -41,13 +41,13 @@ public class StaffDocumentFacade {
     public ViewPreSignedUrlResponse viewDocument(final Long storeId, final Long userId, final Long documentId) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final String key = documentService.getFileKeyByIdAndStaffId(staff.getId(), documentId);
-        return s3FileManager.generateViewPreSignedUrl(key);
+        return s3PreSignedUrlManager.generateViewPreSignedUrl(key);
     }
 
     public DownloadPreSignedUrlResponse downloadDocument(final Long storeId, final Long userId, final Long documentId) {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final String key = documentService.getFileKeyByIdAndStaffId(staff.getId(), documentId);
-        return s3FileManager.generateDownloadPreSignedUrl(key);
+        return s3PreSignedUrlManager.generateDownloadPreSignedUrl(key);
     }
 
     public void deleteDocument(final Long storeId, final Long userId, final Long documentId) {

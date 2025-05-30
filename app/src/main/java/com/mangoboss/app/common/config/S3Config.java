@@ -1,5 +1,6 @@
 package com.mangoboss.app.common.config;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +11,23 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
+@Getter
 @RequiredArgsConstructor
 public class S3Config {
+
+    @Value("${cloud.aws.s3.public-base-url}")
+    private String publicBaseUrl;
+
+    @Value("${cloud.aws.s3.kms-key-id}")
+    private String kmsKeyId;
+
+    @Getter
+    @Value("${cloud.aws.s3.private-bucket}")
+    private String privateBucket;
+
+    @Getter
+    @Value("${cloud.aws.s3.public-bucket}")
+    private String publicBucket;
 
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;

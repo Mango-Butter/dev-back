@@ -1,7 +1,6 @@
 package com.mangoboss.app.api.facade.task;
 
-import com.mangoboss.app.common.constant.S3FileType;
-import com.mangoboss.app.common.util.S3FileManager;
+import com.mangoboss.app.common.util.S3PreSignedUrlManager;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.task.TaskService;
 import com.mangoboss.app.domain.service.store.StoreService;
@@ -14,6 +13,7 @@ import com.mangoboss.app.dto.task.request.TaskRoutineCreateRequest;
 import com.mangoboss.app.dto.task.response.AssignedTaskResponse;
 import com.mangoboss.app.dto.task.response.TaskLogDetailResponse;
 import com.mangoboss.app.dto.task.response.TaskRoutineResponse;
+import com.mangoboss.storage.metadata.S3FileType;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskLogEntity;
 import com.mangoboss.storage.task.TaskRoutineEntity;
@@ -33,8 +33,8 @@ public class BossTaskFacade {
     private final TaskService taskService;
     private final StoreService storeService;
     private final StaffService staffService;
-    private final S3FileManager s3FileManager;
     private final TaskRoutineStrategyContext taskRoutineStrategyContext;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public void createTaskRoutine(final Long storeId, final Long bossId, final TaskRoutineCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
@@ -55,8 +55,8 @@ public class BossTaskFacade {
     public UploadPreSignedUrlResponse generateReferenceImageUploadUrl(final Long storeId, final Long bossId,
                                                                       final String extension, final String contentType) {
         storeService.isBossOfStore(storeId, bossId);
-        final String key = s3FileManager.generateFileKey(S3FileType.TASK_REFERENCE, extension);
-        return s3FileManager.generateUploadPreSignedUrl(key, contentType);
+        final String key = s3PreSignedUrlManager.generateFileKey(S3FileType.TASK_REFERENCE, extension);
+        return s3PreSignedUrlManager.generateUploadPreSignedUrl(key, contentType);
     }
 
     public List<AssignedTaskResponse> getTasksByDate(final Long storeId, final Long bossId, final LocalDate date) {
