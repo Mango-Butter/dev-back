@@ -47,7 +47,7 @@ public enum CustomErrorInfo {
     STORE_TASK_MISMATCH(400, "해당 매장의 업무가 아닙니다.", 400039),
     INVALID_S3_URL(400,"유효하지 않은 S3 URL입니다.", 400040),
     ALREADY_COMPLETED_TASK(400,"이미 완료된 업무입니다.", 400041),
-    INVALID_DELETE_OPTION(400, "삭제 옵션이 올바르지 않습니다.", 40036),
+    INVALID_DELETE_OPTION(400, "삭제 옵션이 올바르지 않습니다.", 400042),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -64,6 +64,7 @@ public enum CustomErrorInfo {
     CONTRACT_NOT_BELONG_TO_STAFF(403, "이 근로계약서는 해당 알바생의 것이 아닙니다.", 403005),
     DOCUMENT_NOT_BELONG_TO_STAFF(403, "이 서류는 해당 알바생의 서류가 아닙니다.", 403006),
     FORBIDDEN_TASK_LOG_DELETE(403, "해당 업무 완료 기록을 삭제할 권한이 없습니다.", 403007),
+    WORK_REPORT_ACCESS_DENIED(403, "보고사항 접근 권한이 없습니다.", 403008),
 
     // 422 Unprocessable Entity
     CONTRACT_PDF_TAMPERED(422, "계약서 PDF의 무결성이 손상되었습니다.", 422001),

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface WorkReportRepository {
+    WorkReportEntity save(WorkReportEntity entity);
+
     WorkReportEntity getByStoreIdAndWorkReportId(Long storeId, Long workReportId);
 
     List<WorkReportEntity> findByStoreIdAndDateOrderByCreatedAtDesc(Long storeId, LocalDate date);

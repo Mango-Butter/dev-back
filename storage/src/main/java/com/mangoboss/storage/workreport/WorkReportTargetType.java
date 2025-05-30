@@ -1,5 +1,5 @@
 package com.mangoboss.storage.workreport;
 
 public enum WorkReportTargetType {
-    BOSS, STAFF
+    TO_BOSS, TO_STAFF
 }

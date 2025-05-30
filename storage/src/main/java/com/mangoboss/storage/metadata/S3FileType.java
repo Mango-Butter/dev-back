@@ -11,7 +11,8 @@ public enum S3FileType {
     DOCUMENT("documents/"),
     PAYSLIP("payslips/"),
     TASK_REFERENCE("tasks/reference/"),
-    TASK_REPORT("tasks/report/");
+    TASK_REPORT("tasks/report/"),
+    WORK_REPORT("work-reports/");
 
     private final String folder;
 }

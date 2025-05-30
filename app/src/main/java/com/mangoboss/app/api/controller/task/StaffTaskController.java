@@ -40,12 +40,12 @@ public class StaffTaskController {
     }
 
     @GetMapping("/task-log-image/upload-url")
-    public UploadPreSignedUrlResponse generateReportImageUploadUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public UploadPreSignedUrlResponse generateTaskReportImageUploadUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                    @PathVariable final Long storeId,
                                                                    @RequestParam final String extension,
                                                                    @RequestParam final String contentType) {
         final Long userId = userDetails.getUserId();
-        return staffTaskFacade.generateReportImageUploadUrl(storeId, userId, extension, contentType);
+        return staffTaskFacade.generateTaskReportImageUploadUrl(storeId, userId, extension, contentType);
     }
 
     @GetMapping

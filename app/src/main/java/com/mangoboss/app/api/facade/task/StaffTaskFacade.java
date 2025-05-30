@@ -37,8 +37,8 @@ public class StaffTaskFacade {
         taskService.deleteTaskLog(storeId, taskId, userId);
     }
 
-    public UploadPreSignedUrlResponse generateReportImageUploadUrl(final Long storeId, final Long userId,
-                                                                   final String extension, final String contentType) {
+    public UploadPreSignedUrlResponse generateTaskReportImageUploadUrl(final Long storeId, final Long userId,
+                                                                       final String extension, final String contentType) {
         staffService.getVerifiedStaff(userId, storeId);
         final String key = s3PreSignedUrlManager.generateFileKey(S3FileType.TASK_REPORT, extension);
         return s3PreSignedUrlManager.generateUploadPreSignedUrl(key, contentType);
