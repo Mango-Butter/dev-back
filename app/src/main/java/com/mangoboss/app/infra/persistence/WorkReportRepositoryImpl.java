@@ -34,4 +34,9 @@ public class WorkReportRepositoryImpl implements WorkReportRepository {
     public List<WorkReportEntity> findByStoreIdAndDateOrderByCreatedAtDesc(final Long storeId, final LocalDate date) {
         return workReportJpaRepository.findByStoreIdAndDateOrderByCreatedAtDesc(storeId, date);
     }
+
+    @Override
+    public List<WorkReportEntity> findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(final Long storeId, final LocalDate date, final WorkReportTargetType targetType) {
+        return workReportJpaRepository.findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(storeId, date, targetType);
+    }
 }

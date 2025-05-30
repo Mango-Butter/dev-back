@@ -12,6 +12,9 @@ import com.mangoboss.storage.workreport.WorkReportEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StaffWorkReportFacade {
@@ -24,6 +27,20 @@ public class StaffWorkReportFacade {
         StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final WorkReportEntity entity = workReportService.createWorkReport(storeId, staff.getId(), request.content(), request.reportImageUrl(), request.targetType());
         return WorkReportResponse.fromEntity(entity, staff);
+    }
+
+    public List<WorkReportResponse> getWorkReportsByDate(final Long storeId, final Long userId, final LocalDate date) {
+        StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        return workReportService.findStaffWorkReports(storeId, date).stream()
+                .map(workReport -> WorkReportResponse.fromEntity(workReport, staff))
+                .toList();
+    }
+
+    public WorkReportResponse getWorkReportDetail(final Long storeId, final Long userId, final Long workReportId) {
+        StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        workReportService.validateStaffHasAccessToWorkReport(storeId, workReportId);
+        final WorkReportEntity workReport = workReportService.getWorkReportByStoreIdAndId(storeId, workReportId);
+        return WorkReportResponse.fromEntity(workReport, staff);
     }
 
     public UploadPreSignedUrlResponse generateWorkReportImageUploadUrl(final Long storeId, final Long userId,

@@ -48,6 +48,7 @@ public enum CustomErrorInfo {
     INVALID_S3_URL(400,"유효하지 않은 S3 URL입니다.", 400040),
     ALREADY_COMPLETED_TASK(400,"이미 완료된 업무입니다.", 400041),
     INVALID_DELETE_OPTION(400, "삭제 옵션이 올바르지 않습니다.", 400042),
+    WORK_REPORT_STORE_MISMATCH(400, "해당 보고사항이 요청한 가게에 속하지 않습니다.", 400043),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
