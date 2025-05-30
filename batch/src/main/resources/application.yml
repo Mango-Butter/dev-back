@@ -35,7 +35,28 @@ external:
 
 cron:
   clock-out: ${CRON_CLOCK_OUT:*/30 * * * * *}
-  transfer: ${CRON_TRANSFER:*/30 * * * * *}
+  payroll: ${CRON_PAYROLL:*/30 * * * * *}
+  payslip: ${CRON_PAYSLIP:*/30 * * * * *}
 
 transfer:
   max-retry: ${MAX_RETRY:3}
+  payroll-batch-size: ${PAYROLL_BATCH_SIZE:10}
+  payslip-batch-size: ${PAYSLIP_BATCH_SIZE:10}
+
+pdf:
+  font-paths: ${PDF_FONT_PATHS:templates/fonts/NotoSansKR-Regular.ttf,templates/fonts/NotoSansKR-Bold.ttf}
+
+payslip:
+  max-retry: ${MAX_RETRY:3}
+  template-path: ${PAYSLIP_TEMPLATE_PATH:templates/payslip_template.html}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      private-bucket: ${AWS_S3_PRIVATE_BUCKET:mango-boss-dev-private}
+      kms-key-id: ${AWS_KMS_KEY_ID}

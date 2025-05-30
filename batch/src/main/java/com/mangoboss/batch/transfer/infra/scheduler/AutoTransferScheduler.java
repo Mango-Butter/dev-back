@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class AutoTransferScheduler {
     private final AutoTransferService autoTransferService;
 
-    @Scheduled(cron = "${cron.transfer}")
+    @Scheduled(cron = "${cron.payroll}")
     public void runTransfer() {
         autoTransferService.autoTransfer();
     }
