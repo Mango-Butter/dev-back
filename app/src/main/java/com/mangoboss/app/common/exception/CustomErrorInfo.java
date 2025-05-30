@@ -84,6 +84,7 @@ public enum CustomErrorInfo {
     TASK_NOT_FOUND(404, "존재하지 않는 업무입니다.", 404012),
     TASK_LOG_NOT_FOUND(404, "완료된 업무 기록이 없습니다.", 404013),
     TASK_ROUTINE_NOT_FOUND(404, "해당 반복 업무를 찾을 수 없습니다.", 404014),
+    WORK_REPORT_NOT_FOUND(404, "보고사항을 찾을 수 없습니다.", 404015),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
