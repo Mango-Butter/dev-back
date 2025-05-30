@@ -34,7 +34,7 @@ public class BossContractFacade {
     private final StoreService storeService;
     private final StaffService staffService;
     private final UserService userService;
-    private final S3FileManager s3FileManager;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public SignatureUploadResponse uploadSignature(final Long storeId, final Long bossId, final SignatureUploadRequest request) {
         storeService.isBossOfStore(storeId, bossId);
@@ -57,14 +57,14 @@ public class BossContractFacade {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validatePdfIntegrity(contract);
-        return s3FileManager.generateViewPreSignedUrl(contract.getFileKey());
+        return s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getFileKey());
     }
 
     public DownloadPreSignedUrlResponse getContractDownloadUrl(final Long storeId, final Long bossId, final Long contractId) {
         storeService.isBossOfStore(storeId, bossId);
         final ContractEntity contract = contractService.getContractById(contractId);
         contractService.validatePdfIntegrity(contract);
-        return s3FileManager.generateDownloadPreSignedUrl(contract.getFileKey());
+        return s3PreSignedUrlManager.generateDownloadPreSignedUrl(contract.getFileKey());
     }
 
     public ContractDetailResponse getContractDetail(final Long storeId, final Long bossId, final Long contractId) {
@@ -73,10 +73,10 @@ public class BossContractFacade {
 
         final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
 
-        final ViewPreSignedUrlResponse bossSigned = s3FileManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
+        final ViewPreSignedUrlResponse bossSigned = s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
 
         final ViewPreSignedUrlResponse staffSigned = contract.getStaffSignatureKey() != null
-                ? s3FileManager.generateViewPreSignedUrl(contract.getStaffSignatureKey())
+                ? s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getStaffSignatureKey())
                 : ViewPreSignedUrlResponse.builder().url("").expiresAt(null).build();
 
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);
@@ -87,8 +87,6 @@ public class BossContractFacade {
         final ContractEntity contract = contractService.getContractById(contractId);
 
         contractService.validateContractNotSignedByStaff(contract);
-
-        s3FileManager.deleteFile(contract.getFileKey());
         contractService.deleteContract(contractId);
     }
 

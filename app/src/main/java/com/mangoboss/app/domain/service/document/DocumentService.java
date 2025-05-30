@@ -1,7 +1,5 @@
 package com.mangoboss.app.domain.service.document;
 
-import com.mangoboss.app.common.constant.ContentType;
-import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.security.EncryptedFileDecoder;
@@ -9,6 +7,8 @@ import com.mangoboss.app.common.util.S3FileManager;
 import com.mangoboss.app.domain.repository.DocumentRepository;
 import com.mangoboss.storage.document.DocumentEntity;
 import com.mangoboss.storage.document.DocumentType;
+import com.mangoboss.storage.metadata.ContentType;
+import com.mangoboss.storage.metadata.S3FileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,8 @@ public class DocumentService {
         final String mimeType = decoded.mimeType();
         final byte[] fileBytes = decoded.fileBytes();
 
-        final String extension = ContentType.getExtensionByMimeType(mimeType);
+        final String extension = ContentType.getExtensionByMimeType(mimeType)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.UNSUPPORTED_FILE_TYPE));
         final String fileKey = s3FileManager.generateFileKey(S3FileType.DOCUMENT, extension);
 
         s3FileManager.upload(fileBytes, fileKey, mimeType);
@@ -54,7 +55,7 @@ public class DocumentService {
 
     @Transactional
     public void deleteDocument(final DocumentEntity document) {
-        s3FileManager.deleteFile(document.getFileKey());
+        s3FileManager.deleteFileFromPrivateBucket(document.getFileKey());
         documentRepository.delete(document);
     }
 

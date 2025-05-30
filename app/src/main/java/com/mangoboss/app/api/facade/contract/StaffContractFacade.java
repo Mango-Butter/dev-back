@@ -30,7 +30,7 @@ public class StaffContractFacade {
     private final ContractService contractService;
     private final StaffService staffService;
     private final ScheduleService scheduleService;
-    private final S3FileManager s3FileManager;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
     private final Clock clock;
 
     public SignatureUploadResponse uploadSignature(final Long storeId, final Long userId, final SignatureUploadRequest request) {
@@ -60,7 +60,7 @@ public class StaffContractFacade {
 
         contractService.validatePdfIntegrity(contract);
 
-        return s3FileManager.generateViewPreSignedUrl(contract.getFileKey());
+        return s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getFileKey());
     }
 
     public DownloadPreSignedUrlResponse getContractDownloadUrl(final Long storeId, final Long contractId, final Long userId) {
@@ -70,7 +70,7 @@ public class StaffContractFacade {
 
         contractService.validatePdfIntegrity(contract);
 
-        return s3FileManager.generateDownloadPreSignedUrl(contract.getFileKey());
+        return s3PreSignedUrlManager.generateDownloadPreSignedUrl(contract.getFileKey());
     }
 
     public ContractDetailResponse getContractDetail(final Long storeId, final Long contractId, final Long userId) {
@@ -80,10 +80,10 @@ public class StaffContractFacade {
 
         final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
 
-        final ViewPreSignedUrlResponse bossSigned = s3FileManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
+        final ViewPreSignedUrlResponse bossSigned = s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getBossSignatureKey());
 
         final ViewPreSignedUrlResponse staffSigned = contract.getStaffSignatureKey() != null
-                ? s3FileManager.generateViewPreSignedUrl(contract.getStaffSignatureKey())
+                ? s3PreSignedUrlManager.generateViewPreSignedUrl(contract.getStaffSignatureKey())
                 : ViewPreSignedUrlResponse.builder().url("").expiresAt(null).build();
 
         return ContractDetailResponse.of(contractData, bossSigned, staffSigned);

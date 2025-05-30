@@ -57,8 +57,8 @@ public class TaskService {
 
         final String imageUrl = taskLog.getTaskLogImageUrl();
         if (imageUrl != null && !imageUrl.isBlank()) {
-            final String key = s3FileManager.extractKeyFromUrl(imageUrl, s3FileManager.getPublicBaseUrl());
-            s3FileManager.deleteFileFromTaskBucket(key);
+            final String key = s3FileManager.extractKeyFromPublicUrl(imageUrl);
+            s3FileManager.deleteFileFromPublicBucket(key);
         }
         taskLogRepository.delete(taskLog);
     }

@@ -1,7 +1,5 @@
 package com.mangoboss.app.domain.service.contract;
 
-import com.mangoboss.app.common.constant.ContentType;
-import com.mangoboss.app.common.constant.S3FileType;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.security.EncryptedFileDecoder;
@@ -13,6 +11,8 @@ import com.mangoboss.app.domain.repository.ContractRepository;
 import com.mangoboss.app.dto.contract.request.ContractData;
 import com.mangoboss.app.dto.contract.request.ContractTemplateData;
 import com.mangoboss.storage.contract.ContractEntity;
+import com.mangoboss.storage.metadata.ContentType;
+import com.mangoboss.storage.metadata.S3FileType;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +83,7 @@ public class ContractService {
     @Transactional
     public void deleteContract(final Long contractId) {
         final ContractEntity contract = getContractById(contractId);
+        s3FileManager.deleteFileFromPrivateBucket(contract.getFileKey());
         contractRepository.delete(contract);
     }
 

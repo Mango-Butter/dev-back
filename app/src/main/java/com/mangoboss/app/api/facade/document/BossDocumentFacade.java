@@ -1,6 +1,6 @@
 package com.mangoboss.app.api.facade.document;
 
-import com.mangoboss.app.common.util.S3FileManager;
+import com.mangoboss.app.common.util.S3PreSignedUrlManager;
 import com.mangoboss.app.domain.service.document.DocumentService;
 import com.mangoboss.app.domain.service.document.RequiredDocumentService;
 import com.mangoboss.app.domain.service.staff.StaffService;
@@ -33,8 +33,8 @@ public class BossDocumentFacade {
     private final DocumentService documentService;
     private final RequiredDocumentService requiredDocumentService;
     private final StoreService storeService;
-    private final S3FileManager s3FileManager;
     private final StaffService staffService;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public List<RequiredDocumentResponse> updateRequiredDocuments(final Long storeId, final Long bossId, final List<RequiredDocumentCreateRequest> requests) {
         final StoreEntity store = storeService.isBossOfStore(storeId, bossId);
@@ -78,13 +78,13 @@ public class BossDocumentFacade {
     public ViewPreSignedUrlResponse viewDocument(final Long storeId, final Long bossId, final Long documentId) {
         storeService.isBossOfStore(storeId, bossId);
         final DocumentEntity document = documentService.getByDocumentId(documentId);
-        return s3FileManager.generateViewPreSignedUrl(document.getFileKey());
+        return s3PreSignedUrlManager.generateViewPreSignedUrl(document.getFileKey());
     }
 
     public DownloadPreSignedUrlResponse downloadDocument(final Long storeId, final Long bossId, final Long documentId) {
         storeService.isBossOfStore(storeId, bossId);
         final DocumentEntity document = documentService.getByDocumentId(documentId);
-        return s3FileManager.generateDownloadPreSignedUrl(document.getFileKey());
+        return s3PreSignedUrlManager.generateDownloadPreSignedUrl(document.getFileKey());
     }
 
     public void deleteDocument(final Long storeId, final Long bossId, final Long documentId) {
