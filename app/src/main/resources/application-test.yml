@@ -57,16 +57,16 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      contract-bucket: ${AWS_S3_CONTRACT_BUCKET:test-bucket}
-      kms-key-id: ${AWS_KMS_KEY_ID:dummy-kms-key}
-      task-bucket: ${AWS_S3_TASK_BUCKET:test-bucket}
-      task-base-url: ${AWS_S3_TASK_BASE_URL:https://example.com}
+      private-bucket: ${AWS_S3_PRIVATE_BUCKET:dummy}
+      public-bucket: ${AWS_S3_PUBLIC_BUCKET:dummy}
+      public-base-url: ${AWS_S3_PUBLIC_BASE_URL:dummy}
+      kms-key-id: ${AWS_KMS_KEY_ID:dummy}
 
 pdf:
-  font-path: ${PDF_FONT_PATH:fonts/NotoSansKR-Regular.ttf}
+  font-path: fonts/NotoSansKR-Regular.ttf
 
 contract:
-  template-path: ${CONTRACT_TEMPLATE_PATH:templates/contract-template.html}
+  template-path: templates/contract-template.html
 
 pre-signed-url:
   view-expiration-minutes: ${VIEW_EXPIRATION_MINUTES:10}
@@ -77,7 +77,7 @@ external:
   nh:
     base-url: ${NH_BASE_URL:https://api.nhncloud.com}
     access-token: ${NH_ACCESS_TOKEN:dummy-access-token}
-    iscd : ${NH_ISCD:dummy-iscd}
+    iscd: ${NH_ISCD:dummy-iscd}
     fintech-apsno: ${NH_FINTECH_APSNO:dummy-fintech-apsno}
     api-svc-cd: ${NH_API_SVC_CD:dummy-api-svc-cd}
     api-svc-cd-received: ${NH_API_SVC_CD_RECEIVED:dummy-api-svc-cd-received}

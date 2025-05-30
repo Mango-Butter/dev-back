@@ -25,22 +25,15 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class S3FileManager {
+    private static final String SSE_ALGORITHM = "aws:kms";
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
     private final Clock clock;
 
     @Getter
-    @Value("${cloud.aws.s3.contract-bucket}")
-    private String contractBucketName;
-
-    @Getter
-    @Value("${cloud.aws.s3.task-bucket}")
-    private String taskBucketName;
-
-    @Getter
-    @Value("${cloud.aws.s3.task-base-url}")
-    private String taskBaseUrl;
+    @Value("${cloud.aws.s3.public-base-url}")
+    private String publicBaseUrl;
 
     @Value("${cloud.aws.s3.kms-key-id}")
     private String kmsKeyId;
@@ -54,12 +47,19 @@ public class S3FileManager {
     @Value("${pre-signed-url.upload-expiration-minutes}")
     private int uploadExpirationMinutes;
 
-    private static final String SSE_ALGORITHM = "aws:kms";
+    @Getter
+    @Value("${cloud.aws.s3.private-bucket}")
+    private String privateBucket;
+
+    @Getter
+    @Value("${cloud.aws.s3.public-bucket}")
+    private String publicBucket;
+
 
     // 파일 업로드: byte[] 기반
     public void upload(final byte[] fileData, final String key, final String contentType) {
         final PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(contractBucketName)
+                .bucket(privateBucket)
                 .key(key)
                 .contentType(contentType)
                 .serverSideEncryption(SSE_ALGORITHM)
@@ -71,7 +71,7 @@ public class S3FileManager {
 
     public void upload(String key, byte[] fileBytes, ContentType contentType) {
         final PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(contractBucketName)
+                .bucket(privateBucket)
                 .key(key)
                 .contentType(contentType.getMimeType())
                 .build();
@@ -82,7 +82,7 @@ public class S3FileManager {
     public void deleteFile(final String key) {
         try {
             final DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                    .bucket(contractBucketName)
+                    .bucket(privateBucket)
                     .key(key)
                     .build();
 
@@ -104,7 +104,7 @@ public class S3FileManager {
         try {
             final ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(
                     GetObjectRequest.builder()
-                            .bucket(contractBucketName)
+                            .bucket(privateBucket)
                             .key(key)
                             .build()
             );
@@ -117,7 +117,7 @@ public class S3FileManager {
     // 조회용 presingedUrl (inline)
     public ViewPreSignedUrlResponse generateViewPreSignedUrl(final String key) {
         final GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(contractBucketName)
+                .bucket(privateBucket)
                 .key(key)
                 .responseContentDisposition("inline")
                 .build();
@@ -135,7 +135,7 @@ public class S3FileManager {
     // 다운로드용 presingedUrl
     public DownloadPreSignedUrlResponse generateDownloadPreSignedUrl(final String key) {
         final GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(contractBucketName)
+                .bucket(privateBucket)
                 .key(key)
                 .responseContentDisposition("attachment")
                 .build();
@@ -153,7 +153,7 @@ public class S3FileManager {
     // 업로드용 presingedUrl
     public UploadPreSignedUrlResponse generateUploadPreSignedUrl(final String key, final String contentType) {
         final PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(taskBucketName)
+                .bucket(publicBucket)
                 .key(key)
                 .contentType(contentType)
                 .build();
@@ -164,7 +164,7 @@ public class S3FileManager {
                 .build();
 
         final String uploadUrl = s3Presigner.presignPutObject(preSignRequest).url().toString();
-        final String publicUrl = taskBaseUrl + key;
+        final String publicUrl = publicBaseUrl + key;
 
         return UploadPreSignedUrlResponse.of(uploadUrl, publicUrl, LocalDateTime.now(clock).plusMinutes(uploadExpirationMinutes));
     }
@@ -172,7 +172,7 @@ public class S3FileManager {
     public void deleteFileFromTaskBucket(final String key) {
         try {
             final DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                    .bucket(taskBucketName)
+                    .bucket(publicBucket)
                     .key(key)
                     .build();
             s3Client.deleteObject(deleteRequest);
@@ -188,7 +188,7 @@ public class S3FileManager {
     public String getContentTypeFromS3(final String key) {
         try {
             final HeadObjectRequest request = HeadObjectRequest.builder()
-                    .bucket(contractBucketName)
+                    .bucket(privateBucket)
                     .key(key)
                     .build();
 

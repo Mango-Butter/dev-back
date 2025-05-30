@@ -34,21 +34,21 @@ external:
     mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE}
 
 cron:
-  clock-out: ${CRON_CLOCK_OUT:*/30 * * * * *}
-  payroll: ${CRON_PAYROLL:*/30 * * * * *}
-  payslip: ${CRON_PAYSLIP:*/30 * * * * *}
+  clock-out: ${CRON_CLOCK_OUT}
+  payroll: ${CRON_PAYROLL}
+  payslip: ${CRON_PAYSLIP}
 
 transfer:
-  max-retry: ${MAX_RETRY:3}
-  payroll-batch-size: ${PAYROLL_BATCH_SIZE:10}
-  payslip-batch-size: ${PAYSLIP_BATCH_SIZE:10}
+  max-retry: ${MAX_RETRY}
+  payroll-batch-size: ${PAYROLL_BATCH_SIZE}
+  payslip-batch-size: ${PAYSLIP_BATCH_SIZE}
 
 pdf:
-  font-paths: ${PDF_FONT_PATHS:templates/fonts/NotoSansKR-Regular.ttf,templates/fonts/NotoSansKR-Bold.ttf}
+  font-paths: templates/fonts/NotoSansKR-Regular.ttf,templates/fonts/NotoSansKR-Bold.ttf
 
 payslip:
   max-retry: ${MAX_RETRY:3}
-  template-path: ${PAYSLIP_TEMPLATE_PATH:templates/payslip_template.html}
+  template-path: templates/payslip_template.html
 
 cloud:
   aws:
@@ -58,5 +58,5 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      private-bucket: ${AWS_S3_PRIVATE_BUCKET:mango-boss-dev-private}
+      private-bucket: ${AWS_S3_PRIVATE_BUCKET}
       kms-key-id: ${AWS_KMS_KEY_ID}
