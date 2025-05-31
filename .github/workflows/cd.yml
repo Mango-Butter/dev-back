@@ -132,8 +132,8 @@ jobs:
 
       - name: Decode firebase credential
         run: |
-          mkdir -p src/main/resources/firebase
-          echo "${{ secrets.FIREBASE_CREDENTIAL_JSON }}" | base64 -d > src/main/resources/firebase/firebase-admin-sdk.json
+          mkdir -p batch/src/main/resources/firebase
+          echo "${{ secrets.FIREBASE_CREDENTIAL_JSON }}" | base64 -d > batch/src/main/resources/firebase/firebase-admin-sdk.json
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -201,6 +201,7 @@ jobs:
             echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
             echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
             echo "AWS_KMS_KEY_ID=${{ secrets.AWS_KMS_KEY_ID }}" >> .env
+            echo "MAX_RETRY=${{ secrets.MAX_RETRY }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
