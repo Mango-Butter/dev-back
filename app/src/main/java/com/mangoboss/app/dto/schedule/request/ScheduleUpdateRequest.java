@@ -6,7 +6,6 @@ import lombok.NonNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Builder
 public record ScheduleUpdateRequest(
         @NonNull
         LocalDate workDate,

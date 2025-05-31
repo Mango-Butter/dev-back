@@ -9,7 +9,6 @@ import com.mangoboss.storage.staff.StaffEntity;
 import lombok.Builder;
 import lombok.NonNull;
 
-@Builder
 public record ScheduleCreateRequest(
         @NonNull
         Long staffId,

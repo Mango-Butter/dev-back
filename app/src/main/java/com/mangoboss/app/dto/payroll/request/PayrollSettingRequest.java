@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Min;
 import lombok.Builder;
 import lombok.NonNull;
 
-@Builder
 public record PayrollSettingRequest(
         @NonNull
         Boolean autoTransferEnabled,
