@@ -158,7 +158,7 @@ public class PayrollService {
     }
 
     public List<PayrollEntity> getPayrollsByMonth(final Long storeId, final YearMonth yearMonth) {
-        LocalDate today = LocalDate.now(clock);
+        LocalDate today = LocalDate.now(clock).minusMonths(1);
         if (yearMonth.isBefore(YearMonth.from(today)) || hasStartedTransfer(storeId, yearMonth)) {
             return payrollRepository.findAllByStoreIdAndMonthBetween(
                     storeId,
@@ -173,5 +173,9 @@ public class PayrollService {
         LocalDate start = yearMonth.atDay(1);
         LocalDate end = yearMonth.atEndOfMonth();
         return payrollRepository.isTransferStarted(storeId, start, end);
+    }
+
+    public PayrollEntity getStorePayrollById(final Long storeId, final Long payrollId) {
+        return payrollRepository.getById(payrollId);
     }
 }

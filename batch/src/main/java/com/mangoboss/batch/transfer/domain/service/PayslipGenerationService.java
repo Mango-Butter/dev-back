@@ -46,7 +46,7 @@ public class PayslipGenerationService {
                         String html = payslipExecutor.renderPayslipHtml(payroll);
                         byte[] pdfBytes = payslipExecutor.generatePdfFromHtml(html);
                         String fileKey = payslipExecutor.savePayslipPdf(pdfBytes);
-                        payslip.savePayslipPdfKey(fileKey);
+                        payslip.saveFileKey(fileKey);
                         entityManager.flush();
                     } catch (Exception e) {
                         log.warn("[{}] payslipId = {}", CustomErrorInfo.PDF_GENERATION_FAILED.getMessage(), payslip.getId(), e);

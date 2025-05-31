@@ -27,13 +27,13 @@ public class PayslipEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer retryCount;
 
-    private String payslipPdfKey;
+    private String fileKey;
 
     @Builder
-    private PayslipEntity(final PayrollEntity payroll, final PayslipState payslipState, final Integer retryCount, final String payslipPdfKey) {
+    private PayslipEntity(final PayrollEntity payroll, final PayslipState payslipState, final Integer retryCount, final String fileKey) {
         this.payroll = payroll;
         this.payslipState = payslipState;
-        this.payslipPdfKey = payslipPdfKey;
+        this.fileKey = fileKey;
         this.retryCount = retryCount;
     }
 
@@ -42,12 +42,12 @@ public class PayslipEntity extends BaseTimeEntity {
                 .payroll(payroll)
                 .payslipState(PayslipState.PENDING)
                 .retryCount(0)
-                .payslipPdfKey(null)
+                .fileKey(null)
                 .build();
     }
 
-    public void savePayslipPdfKey(final String payslipPdfKey) {
-        this.payslipPdfKey = payslipPdfKey;
+    public void saveFileKey(final String fileKey) {
+        this.fileKey = fileKey;
         this.payslipState = PayslipState.COMPLETED;
     }
 }
