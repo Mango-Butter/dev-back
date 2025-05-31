@@ -63,16 +63,16 @@ public class BossPayrollController {
 
     @GetMapping("/confirm")
     public ListWrapperResponse<PayrollWithStaffResponse> getConfirmedPayrolls(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                                       @PathVariable Long storeId) {
+                                                                              @PathVariable Long storeId) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossPayrollFacade.getConfirmedPayrolls(storeId, userId));
     }
 
-    @GetMapping("/{payrollId}/confirm")
-    public PayrollDetailResponse getConfirmedPayrollDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                           @PathVariable Long storeId, @PathVariable Long payrollId) {
+    @GetMapping("/{payrollId}")
+    public PayrollResponse getPayroll(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @PathVariable Long storeId, @PathVariable Long payrollId) {
         final Long userId = userDetails.getUserId();
-        return bossPayrollFacade.getConfirmedPayrollDetail(storeId, payrollId, userId);
+        return bossPayrollFacade.getPayroll(storeId, payrollId, userId);
     }
 
     @DeleteMapping("/account")
@@ -84,22 +84,25 @@ public class BossPayrollController {
 
     @GetMapping
     public ListWrapperResponse<PayrollWithStaffResponse> getPayrollsByMonth(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                            @PathVariable Long storeId, @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth){
+                                                                            @PathVariable Long storeId, @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossPayrollFacade.getPayrollsByMonth(storeId, userId, yearMonth));
     }
 
-    @GetMapping("/{payrollId}")
-    public PayrollWithPayslipResponse getPayrollWithPayslip(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                            @PathVariable Long storeId, @PathVariable Long payrollId){
-        final Long userId = userDetails.getUserId();
-        return bossPayrollFacade.getPayroll(storeId, payrollId, userId);
-    }
-
     @GetMapping("/payslip/{payslipId}")
     public DownloadPreSignedUrlResponse getPayslipDownloadUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                              @PathVariable Long storeId, @PathVariable Long payslipId){
+                                                              @PathVariable Long storeId, @PathVariable Long payslipId) {
         final Long userId = userDetails.getUserId();
         return bossPayrollFacade.getPayslipDownloadUrl(storeId, payslipId, userId);
+    }
+
+    @GetMapping("/staffs/{staffId}")
+    public PayrollResponse getEstimatedPayrollForStaff(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long storeId,
+            @PathVariable Long staffId,
+            @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
+        final Long userId = userDetails.getUserId();
+        return bossPayrollFacade.getEstimatedPayrollForStaff(storeId, staffId, userId, yearMonth);
     }
 }

@@ -45,10 +45,11 @@ public enum CustomErrorInfo {
     INVALID_REPEAT_DATE_RANGE(400, "반복 날짜는 1일부터 31일까지여야 합니다.", 400037),
     TASK_LOG_IMAGE_REQUIRED(400, "업무 수행 이미지가 필요합니다.", 400038),
     STORE_TASK_MISMATCH(400, "해당 매장의 업무가 아닙니다.", 400039),
-    INVALID_S3_URL(400,"유효하지 않은 S3 URL입니다.", 400040),
-    ALREADY_COMPLETED_TASK(400,"이미 완료된 업무입니다.", 400041),
+    INVALID_S3_URL(400, "유효하지 않은 S3 URL입니다.", 400040),
+    ALREADY_COMPLETED_TASK(400, "이미 완료된 업무입니다.", 400041),
     INVALID_DELETE_OPTION(400, "삭제 옵션이 올바르지 않습니다.", 400042),
-    WORK_REPORT_STORE_MISMATCH(400, "해당 보고사항이 요청한 가게에 속하지 않습니다.", 400043),
+    INVALID_ESTIMATED_PAYROLL_KEY(400, "선택한 예상 급여가 존재하지 않습니다. 다시 선택해 주세요.", 400043),
+    WORK_REPORT_STORE_MISMATCH(400, "해당 보고사항이 요청한 가게에 속하지 않습니다.", 400044),
 
     // 401 Unauthorized
     LOGIN_NEEDED(401, "로그인이 필요합니다.", 401001),
@@ -92,7 +93,6 @@ public enum CustomErrorInfo {
     PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
 
 
-
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
 
@@ -109,6 +109,7 @@ public enum CustomErrorInfo {
     INCOMPLETE_ATTENDANCE(409, "근태가 아직 완료되지 않았습니다.", 409010),
     PAYROLL_TRANSFER_ALREADY_STARTED(409, "이미 자동송금이 시작되었습니다.", 409011),
     AUTO_TRANSFER_ENABLED(409, "자동 송금이 켜져있어 계좌를 삭제할 수 없습니다.", 409012),
+    PAYROLL_LOOKUP_TOO_EARLY(409, "해당 월의 급여 내역은 아직 조회할 수 없습니다.", 409013),
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),

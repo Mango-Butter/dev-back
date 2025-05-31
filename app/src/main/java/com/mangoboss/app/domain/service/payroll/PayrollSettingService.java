@@ -109,12 +109,8 @@ public class PayrollSettingService {
 
     public void isTransferDateBefore(final Long storeId, final YearMonth yearMonth) {
         LocalDate today = LocalDate.now(clock);
-        PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
         YearMonth thisMonth = YearMonth.from(today);
-        if (yearMonth.isBefore(thisMonth)) {
-            return;
-        }
-        if (yearMonth.isAfter(thisMonth) || today.getDayOfMonth() > setting.getTransferDate()) {
+        if (yearMonth.isAfter(thisMonth)) {
             throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
         }
     }
@@ -126,5 +122,14 @@ public class PayrollSettingService {
             throw new CustomException(CustomErrorInfo.AUTO_TRANSFER_ENABLED);
         }
         transferAccountRepository.deleteById(setting.getTransferAccountEntity().getId());
+    }
+
+    public BankCode validateBankName(final String bankName) {
+        return BankCode.findCodeByName(bankName)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.INVALID_BANK_NAME));
+    }
+
+    public PayrollSettingEntity getPayrollSettingByStoreId(final Long storeId) {
+        return payrollSettingRepository.getByStoreId(storeId);
     }
 }
