@@ -79,4 +79,8 @@ public class StaffEntity extends BaseTimeEntity {
     public void updateHourlyWage(final Integer hourlyWage) {
         this.hourlyWage = hourlyWage;
     }
+
+    public void updateWithholdingType(final WithholdingType withholdingType) {
+        this.withholdingType = withholdingType;
+    }
 }

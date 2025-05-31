@@ -4,8 +4,12 @@ import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.staff.request.RegularGroupCreateRequest;
+import com.mangoboss.app.dto.staff.request.StaffHourlyWageRequest;
+import com.mangoboss.app.dto.staff.request.StaffWithholdingRequest;
 import com.mangoboss.app.dto.staff.response.RegularGroupResponse;
+import com.mangoboss.app.dto.staff.response.StaffHourlyWageResponse;
 import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
+import com.mangoboss.app.dto.staff.response.StaffWithholdingTypeResponse;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +27,7 @@ public class BossStaffFacade {
     public void createRegularSchedules(final Long storeId, final Long staffId, final Long bossId, final List<RegularGroupCreateRequest> requestList) {
         storeService.isBossOfStore(storeId, bossId);
         requestList.forEach(request -> scheduleService.validateDate(
-                        request.startDate(), request.endDate(), request.startTime(), request.endTime())
+                request.startDate(), request.endDate(), request.startTime(), request.endTime())
         );
         final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
         final List<RegularGroupEntity> regularGroups = requestList.stream().map(request -> request.toEntity(staff)).toList();
@@ -51,5 +55,29 @@ public class BossStaffFacade {
         storeService.isBossOfStore(storeId, bossId);
         final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
         return StaffSimpleResponse.fromEntity(staff);
+    }
+
+    public List<StaffWithholdingTypeResponse> getStaffWithholdingTypes(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return staffService.getStaffsForStore(storeId)
+                .stream().map(StaffWithholdingTypeResponse::fromEntity).toList();
+    }
+
+    public void updateStaffWithholdingType(final Long storeId, final Long staffId, final Long bossId, StaffWithholdingRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
+        staffService.updateWithholdingType(staff, request.withholdingType());
+    }
+
+    public List<StaffHourlyWageResponse> getStaffWithHourlyWage(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return staffService.getStaffsForStore(storeId)
+                .stream().map(StaffHourlyWageResponse::fromEntity).toList();
+    }
+
+    public void updateStaffHourlyWage(final Long storeId, final Long staffId, final Long bossId, final StaffHourlyWageRequest request) {
+        storeService.isBossOfStore(storeId, bossId);
+        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, staffId);
+        staffService.updateHourlyWage(staff, request.hourlyWage());
     }
 }

@@ -47,7 +47,7 @@ public class StaffContractFacade {
         final ContractEntity signedContract = contractService.signByStaff(contractId, contractSignRequest.staffSignatureKey());
 
         final ContractData contractData = contractService.convertFromContractDataJson(contract.getContractDataJson());
-        staffService.updateHourlyWage(staff.getId(), contractData.hourlyWage());
+        staffService.updateHourlyWage(staff, contractData.hourlyWage());
         applyRegularSchedulesFromContractData(contractData, staff, storeId);
 
         return ContractResponse.fromEntity(signedContract);
