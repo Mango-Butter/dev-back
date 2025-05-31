@@ -21,4 +21,6 @@ public interface PayrollRepository {
     List<PayrollEntity> findAllByStoreIdAndMonthBetween(Long storeId, LocalDate start, LocalDate end);
 
     boolean isTransferStarted(Long storeId, LocalDate start, LocalDate end);
+
+    PayrollEntity getById(Long payrollId);
 }

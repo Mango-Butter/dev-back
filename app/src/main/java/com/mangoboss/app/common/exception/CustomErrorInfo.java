@@ -87,6 +87,11 @@ public enum CustomErrorInfo {
     TASK_LOG_NOT_FOUND(404, "완료된 업무 기록이 없습니다.", 404013),
     TASK_ROUTINE_NOT_FOUND(404, "해당 반복 업무를 찾을 수 없습니다.", 404014),
     WORK_REPORT_NOT_FOUND(404, "보고사항을 찾을 수 없습니다.", 404015),
+    PAYROLL_NOT_FOUND(404, "해당하는 급여정보를 찾을 수 없습니다.", 404016),
+    PAYSLIP_NOT_FOUND(404, "해당하는 급여명세서 정보를 찾을 수 없습니다.", 404017),
+    PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
+
+
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),

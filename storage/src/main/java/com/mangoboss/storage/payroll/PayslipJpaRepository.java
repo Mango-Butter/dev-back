@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PayslipJpaRepository extends JpaRepository<PayslipEntity, Long> {
-    List<PayslipEntity> findAllByPayslipState(PayslipState state);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
@@ -23,4 +23,6 @@ public interface PayslipJpaRepository extends JpaRepository<PayslipEntity, Long>
             @Param("maxRetry") Integer maxRetry,
             Pageable pageable
     );
+
+    Optional<PayslipEntity> findByPayrollId(Long payrollId);
 }

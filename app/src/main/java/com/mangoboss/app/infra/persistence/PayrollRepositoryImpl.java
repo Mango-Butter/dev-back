@@ -1,5 +1,7 @@
 package com.mangoboss.app.infra.persistence;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollJpaRepository;
@@ -51,5 +53,10 @@ public class PayrollRepositoryImpl implements PayrollRepository {
         return payrollJpaRepository.existsByStoreIdAndMonthBetweenAndTransferStateNot(storeId, start, end, TransferState.PENDING);
     }
 
+    @Override
+    public PayrollEntity getById(final Long id) {
+        return payrollJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
+    }
 
 }

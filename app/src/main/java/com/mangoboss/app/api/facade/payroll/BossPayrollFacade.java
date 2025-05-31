@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.payroll;
 
+import com.mangoboss.app.domain.service.payroll.PayslipService;
 import com.mangoboss.app.dto.payroll.request.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
@@ -10,10 +11,8 @@ import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
-import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollEstimatedWithStaffResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollSettingResponse;
-import com.mangoboss.app.dto.payroll.response.PayrollWithStaffResponse;
+import com.mangoboss.app.dto.payroll.response.*;
+import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.PayrollEntity;
@@ -37,9 +36,11 @@ import java.util.List;
 public class BossPayrollFacade {
     private final StoreService storeService;
     private final StaffService staffService;
+    private final AttendanceService attendanceService;
+
     private final PayrollSettingService payrollSettingService;
     private final PayrollService payrollService;
-    private final AttendanceService attendanceService;
+    private final PayslipService payslipService;
 
     private final Clock clock;
 
@@ -97,7 +98,7 @@ public class BossPayrollFacade {
         List<PayrollEntity> payrolls = payrollService.confirmEstimatedPayroll(store, payrollSetting, request.payrollKeys());
     }
 
-    public List<PayrollWithStaffResponse> getConfirmedPayroll(final Long storeId, final Long bossId) {
+    public List<PayrollWithStaffResponse> getConfirmedPayrolls(final Long storeId, final Long bossId) {
         storeService.isBossOfStore(storeId, bossId);
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
@@ -120,6 +121,24 @@ public class BossPayrollFacade {
         return payrolls.stream()
                 .map(payroll -> PayrollWithStaffResponse.of(payroll, staffService.getStaffById(payroll.getStaffId())))
                 .toList();
+    }
+
+    public PayrollDetailResponse getConfirmedPayrollDetail(final Long storeId, final Long payrollId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return PayrollDetailResponse.fromEntity(payrollService.getStorePayrollById(storeId, payrollId));
+    }
+
+    public PayrollWithPayslipResponse getPayroll(final Long storeId, final Long payrollId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        return PayrollWithPayslipResponse.of(
+                payrollService.getStorePayrollById(storeId, payrollId),
+                payslipService.getPayslipByPayrollId(payrollId)
+        );
+    }
+
+    public DownloadPreSignedUrlResponse getPayslipDownloadUrl(final Long storeId, final Long payslipId, final Long userId) {
+        storeService.isBossOfStore(storeId, userId);
+        return payslipService.getPayslipDownloadUrl(payslipId);
     }
 }
 
