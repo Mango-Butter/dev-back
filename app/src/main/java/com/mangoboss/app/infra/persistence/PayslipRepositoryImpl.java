@@ -25,4 +25,10 @@ public class PayslipRepositoryImpl implements PayslipRepository {
         return payslipJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYSLIP_NOT_FOUND));
     }
+
+    @Override
+    public PayslipEntity getByIdAndStaffId(final Long id, final Long staffId){
+        return payslipJpaRepository.findByIdAndStaffId(id, staffId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYSLIP_NOT_FOUND));
+    }
 }
