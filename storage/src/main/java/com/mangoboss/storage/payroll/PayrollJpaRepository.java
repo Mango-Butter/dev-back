@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long> {
 
@@ -35,4 +36,8 @@ public interface PayrollJpaRepository extends JpaRepository<PayrollEntity, Long>
     boolean existsByStoreIdAndMonthBetweenAndTransferStateNot(
             Long storeId, LocalDate start, LocalDate end, TransferState state);
 
+    Optional<PayrollEntity> findByIdAndStoreId(Long payrollId, Long storeId);
+
+    Optional<PayrollEntity> findByStaffIdAndMonthBetween(
+            Long staffId, LocalDate start, LocalDate end);
 }

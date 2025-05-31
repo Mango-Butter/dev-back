@@ -4,13 +4,13 @@ package com.mangoboss.app.domain.service.payroll;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.util.S3FileManager;
-import com.mangoboss.app.domain.repository.EstimatedPayrollRepository;
+import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.app.domain.repository.PayrollRepository;
-import com.mangoboss.app.domain.repository.PayslipRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
-import com.mangoboss.storage.payroll.*;
-import com.mangoboss.storage.payroll.estimated.EstimatedPayrollEntity;
-import com.mangoboss.storage.payroll.projection.PayrollWithPayslipProjection;
+import com.mangoboss.storage.payroll.PayrollAmount;
+import com.mangoboss.storage.payroll.PayrollEntity;
+import com.mangoboss.storage.payroll.PayrollSettingEntity;
+import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
@@ -36,27 +36,35 @@ public class PayrollService {
     private static final int WEEKLY_ALLOWANCE_HOURS = 8;
 
     private final PayrollRepository payrollRepository;
-    private final EstimatedPayrollRepository estimatedPayrollRepository;
+    private final AttendanceRepository attendanceRepository;
     private final S3FileManager s3FileManager;
     private final Clock clock;
 
     @Transactional
-    public EstimatedPayrollEntity createEstimatedPayroll(final StaffEntity staff,
-                                                         final PayrollSettingEntity setting,
-                                                         final List<AttendanceEntity> attendances,
-                                                         final LocalDate targetMonth) {
+    public EstimatedPayroll createEstimatedPayroll(final StaffEntity staff,
+                                                   final PayrollSettingEntity setting,
+                                                   final LocalDate targetMonth) {
+        List<AttendanceEntity> attendances = getAttendancesByStaffAndDateRange(
+                staff.getId(),
+                targetMonth.withDayOfMonth(1),
+                targetMonth.with(TemporalAdjusters.lastDayOfMonth())
+        );
         PayrollAmount payrollAmount = createPayrollAmount(
                 staff,
                 setting,
                 attendances,
                 targetMonth
         );
-        EstimatedPayrollEntity estimatedPayroll = EstimatedPayrollEntity.create(
+        return EstimatedPayroll.create(
                 payrollAmount,
                 staff,
                 targetMonth
         );
-        return estimatedPayrollRepository.save(estimatedPayroll);
+    }
+
+    public String generateEstimatedPayrollKey(final Long storeId, final LocalDate month) {
+        String formattedMonth = month.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM"));
+        return String.format("payroll:%d:%s", storeId, formattedMonth);
     }
 
     public PayrollAmount createPayrollAmount(final StaffEntity staff,
@@ -136,11 +144,13 @@ public class PayrollService {
     }
 
     @Transactional
-    public List<PayrollEntity> confirmEstimatedPayroll(final StoreEntity store, final PayrollSettingEntity payrollSetting,
-                                                       final List<String> keys) {
-        List<EstimatedPayrollEntity> estimatedPayrolls = estimatedPayrollRepository.findAllByPayrollKeyIn(keys);
-        List<PayrollEntity> payrolls = estimatedPayrolls.stream()
-                .map(estimated -> estimated.createPayrollEntity(store, payrollSetting))
+    public List<PayrollEntity> confirmEstimatedPayroll(final StoreEntity store,
+                                                       final PayrollSettingEntity payrollSetting,
+                                                       final List<EstimatedPayroll> cached,
+                                                       final List<String> payrollKeys) {
+        List<EstimatedPayroll> targets = filterByKeys(cached, payrollKeys);
+        List<PayrollEntity> payrolls = targets.stream()
+                .map(estimated -> estimated.createPayroll(store, payrollSetting))
                 .toList();
         return payrollRepository.saveAll(payrolls);
     }
@@ -153,20 +163,16 @@ public class PayrollService {
         payrollRepository.deleteAllByStoreIdAndMonth(storeId, targetMonth);
     }
 
-    public List<PayrollEntity> getConfirmedPayroll(final Long storeId, final LocalDate month) {
+    public List<PayrollEntity> getPayroll(final Long storeId, final LocalDate month) {
         return payrollRepository.getAllByStoreIdAndMonth(storeId, month);
     }
 
-    public List<PayrollEntity> getPayrollsByMonth(final Long storeId, final YearMonth yearMonth) {
-        LocalDate today = LocalDate.now(clock).minusMonths(1);
-        if (yearMonth.isBefore(YearMonth.from(today)) || hasStartedTransfer(storeId, yearMonth)) {
-            return payrollRepository.findAllByStoreIdAndMonthBetween(
-                    storeId,
-                    yearMonth.atDay(1),
-                    yearMonth.atEndOfMonth()
-            );
-        }
-        throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
+    public List<PayrollEntity> getTransferredPayrollsByMonth(final Long storeId, final YearMonth yearMonth) {
+        return payrollRepository.findAllByStoreIdAndMonthBetween(
+                storeId,
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth()
+        );
     }
 
     public boolean hasStartedTransfer(final Long storeId, final YearMonth yearMonth) {
@@ -176,6 +182,26 @@ public class PayrollService {
     }
 
     public PayrollEntity getStorePayrollById(final Long storeId, final Long payrollId) {
-        return payrollRepository.getById(payrollId);
+        return payrollRepository.getByIdAndStoreId(payrollId, storeId);
+    }
+
+    private List<EstimatedPayroll> filterByKeys(final List<EstimatedPayroll> all, final List<String> keys) {
+        return keys.stream()
+                .map(key -> all.stream()
+                        .filter(e -> e.getKey().equals(key))
+                        .findFirst()
+                        .orElseThrow(() -> new CustomException(CustomErrorInfo.INVALID_ESTIMATED_PAYROLL_KEY)))
+                .toList();
+    }
+
+    private List<AttendanceEntity> getAttendancesByStaffAndDateRange(final Long staffId, final LocalDate start, final LocalDate end) {
+        return attendanceRepository.findByStaffIdAndWorkDateBetween(staffId, start, end);
+    }
+
+    public void validateMonthIsBeforeCurrent(final YearMonth yearMonth){
+        YearMonth currentMonth = YearMonth.now(clock).minusMonths(1);
+        if (yearMonth.isAfter(currentMonth)) {
+            throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
+        }
     }
 }

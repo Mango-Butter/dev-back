@@ -4,23 +4,15 @@ import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayslipEntity;
 import lombok.Builder;
 
-import java.util.Optional;
-
 @Builder
 public record PayrollWithPayslipResponse(
-        PayrollDetailResponse payroll,
-        Long payslipId
+        PayrollDataResponse data,
+        PayrollInfoResponse info
 ) {
-    public static PayrollWithPayslipResponse of(final PayrollEntity payroll, final Optional<PayslipEntity> payslip) {
-        if (payslip.isEmpty()) {
-            return PayrollWithPayslipResponse.builder()
-                    .payroll(PayrollDetailResponse.fromEntity(payroll))
-                    .payslipId(null)
-                    .build();
-        }
+    public static PayrollWithPayslipResponse of(final PayrollEntity payroll, final PayslipEntity payslip) {
         return PayrollWithPayslipResponse.builder()
-                .payroll(PayrollDetailResponse.fromEntity(payroll))
-                .payslipId(payslip.get().getId())
+                .data(PayrollDataResponse.fromEntity(payroll))
+                .info(PayrollInfoResponse.of(payroll, payslip))
                 .build();
     }
 }

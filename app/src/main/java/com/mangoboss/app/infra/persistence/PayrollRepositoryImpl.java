@@ -59,4 +59,15 @@ public class PayrollRepositoryImpl implements PayrollRepository {
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
     }
 
+    @Override
+    public PayrollEntity getByIdAndStoreId(final Long id, final Long storeId) {
+        return payrollJpaRepository.findByIdAndStoreId(id, storeId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
+    }
+
+//    @Override
+//    public PayrollEntity getByStaffIdAndMonthBetween(final Long staffId, final LocalDate start, final LocalDate end) {
+//        return payrollJpaRepository.findByStaffIdAndMonthBetween(staffId, start, end)
+//                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
+//    }
 }

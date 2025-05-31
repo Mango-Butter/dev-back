@@ -34,7 +34,7 @@ VALUES (1, 'NH', '3020000012816', '망고보스', '00820100029430000000000027417
 
 INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit, commuting_allowance,
                              transfer_date, transfer_account_id, store_id)
-VALUES (1, true, 10, 3000, 22, 1, 1),
+VALUES (1, true, 10, 3000, 31, 1, 1),
        (2, false, 10, 0, null, null, 2),
        (3, false, 10, 0, null, null, 3);
 

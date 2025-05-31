@@ -18,17 +18,18 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PayslipService {
     private final PayslipRepository payslipRepository;
-    private final S3PreSignedUrlManager preSignedUrlManager;
+    private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
-    public Optional<PayslipEntity> getPayslipByPayrollId(final Long payrollId) {
-        return payslipRepository.findByPayrollId(payrollId);
+    public PayslipEntity getPayslipByPayrollId(final Long payrollId) {
+        return payslipRepository.findByPayrollId(payrollId)
+                .orElse(null);
     }
 
     public DownloadPreSignedUrlResponse getPayslipDownloadUrl(final Long payslipId) {
         PayslipEntity payslip = payslipRepository.getById(payslipId);
         if(payslip.getPayslipState().equals(PayslipState.COMPLETED)) {
             String key = payslip.getFileKey();
-            return preSignedUrlManager.generateDownloadPreSignedUrl(key);
+            return s3PreSignedUrlManager.generateDownloadPreSignedUrl(key);
         }
         throw new CustomException(CustomErrorInfo.PAYSLIP_PDF_NOT_FOUND);
     }

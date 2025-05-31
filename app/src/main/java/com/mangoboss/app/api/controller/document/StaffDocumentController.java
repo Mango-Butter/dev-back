@@ -9,12 +9,14 @@ import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import com.mangoboss.app.dto.s3.response.ViewPreSignedUrlResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/staff/stores/{storeId}/documents")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('STAFF')")
 public class StaffDocumentController {
 
     private final StaffDocumentFacade staffDocumentFacade;

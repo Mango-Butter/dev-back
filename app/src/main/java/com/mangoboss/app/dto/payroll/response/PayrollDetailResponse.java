@@ -1,15 +1,14 @@
 package com.mangoboss.app.dto.payroll.response;
 
+import com.mangoboss.app.domain.service.payroll.EstimatedPayroll;
 import com.mangoboss.storage.payroll.PayrollEntity;
-import com.mangoboss.storage.payroll.TransferState;
 import com.mangoboss.storage.payroll.WithholdingType;
 import lombok.Builder;
 
 import java.time.LocalDate;
 
 @Builder
-public record PayrollDetailResponse (
-        Long payrollId,
+public record PayrollDetailResponse(
         String staffName,
         String bankCode,
         String account,
@@ -21,12 +20,10 @@ public record PayrollDetailResponse (
         Integer totalCommutingAllowance,
         Integer totalAmount,
         Integer withholdingTax,
-        Integer netAmount,
-        String transferState
+        Integer netAmount
 ){
-    public static PayrollDetailResponse fromEntity(final PayrollEntity payroll){
+    public static PayrollDetailResponse fromEntity(final PayrollEntity payroll) {
         return PayrollDetailResponse.builder()
-                .payrollId(payroll.getId())
                 .staffName(payroll.getStaffName())
                 .bankCode(payroll.getDepositBankCode().getDisplayName())
                 .account(payroll.getDepositAccount())
@@ -39,15 +36,39 @@ public record PayrollDetailResponse (
                 .totalAmount(payroll.getPayrollAmount().getTotalAmount())
                 .withholdingTax(payroll.getPayrollAmount().getWithholdingTax())
                 .netAmount(payroll.getPayrollAmount().getNetAmount())
-                .transferState(getStateFor(payroll.getTransferState()))
                 .build();
     }
 
-    private static String getStateFor(final TransferState transferState) {
-        return switch (transferState) {
-            case PENDING -> "PENDING";
-            case COMPLETED_TRANSFERRED -> "COMPLETED";
-            default -> "FAILED";
-        };
+    public static PayrollDetailResponse fromEstimated(final EstimatedPayroll estimatedPayroll) {
+        if(estimatedPayroll.getBankCode() == null || estimatedPayroll.getAccount() == null){
+            return PayrollDetailResponse.builder()
+                    .staffName(estimatedPayroll.getStaffName())
+                    .bankCode(null)
+                    .account(null)
+                    .month(estimatedPayroll.getMonth())
+                    .withholdingType(estimatedPayroll.getWithholdingType())
+                    .totalTime(estimatedPayroll.getTotalTime())
+                    .baseAmount(estimatedPayroll.getBaseAmount())
+                    .weeklyAllowance(estimatedPayroll.getWeeklyAllowance())
+                    .totalCommutingAllowance(estimatedPayroll.getTotalCommutingAllowance())
+                    .totalAmount(estimatedPayroll.getTotalAmount())
+                    .withholdingTax(estimatedPayroll.getWithholdingTax())
+                    .netAmount(estimatedPayroll.getNetAmount())
+                    .build();
+        }
+        return PayrollDetailResponse.builder()
+                .staffName(estimatedPayroll.getStaffName())
+                .bankCode(estimatedPayroll.getBankCode().getDisplayName())
+                .account(estimatedPayroll.getAccount())
+                .month(estimatedPayroll.getMonth())
+                .withholdingType(estimatedPayroll.getWithholdingType())
+                .totalTime(estimatedPayroll.getTotalTime())
+                .baseAmount(estimatedPayroll.getBaseAmount())
+                .weeklyAllowance(estimatedPayroll.getWeeklyAllowance())
+                .totalCommutingAllowance(estimatedPayroll.getTotalCommutingAllowance())
+                .totalAmount(estimatedPayroll.getTotalAmount())
+                .withholdingTax(estimatedPayroll.getWithholdingTax())
+                .netAmount(estimatedPayroll.getNetAmount())
+                .build();
     }
 }

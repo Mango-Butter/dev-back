@@ -22,5 +22,7 @@ public interface PayrollRepository {
 
     boolean isTransferStarted(Long storeId, LocalDate start, LocalDate end);
 
-    PayrollEntity getById(Long payrollId);
+    PayrollEntity getById(Long id);
+
+    PayrollEntity getByIdAndStoreId(Long id, Long storeId);
 }
