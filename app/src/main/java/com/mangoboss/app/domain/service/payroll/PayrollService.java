@@ -204,4 +204,12 @@ public class PayrollService {
             throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
         }
     }
+
+    public PayrollEntity getPayrollForStaffAndMonth(final Long staffId, final YearMonth yearMonth) {
+        return payrollRepository.getByStaffIdAndMonthBetween(
+                staffId,
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth()
+        );
+    }
 }

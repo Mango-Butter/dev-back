@@ -9,4 +9,6 @@ public interface PayslipRepository {
     Optional<PayslipEntity> findByPayrollId(Long payrollId);
 
     PayslipEntity getById(Long id);
+
+    PayslipEntity getByIdAndStaffId(Long id, Long staffId);
 }

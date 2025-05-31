@@ -5,6 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.common.util.S3PreSignedUrlManager;
 import com.mangoboss.app.domain.repository.PayslipRepository;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
+import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayslipEntity;
 import com.mangoboss.storage.payroll.PayslipState;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,15 @@ public class PayslipService {
 
     public DownloadPreSignedUrlResponse getPayslipDownloadUrl(final Long payslipId) {
         PayslipEntity payslip = payslipRepository.getById(payslipId);
-        if(payslip.getPayslipState().equals(PayslipState.COMPLETED)) {
+        if (payslip.getPayslipState().equals(PayslipState.COMPLETED)) {
             String key = payslip.getFileKey();
             return s3PreSignedUrlManager.generateDownloadPreSignedUrl(key);
         }
         throw new CustomException(CustomErrorInfo.PAYSLIP_PDF_NOT_FOUND);
+    }
+
+
+    public PayslipEntity verifyPayslipOwner(final Long payslipId, final Long userId) {
+        return payslipRepository.getByIdAndStaffId(payslipId, userId);
     }
 }

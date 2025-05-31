@@ -25,4 +25,6 @@ public interface PayrollRepository {
     PayrollEntity getById(Long id);
 
     PayrollEntity getByIdAndStoreId(Long id, Long storeId);
+
+    PayrollEntity getByStaffIdAndMonthBetween(Long staffId, LocalDate start, LocalDate end);
 }

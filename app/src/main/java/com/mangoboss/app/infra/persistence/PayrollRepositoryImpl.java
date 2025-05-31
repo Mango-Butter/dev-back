@@ -6,7 +6,6 @@ import com.mangoboss.app.domain.repository.PayrollRepository;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayrollJpaRepository;
 import com.mangoboss.storage.payroll.TransferState;
-import com.mangoboss.storage.payroll.projection.PayrollWithPayslipProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -65,9 +64,9 @@ public class PayrollRepositoryImpl implements PayrollRepository {
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
     }
 
-//    @Override
-//    public PayrollEntity getByStaffIdAndMonthBetween(final Long staffId, final LocalDate start, final LocalDate end) {
-//        return payrollJpaRepository.findByStaffIdAndMonthBetween(staffId, start, end)
-//                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_NOT_FOUND));
-//    }
+    @Override
+    public PayrollEntity getByStaffIdAndMonthBetween(final Long staffId, final LocalDate start, final LocalDate end) {
+        return payrollJpaRepository.findByStaffIdAndMonthBetween(staffId, start, end)
+                .orElse(null);
+    }
 }
