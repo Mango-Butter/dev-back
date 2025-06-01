@@ -48,7 +48,7 @@ public class PayslipGenerator {
 
         PayrollAmount payrollAmount = payroll.getPayrollAmount();
         LocalDateTime now = LocalDateTime.now(clock);
-        dataMap.put("storeName", payroll.getStaffName());
+        dataMap.put("storeName", payroll.getStoreName());
         dataMap.put("businessNumber", payroll.getBusinessNumber());
         dataMap.put("staffName", payroll.getStaffName());
         dataMap.put("transferDate", payroll.getTransferredAt().format(DATE_FORMATTER));

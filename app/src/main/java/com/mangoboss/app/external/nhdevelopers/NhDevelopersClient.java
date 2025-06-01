@@ -53,7 +53,7 @@ public class NhDevelopersClient {
             if (response.Header().Rpcd().equals(SUCCESS_RPCD)) {
                 return response;
             }
-            throw new CustomException(CustomErrorInfo.EXTERNAL_API_LOGICAL_FAILURE);
+            return null;
         } catch (WebClientResponseException e) {
             throw new CustomException(CustomErrorInfo.EXTERNAL_API_EXCEPTION);
         }

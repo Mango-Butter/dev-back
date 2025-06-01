@@ -31,11 +31,10 @@ public class PayrollSettingService {
     private String finAcno;
     private final Clock clock;
 
-    private void isBossAccount(final String bossName, final BankCode bankCode, final String accountNumber) {
+    private void validateAccount(final BankCode bankCode, final String accountNumber) {
         DepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
-        String realName = response.Dpnm();
-        if (!realName.equals(bossName)) {
-            throw new CustomException(CustomErrorInfo.NOT_OWNER_ACCOUNT);
+        if (response == null) {
+            throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);
         }
     }
 
@@ -50,12 +49,14 @@ public class PayrollSettingService {
     }
 
     @Transactional
-    public TransferAccountEntity registerBossAccount(final StoreEntity store, final BankCode bankCode,
-                                                     final String accountNumber, final String birthDate) {
+    public TransferAccountEntity registerBossAccount(final StoreEntity store,
+                                                     final BankCode bankCode,
+                                                     final String accountNumber,
+                                                     final String birthDate) {
         PayrollSettingEntity payrollSetting = store.getPayrollSetting();
         String bossName = store.getBoss().getName();
 
-        isBossAccount(bossName, bankCode, accountNumber);
+        validateAccount(bankCode, accountNumber);
         String finAccount = registerFinAccount(bankCode, accountNumber, birthDate);
         TransferAccountEntity transferAccount = TransferAccountEntity.create(
                 bankCode,
@@ -123,7 +124,7 @@ public class PayrollSettingService {
         }
         TransferAccountEntity transferAccount = setting.getTransferAccountEntity();
         setting.deleteAccount();
-        transferAccountRepository.deleteById(transferAccount .getId());
+        transferAccountRepository.deleteById(transferAccount.getId());
     }
 
     public BankCode validateBankName(final String bankName) {
