@@ -23,7 +23,7 @@ public class PayrollSettingEntity {
     private Boolean autoTransferEnabled = false;
 
     @Min(1)
-    @Max(31)
+    @Max(28)
     private Integer transferDate;
 
     @Column(nullable = false)
@@ -95,6 +95,11 @@ public class PayrollSettingEntity {
                                              final Integer commutingAllowance) {
         this.deductionUnit = deductionUnit;
         this.commutingAllowance = commutingAllowance;
+        return this;
+    }
+
+    public PayrollSettingEntity deleteAccount() {
+        this.transferAccountEntity = null;
         return this;
     }
 }

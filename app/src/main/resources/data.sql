@@ -34,7 +34,7 @@ VALUES (1, 'NH', '3020000012816', '망고보스', '00820100029430000000000027417
 
 INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit, commuting_allowance,
                              transfer_date, transfer_account_id, store_id)
-VALUES (1, true, 10, 3000, 31, 1, 1),
+VALUES (1, true, 10, 3000, 20, 1, 1),
        (2, false, 10, 0, null, null, 2),
        (3, false, 10, 0, null, null, 3);
 
@@ -96,7 +96,7 @@ VALUES (1, 1, '2025-04-01 09:00:00', '2025-04-01 15:30:00', 'NORMAL', 'NORMAL'),
        (4, 4, null, null, 'ABSENT', 'ABSENT'),
        (5, 5, '2025-05-05 09:00:00', '2025-05-05 14:30:00', 'NORMAL', 'NORMAL'),
        (6, 6, '2025-05-07 10:00:00', '2025-05-07 13:00:00', 'NORMAL', 'EARLY_LEAVE'),
-       (7, 7, '2025-05-08 09:00:00', '2025-05-05 14:20:00', 'NORMAL', 'OVERTIME'),
+       (7, 7, '2025-05-08 09:00:00', '2025-05-08 14:20:00', 'NORMAL', 'OVERTIME'),
        (8, 8, null, null, 'ABSENT', 'ABSENT'),
        (9, 10, '2025-04-01 09:00:00', '2025-04-01 15:00:00', 'NORMAL', 'NORMAL'),
        (10, 11, '2025-04-02 10:00:00', '2025-04-02 16:00:00', 'NORMAL', 'NORMAL'),
