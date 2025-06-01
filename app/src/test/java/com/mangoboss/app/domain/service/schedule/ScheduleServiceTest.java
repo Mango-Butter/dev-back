@@ -10,6 +10,7 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.schedule.ScheduleState;
 import com.mangoboss.storage.staff.StaffEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,6 +118,7 @@ class ScheduleServiceTest {
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
         when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).plusDays(2));
+        when(schedule.isUpdatable()).thenReturn(true);
 
         //when
         scheduleService.deleteScheduleById(scheduleId);
@@ -126,17 +128,40 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void 삭제할_스케줄_시작날짜가_현재시간_이전이면_에러를_던진다() {
+    void 삭제할_스케줄의_시작날짜가_현재시간_이전이면_에러를_던진다() {
         //given
         Long scheduleId = 1L;
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
         when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).minusMinutes(1));
+        when(schedule.isUpdatable()).thenReturn(true);
 
         //then
         assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE.getMessage());
+    }
+
+    @Test
+    void 대타요청_중인_스케줄을_삭제하면_에러를_던진다() {
+        //given
+        Long scheduleId = 1L;
+        LocalDate workDate = fixedNow.toLocalDate();
+        LocalDateTime startTime = fixedNow.plusMinutes(20);
+        LocalDateTime endTime = fixedNow.plusHours(2);
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .workDate(workDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .regularGroup(mock(RegularGroupEntity.class))
+                .state(ScheduleState.REQUESTED)
+                .build();
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+
+        //then
+        assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.SUBSTITUTE_REQUESTED.getMessage());
     }
 
     @Test
@@ -151,6 +176,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
+                .state(ScheduleState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -172,6 +198,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
+                .state(ScheduleState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -181,6 +208,30 @@ class ScheduleServiceTest {
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE.getMessage());
     }
+
+    @Test
+    void 대타요청_중인_스케줄을_수정하면_에러를_던진다() {
+        //given
+        Long scheduleId = 1L;
+        LocalDate workDate = fixedNow.toLocalDate();
+        LocalDateTime startTime = fixedNow.minusMinutes(1);
+        LocalDateTime endTime = fixedNow.plusHours(2);
+        ScheduleEntity schedule = ScheduleEntity.builder()
+                .workDate(workDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .regularGroup(mock(RegularGroupEntity.class))
+                .state(ScheduleState.REQUESTED)
+                .build();
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+
+        //when
+        //then
+        assertThatThrownBy(() -> scheduleService.updateSchedule(scheduleId, fixedNow.toLocalDate().plusDays(1), startTime.toLocalTime(), endTime.toLocalTime()))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.SUBSTITUTE_REQUESTED.getMessage());
+    }
+
 
     @Test
     void 고정_근무를_만들고_고정_스케줄들을_만들_수_있다() {
