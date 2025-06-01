@@ -118,10 +118,12 @@ public class PayrollSettingService {
     @Transactional
     public void deleteAccount(final Long storeId) {
         PayrollSettingEntity setting = payrollSettingRepository.getByStoreId(storeId);
-        if (!setting.isAutoTransferEnabled()) {
+        if (setting.isAutoTransferEnabled()) {
             throw new CustomException(CustomErrorInfo.AUTO_TRANSFER_ENABLED);
         }
-        transferAccountRepository.deleteById(setting.getTransferAccountEntity().getId());
+        TransferAccountEntity transferAccount = setting.getTransferAccountEntity();
+        setting.deleteAccount();
+        transferAccountRepository.deleteById(transferAccount .getId());
     }
 
     public BankCode validateBankName(final String bankName) {
