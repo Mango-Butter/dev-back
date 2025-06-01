@@ -1,6 +1,7 @@
 package com.mangoboss.app.dto.attendance.response;
 
 import com.mangoboss.storage.attendance.AttendanceEntity;
+import com.mangoboss.storage.attendance.AttendanceState;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.schedule.ScheduleEntity;
@@ -18,7 +19,8 @@ public record AttendanceDetailResponse(
         LocalDateTime clockInTime,
         LocalDateTime clockOutTime,
         ClockInStatus clockInStatus,
-        ClockOutStatus clockOutStatus
+        ClockOutStatus clockOutStatus,
+        AttendanceState attendanceState
 ) {
     public static AttendanceDetailResponse fromEntity(final AttendanceEntity attendance) {
         final ScheduleEntity schedule = attendance.getSchedule();
@@ -32,6 +34,7 @@ public record AttendanceDetailResponse(
                 .workDate(schedule.getWorkDate())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
+                .attendanceState(attendance.getAttendanceState())
                 .build();
     }
 }

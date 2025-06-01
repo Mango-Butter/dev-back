@@ -2,7 +2,9 @@ package com.mangoboss.app.api.controller.attendance;
 
 import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.attendance.base.AttendanceBaseRequest;
+import com.mangoboss.app.dto.attendance.request.AttendanceEditRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
+import com.mangoboss.app.dto.attendance.response.AttendanceEditResponse;
 import com.mangoboss.app.dto.calender.WorkResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,5 +66,19 @@ public class StaffAttendanceController {
         return attendanceFacade.getAttendanceDetail(storeId, userId, scheduleId);
     }
 
+    @PostMapping("/{scheduleId}/attendance-edits")
+    public void requestAttendanceEdit(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @PathVariable Long storeId,
+                                      @PathVariable Long scheduleId,
+                                      @RequestBody @Valid AttendanceEditRequest request) {
+        final Long userId = userDetails.getUserId();
+        attendanceFacade.requestAttendanceEdit(storeId, userId, scheduleId, request);
+    }
 
+    @GetMapping("/attendance-edits")
+    public ListWrapperResponse<AttendanceEditResponse> getAttendanceEdits(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                          @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(attendanceFacade.getAttendanceEdits(storeId, userId));
+    }
 }

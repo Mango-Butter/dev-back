@@ -112,7 +112,8 @@ public enum CustomErrorInfo {
     AUTO_TRANSFER_ENABLED(409, "자동 송금이 켜져있어 계좌를 삭제할 수 없습니다.", 409012),
     PAYROLL_LOOKUP_TOO_EARLY(409, "해당 월의 급여 내역은 아직 조회할 수 없습니다.", 409013),
     SUBSTITUTE_REQUESTED(409, "대타 요청 중인 스케줄은 수정할 수 없습니다.", 409014),
-    SCHEDULE_ALREADY_SUBSTITUTED(409, "이미 대타요청 중인 스케줄 입니다.", 409015),
+    SCHEDULE_ALREADY_REQUESTED(409, "대타 요청 중인 스케줄입니다. 대타 요청을 완료해주시고 수정해 주세요.", 409015),
+    ATTENDANCE_ALREADY_REQUESTED(409, "변경 요청 중인 근태 기록입니다. 변경 요청을 완료해주시고 수정해 주세요.", 409015),
 
 
     // 500 INTERNAL_SERVER_ERROR
