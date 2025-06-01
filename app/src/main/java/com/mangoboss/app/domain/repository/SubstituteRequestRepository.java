@@ -10,4 +10,8 @@ public interface SubstituteRequestRepository {
     List<SubstituteRequestEntity> findAllByRequesterStaffIdOrTargetStaffId(Long staffId);
 
     Boolean existsByRequestScheduleId(Long requestScheduleId);
+
+    List<SubstituteRequestEntity> findAllByStoreId(Long storeId);
+
+    SubstituteRequestEntity getById(Long bossId);
 }

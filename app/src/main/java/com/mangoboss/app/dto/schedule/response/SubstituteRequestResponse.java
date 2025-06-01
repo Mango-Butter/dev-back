@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record SubstituteRequestResponse(
+        Long substituteRequestId,
         String requesterName,
         String targetName,
         String reason,
@@ -21,6 +22,7 @@ public record SubstituteRequestResponse(
             SubstituteRequestEntity substituteRequest
     ) {
         return SubstituteRequestResponse.builder()
+                .substituteRequestId(substituteRequest.getId())
                 .requesterName(substituteRequest.getRequesterStaffName())
                 .targetName(substituteRequest.getTargetStaffName())
                 .reason(substituteRequest.getReason())

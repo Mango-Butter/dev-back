@@ -9,4 +9,6 @@ public interface SubstituteRequestJpaRepository extends JpaRepository<Substitute
     List<SubstituteRequestEntity> findAllByRequesterStaffIdOrTargetStaffId(Long requesterStaffId, Long targetStaffId);
 
     Boolean existsByRequestScheduleId(Long requestScheduleId);
+
+    List<SubstituteRequestEntity> findAllByStoreId(Long storeId);
 }

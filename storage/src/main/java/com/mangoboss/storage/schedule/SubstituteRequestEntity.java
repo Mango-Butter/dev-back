@@ -36,6 +36,9 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
     @Column(name = "target_staff_id", nullable = false)
     private Long targetStaffId;
 
+    @Column(name = "store_id", nullable = false)
+    private Long storeId;
+
     @Column(nullable = false)
     private LocalDate workDate;
 
@@ -53,7 +56,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
 
     @Builder
     private SubstituteRequestEntity(final SubstituteState state, final String reason, final Long requesterStaffId,
-                                    final Long requestScheduleId, final Long targetStaffId,
+                                    final Long requestScheduleId, final Long targetStaffId, final Long storeId,
                                     final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
                                     final String requesterName, final String targetName) {
         this.state = state;
@@ -61,6 +64,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
         this.requesterStaffId = requesterStaffId;
         this.requestScheduleId = requestScheduleId;
         this.targetStaffId = targetStaffId;
+        this.storeId = storeId;
         this.workDate = workDate;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -76,6 +80,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
         return SubstituteRequestEntity.builder()
                 .state(SubstituteState.PENDING)
                 .reason(reason)
+                .storeId(schedule.getStoreId())
                 .requesterStaffId(requesterStaff.getId())
                 .requesterName(requesterStaff.getName())
                 .requestScheduleId(schedule.getId())
@@ -85,5 +90,13 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
                 .build();
+    }
+
+    public void approved() {
+        this.state = SubstituteState.APPROVED;
+    }
+
+    public void rejected() {
+        this.state = SubstituteState.REJECTED;
     }
 }
