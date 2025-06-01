@@ -20,9 +20,12 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     }
 
     @Override
-    public void save(final NotificationEntity notification) {
-        notificationJpaRepository.save(notification);
+    public void saveAll(final List<NotificationEntity> notifications) {
+        notificationJpaRepository.saveAll(notifications);
     }
 
-
+    @Override
+    public void updateSendStatus(List<Long> notificationIds, SendStatus status) {
+        notificationJpaRepository.updateSendStatus(notificationIds, status);
+    }
 }

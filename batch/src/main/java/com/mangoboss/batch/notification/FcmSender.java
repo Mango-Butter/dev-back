@@ -18,6 +18,8 @@ public class FcmSender {
 
     public void send(List<NotificationEntity> notifications) {
         final List<Message> messages = new ArrayList<>();
+        final Map<Integer, NotificationEntity> notificationMapping = new HashMap<>();
+        int messageIndex = 0;
 
         for (NotificationEntity notification : notifications) {
             String targetToken = notification.getTargetToken();
@@ -28,6 +30,8 @@ public class FcmSender {
             }
 
             messages.add(buildMessage(notification, targetToken));
+            notificationMapping.put(messageIndex, notification);
+            messageIndex++;
         }
 
         if (messages.isEmpty()) return;
@@ -38,7 +42,7 @@ public class FcmSender {
 
             for (int i = 0; i < response.getResponses().size(); i++) {
                 final var sendResponse = response.getResponses().get(i);
-                final NotificationEntity notification = notifications.get(i);
+                final NotificationEntity notification = notificationMapping.get(i);
 
                 if (sendResponse.isSuccessful()) {
                     notification.markSuccess();
@@ -47,9 +51,7 @@ public class FcmSender {
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
-            for (NotificationEntity notification : notifications) {
-                notification.markFailure();
-            }
+            notificationMapping.values().forEach(NotificationEntity::markFailure);
         }
     }
 

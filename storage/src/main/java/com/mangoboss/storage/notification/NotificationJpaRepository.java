@@ -2,6 +2,7 @@ package com.mangoboss.storage.notification;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,5 +21,9 @@ public interface NotificationJpaRepository extends JpaRepository<NotificationEnt
             @Param("maxRetry") Integer maxRetry,
             Pageable pageable
     );
+
+    @Modifying
+    @Query("UPDATE NotificationEntity n SET n.sendStatus = :status WHERE n.id IN :ids")
+    void updateSendStatus(List<Long> ids, @Param("status") SendStatus status);
 
 }
