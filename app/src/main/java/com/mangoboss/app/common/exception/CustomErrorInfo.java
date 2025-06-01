@@ -110,6 +110,9 @@ public enum CustomErrorInfo {
     PAYROLL_TRANSFER_ALREADY_STARTED(409, "이미 자동송금이 시작되었습니다.", 409011),
     AUTO_TRANSFER_ENABLED(409, "자동 송금이 켜져있어 계좌를 삭제할 수 없습니다.", 409012),
     PAYROLL_LOOKUP_TOO_EARLY(409, "해당 월의 급여 내역은 아직 조회할 수 없습니다.", 409013),
+    SUBSTITUTE_REQUESTED(409, "대타 요청 중인 스케줄은 수정할 수 없습니다.", 409014),
+    SCHEDULE_ALREADY_SUBSTITUTED(409, "이미 대타요청 중인 스케줄 입니다.", 409015),
+
 
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),

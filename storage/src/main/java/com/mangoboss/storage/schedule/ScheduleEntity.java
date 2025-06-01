@@ -82,11 +82,26 @@ public class ScheduleEntity extends BaseTimeEntity {
         this.startTime = LocalDateTime.of(workDate, startTime);
         this.endTime = adjustEndDateTime(workDate, startTime, endTime);
         this.regularGroup = null;
+        this.state = ScheduleState.NONE;
         return this;
     }
 
     private static LocalDateTime adjustEndDateTime(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime) {
         return endTime.isAfter(startTime) ?
                 LocalDateTime.of(workDate, endTime) : LocalDateTime.of(workDate.plusDays(1), endTime);
+    }
+
+    public ScheduleEntity requested() {
+        this.state = ScheduleState.REQUESTED;
+        return this;
+    }
+
+    public ScheduleEntity replaced() {
+        this.state = ScheduleState.REPLACED;
+        return this;
+    }
+
+    public Boolean isUpdatable() {
+        return !state.equals(ScheduleState.REQUESTED);
     }
 }

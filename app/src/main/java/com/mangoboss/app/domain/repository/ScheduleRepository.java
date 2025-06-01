@@ -3,6 +3,7 @@ package com.mangoboss.app.domain.repository;
 import com.mangoboss.storage.schedule.ScheduleEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScheduleRepository {
@@ -23,4 +24,7 @@ public interface ScheduleRepository {
     List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
 
     Boolean existsByRegularGroupId(Long regularGroupId);
+
+    Boolean existsOverlappingSchedule(Long staffId, LocalDate workDate,
+                                      LocalDateTime startTime, LocalDateTime endTime);
 }
