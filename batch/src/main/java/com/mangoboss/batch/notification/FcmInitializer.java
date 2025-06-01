@@ -1,4 +1,4 @@
-package com.mangoboss.batch.infra;
+package com.mangoboss.batch.notification;
 
 import java.io.IOException;
 import java.io.InputStream;
