@@ -5,6 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.attendance.AttendanceEntity;
+import com.mangoboss.storage.attendance.AttendanceState;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.schedule.ScheduleEntity;
@@ -218,6 +219,7 @@ class AttendanceServiceTest {
                 .schedule(schedule)
                 .clockInStatus(ClockInStatus.LATE)
                 .clockOutStatus(ClockOutStatus.NORMAL)
+                .attendanceState(AttendanceState.NONE)
                 .build();
         when(schedule.getEndTime()).thenReturn(originalEndTime);
         when(schedule.getAttendance()).thenReturn(attendance);
@@ -259,11 +261,36 @@ class AttendanceServiceTest {
     }
 
     @Test
+    void 변경요청_중인_근태기록을_수정하면_에러를_던진다() {
+        // given
+        Long scheduleId = 1L;
+        AttendanceEntity attendance = AttendanceEntity.builder()
+                .clockInStatus(ClockInStatus.NORMAL)
+                .clockOutStatus(ClockOutStatus.NORMAL)
+                .attendanceState(AttendanceState.REQUESTED)
+                .build();
+        LocalDateTime clockInTime = LocalDateTime.of(2024, 5, 5, 9, 0);
+        LocalDateTime clockOutTime = LocalDateTime.of(2024, 5, 5, 15, 0);
+        ClockInStatus clockInStatus = ClockInStatus.NORMAL;
+        Integer overtimeLimit = 0;
+        when(schedule.getId()).thenReturn(scheduleId);
+        when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
+
+        // when
+        // then
+        assertThatThrownBy(() -> attendanceService.updateAttendance(schedule, overtimeLimit, clockInTime, clockOutTime, clockInStatus))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.ATTENDANCE_ALREADY_REQUESTED.getMessage());
+    }
+
+    @Test
     void 근태기록을_삭제하면_스케줄도_함께_삭제된다() {
         // given
         Long scheduleId = schedule.getId();
         AttendanceEntity attendance = AttendanceEntity.builder()
+                .clockInStatus(ClockInStatus.NORMAL)
                 .clockOutStatus(ClockOutStatus.NORMAL)
+                .attendanceState(AttendanceState.NONE)
                 .schedule(schedule)
                 .build();
         when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
@@ -283,6 +310,7 @@ class AttendanceServiceTest {
         AttendanceEntity attendance = AttendanceEntity.builder()
                 .clockOutStatus(null)
                 .schedule(schedule)
+                .attendanceState(AttendanceState.NONE)
                 .build();
         when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
 
@@ -291,5 +319,23 @@ class AttendanceServiceTest {
         assertThatThrownBy(() -> attendanceService.deleteAttendanceWithSchedule(scheduleId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.INCOMPLETE_ATTENDANCE.getMessage());
+    }
+
+    @Test
+    void 변경중인_근태기록_삭제를_시도하면_에러가_발생한다() {
+        // given
+        Long scheduleId = schedule.getId();
+        AttendanceEntity attendance = AttendanceEntity.builder()
+                .clockOutStatus(null)
+                .schedule(schedule)
+                .attendanceState(AttendanceState.REQUESTED)
+                .build();
+        when(attendanceRepository.getByScheduleId(scheduleId)).thenReturn(attendance);
+
+        // when
+        // then
+        assertThatThrownBy(() -> attendanceService.deleteAttendanceWithSchedule(scheduleId))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(CustomErrorInfo.ATTENDANCE_ALREADY_REQUESTED.getMessage());
     }
 }
