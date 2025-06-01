@@ -1,6 +1,7 @@
 package com.mangoboss.app.api.controller.user;
 
 import com.mangoboss.app.dto.auth.response.JwtResponse;
+import com.mangoboss.app.dto.user.request.DeviceTokenRegisterRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +36,13 @@ public class UserController {
                               @RequestBody @Valid SignUpRequest request) {
         final Long userId = userDetails.getUserId();
         return userFacade.signUp(userId, request);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/device-token")
+    public void registerDeviceToken(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                    @RequestBody @Valid DeviceTokenRegisterRequest request) {
+        final Long userId = userDetails.getUserId();
+        userFacade.registerDeviceToken(userId, request);
     }
 }
