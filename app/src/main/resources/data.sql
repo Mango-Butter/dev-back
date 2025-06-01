@@ -71,7 +71,7 @@ VALUES (1, 2, 1, '망알바',
         'http://k.kakaocdn.net/dn/bD4Rih/btsNXAxY4w1/XuxLt8jAsnIA5ZaHVjkE0k/img_110x110.jpg',
         'INCOME_TAX', 10030, 'NH', '3020000013094', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO schedule (schedule_id, staff_id, regular_group_id, work_date, start_time, end_time, store_id, state)
+INSERT INTO schedule (schedule_id, staff_id, regular_group_id, work_date, start_time, end_time, store_id, substitution_state)
 VALUES (1, 1, null, '2025-04-01', '2025-04-01 09:00:00', '2025-04-01 15:30:00', 1, 'NONE'),
        (2, 2, null, '2025-05-01', '2025-05-01 13:00:00', '2025-05-01 18:00:00', 1, 'NONE'),
        (3, 1, null, '2025-05-03', '2025-05-03 10:00:00', '2025-05-03 18:00:00', 1, 'NONE'),

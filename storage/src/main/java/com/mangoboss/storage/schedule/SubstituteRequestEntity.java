@@ -22,7 +22,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SubstituteState state;
+    private SubstituteRequestState state;
 
     @Column(nullable = false)
     private String reason;
@@ -55,7 +55,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
     private String targetStaffName;
 
     @Builder
-    private SubstituteRequestEntity(final SubstituteState state, final String reason, final Long requesterStaffId,
+    private SubstituteRequestEntity(final SubstituteRequestState state, final String reason, final Long requesterStaffId,
                                     final Long requestScheduleId, final Long targetStaffId, final Long storeId,
                                     final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
                                     final String requesterName, final String targetName) {
@@ -78,7 +78,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
             final StaffEntity targetStaff,
             final ScheduleEntity schedule) {
         return SubstituteRequestEntity.builder()
-                .state(SubstituteState.PENDING)
+                .state(SubstituteRequestState.PENDING)
                 .reason(reason)
                 .storeId(schedule.getStoreId())
                 .requesterStaffId(requesterStaff.getId())
@@ -93,10 +93,10 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
     }
 
     public void approved() {
-        this.state = SubstituteState.APPROVED;
+        this.state = SubstituteRequestState.APPROVED;
     }
 
     public void rejected() {
-        this.state = SubstituteState.REJECTED;
+        this.state = SubstituteRequestState.REJECTED;
     }
 }

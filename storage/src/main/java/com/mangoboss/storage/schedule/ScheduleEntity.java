@@ -46,21 +46,21 @@ public class ScheduleEntity extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ScheduleState state;
+    private SubstitutionState substitutionState;
 
     @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
     private AttendanceEntity attendance;
 
     @Builder
     private ScheduleEntity(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
-                           final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId, final ScheduleState state) {
+                           final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId, final SubstitutionState substitutionState) {
         this.workDate = workDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.staff = staff;
         this.regularGroup = regularGroup;
         this.storeId = storeId;
-        this.state = state;
+        this.substitutionState = substitutionState;
     }
 
     public static ScheduleEntity create(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime,
@@ -72,7 +72,7 @@ public class ScheduleEntity extends BaseTimeEntity {
                 .staff(staff)
                 .regularGroup(regularGroup)
                 .storeId(storeId)
-                .state(ScheduleState.NONE)
+                .substitutionState(SubstitutionState.NONE)
                 .build();
     }
 
@@ -81,7 +81,7 @@ public class ScheduleEntity extends BaseTimeEntity {
         this.startTime = LocalDateTime.of(workDate, startTime);
         this.endTime = adjustEndDateTime(workDate, startTime, endTime);
         this.regularGroup = null;
-        this.state = ScheduleState.NONE;
+        this.substitutionState = SubstitutionState.NONE;
         return this;
     }
 
@@ -91,19 +91,19 @@ public class ScheduleEntity extends BaseTimeEntity {
     }
 
     public Boolean isUpdatable() {
-        return !state.equals(ScheduleState.REQUESTED);
+        return !substitutionState.equals(SubstitutionState.REQUESTED);
     }
 
     public void requested() {
-        this.state = ScheduleState.REQUESTED;
+        this.substitutionState = SubstitutionState.REQUESTED;
     }
 
     public void substituted(final StaffEntity staff) {
         this.staff = staff;
-        this.state = ScheduleState.SUBSTITUTED;
+        this.substitutionState = SubstitutionState.SUBSTITUTED;
     }
 
     public void rejected(){
-        this.state = ScheduleState.NONE;
+        this.substitutionState = SubstitutionState.NONE;
     }
 }

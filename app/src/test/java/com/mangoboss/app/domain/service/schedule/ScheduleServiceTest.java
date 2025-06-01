@@ -10,7 +10,7 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.schedule.ScheduleState;
+import com.mangoboss.storage.schedule.SubstitutionState;
 import com.mangoboss.storage.staff.StaffEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -154,7 +154,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(ScheduleState.REQUESTED)
+                .state(SubstitutionState.REQUESTED)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -176,7 +176,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(ScheduleState.NONE)
+                .state(SubstitutionState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -198,7 +198,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(ScheduleState.NONE)
+                .state(SubstitutionState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -221,7 +221,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(ScheduleState.REQUESTED)
+                .state(SubstitutionState.REQUESTED)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 

@@ -1,7 +1,7 @@
 package com.mangoboss.app.dto.schedule.response;
 
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.schedule.ScheduleState;
+import com.mangoboss.storage.schedule.SubstitutionState;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public record ScheduleSimpleResponse(
         LocalDate workDate,
         LocalDateTime startTime,
         LocalDateTime endTime,
-        ScheduleState state
+        SubstitutionState substitutionState
 ) {
     public static ScheduleSimpleResponse fromEntity(final ScheduleEntity schedule) {
         return ScheduleSimpleResponse.builder()
@@ -21,7 +21,7 @@ public record ScheduleSimpleResponse(
                 .workDate(schedule.getWorkDate())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
-                .state(schedule.getState())
+                .substitutionState(schedule.getSubstitutionState())
                 .build();
     }
 }

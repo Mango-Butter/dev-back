@@ -1,5 +1,5 @@
 package com.mangoboss.storage.schedule;
 
-public enum SubstituteState {
+public enum SubstituteRequestState {
     PENDING, APPROVED, REJECTED
 }

@@ -1,7 +1,7 @@
 package com.mangoboss.app.dto.schedule.response;
 
 import com.mangoboss.storage.schedule.SubstituteRequestEntity;
-import com.mangoboss.storage.schedule.SubstituteState;
+import com.mangoboss.storage.schedule.SubstituteRequestState;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public record SubstituteRequestResponse(
         String requesterName,
         String targetName,
         String reason,
-        SubstituteState state,
+        SubstituteRequestState substituteRequestState,
         LocalDate workDate,
         LocalDateTime startTime,
         LocalDateTime endTime
@@ -26,7 +26,7 @@ public record SubstituteRequestResponse(
                 .requesterName(substituteRequest.getRequesterStaffName())
                 .targetName(substituteRequest.getTargetStaffName())
                 .reason(substituteRequest.getReason())
-                .state(substituteRequest.getState())
+                .substituteRequestState(substituteRequest.getState())
                 .workDate(substituteRequest.getWorkDate())
                 .startTime(substituteRequest.getStartTime())
                 .endTime(substituteRequest.getEndTime())

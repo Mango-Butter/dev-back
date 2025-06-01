@@ -1,6 +1,6 @@
 package com.mangoboss.storage.schedule;
 
-public enum ScheduleState {
+public enum SubstitutionState {
     NONE,
     REQUESTED,
     SUBSTITUTED
