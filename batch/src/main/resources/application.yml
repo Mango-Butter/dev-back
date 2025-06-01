@@ -37,6 +37,7 @@ cron:
   clock-out: ${CRON_CLOCK_OUT}
   payroll: ${CRON_PAYROLL}
   payslip: ${CRON_PAYSLIP}
+  notification: ${CRON_NOTIFICATION}
 
 transfer:
   max-retry: ${MAX_RETRY}
@@ -63,3 +64,7 @@ cloud:
 
 firebase:
   key-path: firebase/firebase-admin-sdk.json
+
+notification:
+  max-retry: ${NOTIFICATION_MAX_RETRY:3}
+  notification-batch-size: ${NOTIFICATION_BATCH_SIZE:400}
