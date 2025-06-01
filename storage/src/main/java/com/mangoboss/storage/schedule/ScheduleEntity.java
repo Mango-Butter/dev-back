@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,18 +45,23 @@ public class ScheduleEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Long storeId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ScheduleState state;
+
     @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
     private AttendanceEntity attendance;
 
     @Builder
     private ScheduleEntity(final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
-                           final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId) {
+                           final StaffEntity staff, final RegularGroupEntity regularGroup, final Long storeId, final ScheduleState state) {
         this.workDate = workDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.staff = staff;
         this.regularGroup = regularGroup;
         this.storeId = storeId;
+        this.state = state;
     }
 
     public static ScheduleEntity create(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime,
@@ -63,10 +69,11 @@ public class ScheduleEntity extends BaseTimeEntity {
         return ScheduleEntity.builder()
                 .workDate(workDate)
                 .startTime(LocalDateTime.of(workDate, startTime))
-                .endTime(adjustEndDateTime(workDate,startTime,endTime))
+                .endTime(adjustEndDateTime(workDate, startTime, endTime))
                 .staff(staff)
                 .regularGroup(regularGroup)
                 .storeId(storeId)
+                .state(ScheduleState.NONE)
                 .build();
     }
 
@@ -78,7 +85,7 @@ public class ScheduleEntity extends BaseTimeEntity {
         return this;
     }
 
-    private static LocalDateTime adjustEndDateTime(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime){
+    private static LocalDateTime adjustEndDateTime(final LocalDate workDate, final LocalTime startTime, final LocalTime endTime) {
         return endTime.isAfter(startTime) ?
                 LocalDateTime.of(workDate, endTime) : LocalDateTime.of(workDate.plusDays(1), endTime);
     }
