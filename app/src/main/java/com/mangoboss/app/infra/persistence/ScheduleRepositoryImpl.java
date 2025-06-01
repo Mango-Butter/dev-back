@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -63,5 +64,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public Boolean existsByRegularGroupId(final Long regularGroupId) {
         return scheduleJpaRepository.existsByRegularGroupId(regularGroupId);
+    }
+
+    @Override
+    public Boolean existsOverlappingSchedule(final Long staffId, final LocalDate workDate,
+                                             final LocalDateTime startTime, final LocalDateTime endTime) {
+        return scheduleJpaRepository.existsOverlappingSchedule(staffId, workDate, startTime, endTime);
     }
 }

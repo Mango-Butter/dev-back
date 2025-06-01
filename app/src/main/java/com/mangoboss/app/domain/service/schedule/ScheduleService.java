@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 public class ScheduleService {
     private static final int SCHEDULE_CREATE_LIMIT_MINUTES = 30;
@@ -27,7 +27,6 @@ public class ScheduleService {
     private final RegularGroupRepository regularGroupRepository;
     private final Clock clock;
 
-    @Transactional(readOnly = true)
     public void validateTime(final LocalTime startTime, final LocalTime endTime) {
         final LocalDate BASE_DATE = LocalDate.of(2000, 1, 1);
         LocalDateTime start = LocalDateTime.of(BASE_DATE, startTime);
@@ -37,12 +36,11 @@ public class ScheduleService {
         );
 
         Duration duration = Duration.between(start, end);
-        if (duration.isZero() || duration.toHours() > MAX_SCHEDULE_DURATION_HOURS-1) {
+        if (duration.isZero() || duration.toHours() > MAX_SCHEDULE_DURATION_HOURS - 1) {
             throw new CustomException(CustomErrorInfo.INVALID_SCHEDULE_TIME);
         }
     }
 
-    @Transactional(readOnly = true)
     public void validateDate(final LocalDate startDate, final LocalDate endDate,
                              final LocalTime startTime, final LocalTime endTime) {
         final LocalDate now = LocalDate.now(clock);
@@ -53,7 +51,6 @@ public class ScheduleService {
         validateTime(startTime, endTime);
     }
 
-    @Transactional(readOnly = true)
     public void validateScheduleCreatable(final LocalDate workDate, final LocalTime startTime) {
         final LocalDateTime limitTime = LocalDateTime.now(clock).plusMinutes(SCHEDULE_CREATE_LIMIT_MINUTES);
         if (!LocalDateTime.of(workDate, startTime).isAfter(limitTime)) {
@@ -61,6 +58,7 @@ public class ScheduleService {
         }
     }
 
+    @Transactional
     public void createRegularGroupAndSchedules(final List<RegularGroupEntity> regularGroups, final Long storeId) {
         regularGroups.forEach(regularGroup -> {
             regularGroupRepository.save(regularGroup);
@@ -83,31 +81,31 @@ public class ScheduleService {
         }
     }
 
+    @Transactional
     public ScheduleEntity createSchedule(final ScheduleEntity schedule) {
         return scheduleRepository.save(schedule);
     }
 
-    @Transactional(readOnly = true)
+
     public List<ScheduleEntity> getDailySchedules(final Long storeId, final LocalDate date) {
         return scheduleRepository.findAllByStoreIdAndWorkDate(storeId, date);
     }
 
-    @Transactional(readOnly = true)
+
     public List<RegularGroupEntity> getRegularGroupsForStaff(final Long staffId) {
         final LocalDate today = LocalDate.now(clock);
         return regularGroupRepository.findActiveOrUpcomingByStaffId(staffId, today);
     }
 
+    @Transactional
     public void deleteScheduleById(final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
 
-        final LocalDateTime now = LocalDateTime.now(clock);
-        if (now.isAfter(schedule.getStartTime())) {
-            throw new CustomException(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE);
-        }
+        isUpdatable(schedule);
         scheduleRepository.delete(schedule);
     }
 
+    @Transactional
     public void terminateRegularGroup(final Long regularGroupId) {
         final RegularGroupEntity regularGroup = regularGroupRepository.getById(regularGroupId);
         LocalDate today = LocalDate.now(clock);
@@ -121,28 +119,33 @@ public class ScheduleService {
         regularGroup.terminate(today);
     }
 
-    @Transactional(readOnly = true)
+
     public List<ScheduleEntity> getSchedulesByStaffIdAndDate(final Long storeId, final LocalDate date) {
         return scheduleRepository.findAllByStaffIdAndWorkDate(storeId, date);
     }
 
+    @Transactional
     public void updateSchedule(final Long scheduleId, final LocalDate workDate,
                                final LocalTime starTime, final LocalTime endTime) {
         final ScheduleEntity schedule = scheduleRepository.getById(scheduleId);
+        isUpdatable(schedule);
+        schedule.update(workDate, starTime, endTime);
+    }
 
+    private void isUpdatable(final ScheduleEntity schedule) {
+        if (!schedule.isUpdatable()) {
+            throw new CustomException(CustomErrorInfo.SUBSTITUTE_REQUESTED);
+        }
         final LocalDateTime now = LocalDateTime.now(clock);
         if (now.isAfter(schedule.getStartTime())) {
             throw new CustomException(CustomErrorInfo.CANNOT_MODIFY_PAST_SCHEDULE);
         }
-        schedule.update(workDate, starTime, endTime);
     }
 
-    @Transactional(readOnly = true)
     public ScheduleEntity getScheduleById(final Long scheduleId) {
         return scheduleRepository.getById(scheduleId);
     }
 
-    @Transactional(readOnly = true)
     public List<DayOfWeek> getDayOfWeeksForRegularGroup(final Long staffId) {
         final List<RegularGroupEntity> regularGroups = getRegularGroupsForStaff(staffId);
         return regularGroups
@@ -153,11 +156,20 @@ public class ScheduleService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public void validateScheduleBelongsToStaff(final Long scheduleId, final Long staffId) {
+
+    public ScheduleEntity validateScheduleBelongsToStaff(final Long scheduleId, final Long staffId) {
         final ScheduleEntity schedule = getScheduleById(scheduleId);
         if (!schedule.getStaff().getId().equals(staffId)) {
             throw new CustomException(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF);
         }
+        return schedule;
+    }
+
+    public Boolean isSubstituteCandidate(final Long staffId, final ScheduleEntity schedule) {
+        return scheduleRepository.existsOverlappingSchedule(
+                staffId,
+                schedule.getWorkDate(),
+                schedule.getStartTime(),
+                schedule.getEndTime());
     }
 }

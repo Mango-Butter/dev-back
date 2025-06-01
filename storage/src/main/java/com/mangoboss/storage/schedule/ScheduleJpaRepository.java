@@ -32,4 +32,14 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
     List<ScheduleEntity> findAllSchedulesWithoutClockOut(LocalDateTime oneHourAgo);
 
     Boolean existsByRegularGroupId(Long regularGroupId);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(s) > 0 THEN TRUE ELSE FALSE END
+            FROM ScheduleEntity s
+            WHERE s.staff.id = :staffId
+            AND s.workDate = :workDate
+            AND s.startTime <= :endTime
+            AND s.endTime >= :startTime
+            """)
+    Boolean existsOverlappingSchedule(Long staffId, LocalDate workDate, LocalDateTime startTime, LocalDateTime endTime);
 }
