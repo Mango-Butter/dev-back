@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface NotificationRepository {
     List<NotificationEntity> findAllBySendStatus(List<SendStatus> sendStatuses, Integer maxRetry, Pageable pageable);
-    void save(NotificationEntity notification);
+    void saveAll(List<NotificationEntity> notifications);
+    void updateSendStatus(List<Long> notificationIds, SendStatus status);
 }

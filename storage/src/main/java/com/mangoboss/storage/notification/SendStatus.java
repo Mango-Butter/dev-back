@@ -1,5 +1,5 @@
 package com.mangoboss.storage.notification;
 
 public enum SendStatus {
-    PENDING, COMPLETED, FAILED
+    PENDING, COMPLETED, FAILED, IN_PROGRESS
 }
