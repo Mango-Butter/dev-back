@@ -154,7 +154,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(SubstitutionState.REQUESTED)
+                .substitutionState(SubstitutionState.REQUESTED)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -176,7 +176,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(SubstitutionState.NONE)
+                .substitutionState(SubstitutionState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -198,7 +198,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(SubstitutionState.NONE)
+                .substitutionState(SubstitutionState.NONE)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
@@ -221,7 +221,7 @@ class ScheduleServiceTest {
                 .startTime(startTime)
                 .endTime(endTime)
                 .regularGroup(mock(RegularGroupEntity.class))
-                .state(SubstitutionState.REQUESTED)
+                .substitutionState(SubstitutionState.REQUESTED)
                 .build();
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
 
