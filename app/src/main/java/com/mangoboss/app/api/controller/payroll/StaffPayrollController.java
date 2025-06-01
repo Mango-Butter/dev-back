@@ -2,7 +2,7 @@ package com.mangoboss.app.api.controller.payroll;
 
 import com.mangoboss.app.api.facade.payroll.StaffPayrollFacade;
 import com.mangoboss.app.common.security.CustomUserDetails;
-import com.mangoboss.app.dto.payroll.response.PayrollDetailResponse;
+import com.mangoboss.app.dto.payroll.response.PayrollSettingForStaffResponse;
 import com.mangoboss.app.dto.payroll.response.PayrollResponse;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +34,12 @@ public class StaffPayrollController {
                                                          @PathVariable Long payslipId) {
         final Long userId = userDetails.getUserId();
         return staffPayrollFacade.getPayrollDownloadUrl(storeId, userId, payslipId);
+    }
+
+    @GetMapping("/settings")
+    public PayrollSettingForStaffResponse getPayrollSettingForStaff(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                    @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return staffPayrollFacade.getPayrollSettingForStaff(storeId, userId);
     }
 }
