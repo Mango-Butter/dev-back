@@ -35,14 +35,20 @@ public class AttendanceEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ClockOutStatus clockOutStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AttendanceState attendanceState;
+
     @Builder
     private AttendanceEntity(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
-                             final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus, final ScheduleEntity schedule) {
+                             final ClockInStatus clockInStatus, final ClockOutStatus clockOutStatus, final ScheduleEntity schedule,
+                             final AttendanceState attendanceState) {
         this.clockInTime = clockInTime;
         this.clockOutTime = clockOutTime;
         this.clockInStatus = clockInStatus;
         this.clockOutStatus = clockOutStatus;
         this.schedule = schedule;
+        this.attendanceState = attendanceState;
     }
 
     public static AttendanceEntity create(final LocalDateTime clockInTime, final LocalDateTime clockOutTime,
@@ -53,6 +59,7 @@ public class AttendanceEntity extends BaseTimeEntity {
                 .clockInStatus(clockInStatus)
                 .clockOutStatus(clockOutStatus)
                 .schedule(schedule)
+                .attendanceState(AttendanceState.NONE)
                 .build();
     }
 
@@ -61,6 +68,7 @@ public class AttendanceEntity extends BaseTimeEntity {
                 .schedule(schedule)
                 .clockInTime(clockInTime)
                 .clockInStatus(clockInStatus)
+                .attendanceState(AttendanceState.NONE)
                 .build();
     }
 
@@ -89,5 +97,18 @@ public class AttendanceEntity extends BaseTimeEntity {
         }
         long totalMinutes = java.time.Duration.between(clockInTime, clockOutTime).toMinutes();
         return (int) (totalMinutes / deductionUnit) * deductionUnit;
+    }
+
+    public void requested() {
+        this.attendanceState = AttendanceState.REQUESTED;
+    }
+
+    public boolean isCompleted() {
+        return this.clockInStatus != null
+                && this.clockOutStatus != null;
+    }
+
+    public boolean isRequested() {
+        return this.attendanceState.equals(AttendanceState.REQUESTED);
     }
 }

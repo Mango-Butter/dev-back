@@ -2,7 +2,6 @@ package com.mangoboss.app.domain.service.attendance;
 
 import java.time.*;
 import java.util.List;
-import java.util.Map;
 
 import com.mangoboss.app.domain.repository.AttendanceRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
@@ -12,7 +11,6 @@ import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.attendance.projection.WorkDotProjection;
 import com.mangoboss.storage.attendance.projection.StaffAttendanceCountProjection;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.store.StoreEntity;
 import org.springframework.stereotype.Service;
 
 import com.mangoboss.app.common.exception.CustomErrorInfo;
@@ -23,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AttendanceService {
 
     private static final long CLOCK_ALLOWED_MINUTES = 10;
@@ -38,6 +36,7 @@ public class AttendanceService {
     private record ClockInResult(LocalDateTime clockInTime, ClockInStatus status) {
     }
 
+    @Transactional
     public AttendanceEntity recordClockIn(final Long staffId, final Long scheduleId) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
@@ -51,6 +50,7 @@ public class AttendanceService {
         return attendanceRepository.save(attendance);
     }
 
+    @Transactional
     public void recordClockOut(final Long staffId, final Long scheduleId, final Integer overtimeLimit) {
         final ScheduleEntity schedule = scheduleRepository.getByIdAndStaffId(scheduleId, staffId);
         final LocalDateTime now = LocalDateTime.now(clock).withSecond(0).withNano(0);
@@ -88,8 +88,14 @@ public class AttendanceService {
     }
 
     private void validateClockedOut(final AttendanceEntity attendance) {
-        if (!attendance.isAlreadyClockedOut()) {
+        if (!attendance.isCompleted()) {
             throw new CustomException(CustomErrorInfo.INCOMPLETE_ATTENDANCE);
+        }
+    }
+
+    private void validateUpdatable(final AttendanceEntity attendance) {
+        if (attendance.isRequested()) {
+            throw new CustomException(CustomErrorInfo.ATTENDANCE_ALREADY_REQUESTED);
         }
     }
 
@@ -126,17 +132,14 @@ public class AttendanceService {
         return new ClockOutResult(scheduleEndTime, ClockOutStatus.NORMAL);
     }
 
-    @Transactional(readOnly = true)
     public AttendanceEntity getScheduleWithAttendance(final Long scheduleId) {
         return attendanceRepository.getByScheduleId(scheduleId);
     }
 
-    @Transactional(readOnly = true)
     public List<WorkDotProjection> getWorkDots(final Long storeId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findWorkDotProjections(storeId, start, end);
     }
 
-    @Transactional(readOnly = true)
     public void validateWorkDateForManualAttendance(final LocalDate workDate) {
         final LocalDate now = LocalDate.now(clock);
         if (!workDate.isBefore(now)) {
@@ -144,6 +147,7 @@ public class AttendanceService {
         }
     }
 
+    @Transactional
     public AttendanceEntity createManualAttendanceAndSchedule(final ScheduleEntity schedule) {
         scheduleRepository.save(schedule);
         final AttendanceEntity attendance = AttendanceEntity.create(
@@ -151,8 +155,10 @@ public class AttendanceService {
         return attendanceRepository.save(attendance);
     }
 
+    @Transactional
     public AttendanceEntity updateAttendance(final ScheduleEntity schedule, final Integer overtimeLimit, final LocalDateTime clockInTime, final LocalDateTime clockOutTime, final ClockInStatus clockInStatus) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(schedule.getId());
+        validateUpdatable(attendance);
         if (clockInStatus.equals(ClockInStatus.ABSENT)) {
             return attendance.update(null, null, ClockInStatus.ABSENT, ClockOutStatus.ABSENT);
         }
@@ -161,20 +167,20 @@ public class AttendanceService {
         return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
     }
 
+    @Transactional
     public void deleteAttendanceWithSchedule(final Long scheduleId) {
         final AttendanceEntity attendance = attendanceRepository.getByScheduleId(scheduleId);
         final ScheduleEntity schedule = attendance.getSchedule();
+        validateUpdatable(attendance);
         validateClockedOut(attendance);
         attendanceRepository.delete(attendance);
         scheduleRepository.delete(schedule);
     }
 
-    @Transactional(readOnly = true)
     public List<StaffAttendanceCountProjection> getAttendanceCountsByStoreId(final Long storeId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findAttendanceCountsByStoreId(storeId, start, end);
     }
 
-    @Transactional(readOnly = true)
     public List<AttendanceEntity> getAttendancesByStaffAndDateRange(final Long staffId, final LocalDate start, final LocalDate end) {
         return attendanceRepository.findByStaffIdAndWorkDateBetween(staffId, start, end);
     }

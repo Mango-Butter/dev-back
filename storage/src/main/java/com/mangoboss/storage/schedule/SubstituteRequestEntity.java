@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class SubstituteRequestEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "substitute_request_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)

@@ -37,7 +37,7 @@ public class SubstituteRequestService {
 
     private void isAlreadyRequested(final Long scheduleId) {
         if (substituteRequestRepository.existsByRequestScheduleId(scheduleId)) {
-            throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_SUBSTITUTED);
+            throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_REQUESTED);
         }
     }
 
