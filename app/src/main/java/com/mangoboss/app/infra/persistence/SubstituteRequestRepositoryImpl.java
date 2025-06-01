@@ -1,9 +1,12 @@
 package com.mangoboss.app.infra.persistence;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.SubstituteRequestRepository;
 import com.mangoboss.storage.schedule.SubstituteRequestEntity;
 import com.mangoboss.storage.schedule.SubstituteRequestJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,5 +30,16 @@ public class SubstituteRequestRepositoryImpl implements SubstituteRequestReposit
     @Override
     public Boolean existsByRequestScheduleId(final Long requestScheduleId) {
         return substituteRequestJpaRepository.existsByRequestScheduleId(requestScheduleId);
+    }
+
+    @Override
+    public List<SubstituteRequestEntity> findAllByStoreId(final Long storeId) {
+        return substituteRequestJpaRepository.findAllByStoreId(storeId);
+    }
+
+    @Override
+    public SubstituteRequestEntity getById(final Long id) {
+        return substituteRequestJpaRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.SUBSTITUTE_REQUEST_NOT_FOUND));
     }
 }

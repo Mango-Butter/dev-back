@@ -91,6 +91,7 @@ public enum CustomErrorInfo {
     PAYROLL_NOT_FOUND(404, "해당하는 급여정보를 찾을 수 없습니다.", 404016),
     PAYSLIP_NOT_FOUND(404, "해당하는 급여명세서 정보를 찾을 수 없습니다.", 404017),
     PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
+    SUBSTITUTE_REQUEST_NOT_FOUND(404, "대타 요청을 찾을 수 없습니다.", 404019),
 
 
     // 405 Method Not Allowed

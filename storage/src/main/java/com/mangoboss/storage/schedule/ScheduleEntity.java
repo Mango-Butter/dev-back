@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,17 +90,20 @@ public class ScheduleEntity extends BaseTimeEntity {
                 LocalDateTime.of(workDate, endTime) : LocalDateTime.of(workDate.plusDays(1), endTime);
     }
 
-    public ScheduleEntity requested() {
-        this.state = ScheduleState.REQUESTED;
-        return this;
-    }
-
-    public ScheduleEntity replaced() {
-        this.state = ScheduleState.REPLACED;
-        return this;
-    }
-
     public Boolean isUpdatable() {
         return !state.equals(ScheduleState.REQUESTED);
+    }
+
+    public void requested() {
+        this.state = ScheduleState.REQUESTED;
+    }
+
+    public void substituted(final StaffEntity staff) {
+        this.staff = staff;
+        this.state = ScheduleState.SUBSTITUTED;
+    }
+
+    public void rejected(){
+        this.state = ScheduleState.NONE;
     }
 }
