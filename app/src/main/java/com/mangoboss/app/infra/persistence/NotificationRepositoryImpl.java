@@ -6,6 +6,8 @@ import com.mangoboss.storage.notification.NotificationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class NotificationRepositoryImpl implements NotificationRepository {
@@ -14,5 +16,10 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     @Override
     public void save(NotificationEntity notification) {
         notificationJpaRepository.save(notification);
+    }
+
+    @Override
+    public List<NotificationEntity> findByUserIdAndStoreIdOrderByCreatedAtDesc(final Long userId, final Long storeId) {
+        return notificationJpaRepository.findByUserIdAndStoreIdOrderByCreatedAtDesc(userId, storeId);
     }
 }
