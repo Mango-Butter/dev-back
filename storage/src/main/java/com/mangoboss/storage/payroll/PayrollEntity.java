@@ -176,4 +176,8 @@ public class PayrollEntity extends BaseTimeEntity {
         this.transferState = transferState.markFailed();
         this.retryCount++;
     }
+
+    public boolean isPending() {
+        return this.transferState.equals(TransferState.PENDING);
+    }
 }

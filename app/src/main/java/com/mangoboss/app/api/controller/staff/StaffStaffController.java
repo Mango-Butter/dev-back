@@ -38,4 +38,11 @@ public class StaffStaffController {
         final Long userId = userDetails.getUserId();
         return staffStaffFacade.getStaffInfo(storeId, userId);
     }
+
+    @DeleteMapping ("/account")
+    public void deleteAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                              @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        staffStaffFacade.deleteAccount(storeId, userId);
+    }
 }

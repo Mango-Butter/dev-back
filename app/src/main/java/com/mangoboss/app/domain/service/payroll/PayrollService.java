@@ -198,7 +198,7 @@ public class PayrollService {
         return attendanceRepository.findByStaffIdAndWorkDateBetween(staffId, start, end);
     }
 
-    public void validateMonthIsBeforeCurrent(final YearMonth yearMonth){
+    public void validateMonthIsBeforeCurrent(final YearMonth yearMonth) {
         YearMonth currentMonth = YearMonth.now(clock).minusMonths(1);
         if (yearMonth.isAfter(currentMonth)) {
             throw new CustomException(CustomErrorInfo.PAYROLL_LOOKUP_TOO_EARLY);
@@ -211,5 +211,17 @@ public class PayrollService {
                 yearMonth.atDay(1),
                 yearMonth.atEndOfMonth()
         );
+    }
+
+    public void validateNoPendingPayroll(final Long staffId) {
+        YearMonth lastMonth = YearMonth.now(clock).minusMonths(1);
+        PayrollEntity payroll = payrollRepository.getByStaffIdAndMonthBetween(
+                staffId,
+                lastMonth.atDay(1),
+                lastMonth.atEndOfMonth()
+        );
+        if (payroll != null && payroll.isPending()) {
+            throw new CustomException(CustomErrorInfo.ACCOUNT_HAS_PENDING_TRANSFER);
+        }
     }
 }

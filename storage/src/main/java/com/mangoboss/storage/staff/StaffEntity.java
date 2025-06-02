@@ -88,4 +88,9 @@ public class StaffEntity extends BaseTimeEntity {
         this.bankCode = bankCode;
         this.accountNumber = accountNumber;
     }
+
+    public void deleteAccount() {
+        this.bankCode = null;
+        this.accountNumber = null;
+    }
 }

@@ -67,4 +67,9 @@ public class StaffService {
     public void registerStaffAccount(final StaffEntity staff, final BankCode bankCode, final String account) {
         staff.registerAccount(bankCode, account);
     }
+
+    @Transactional
+    public void deleteAccount(final StaffEntity staff) {
+        staff.deleteAccount();
+    }
 }
