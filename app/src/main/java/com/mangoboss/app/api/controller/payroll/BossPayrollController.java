@@ -13,6 +13,7 @@ import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.time.YearMonth;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boss/stores/{storeId}/payrolls")
+@PreAuthorize("hasRole('BOSS')")
 public class BossPayrollController {
 
     private final BossPayrollFacade bossPayrollFacade;

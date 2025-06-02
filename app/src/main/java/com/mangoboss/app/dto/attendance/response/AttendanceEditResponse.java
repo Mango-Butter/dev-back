@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public record AttendanceEditResponse(
         Long attendanceEditId,
         String staffName,
+        String reason,
         AttendanceEditState attendanceEditState,
         LocalDate workDate,
         AttendanceSimpleForEditResponse originalAttendance,
@@ -22,6 +23,7 @@ public record AttendanceEditResponse(
                 .attendanceEditId(attendanceEdit.getId())
                 .attendanceEditState(attendanceEdit.getAttendanceEditState())
                 .staffName(attendanceEdit.getStaffName())
+                .reason(attendanceEdit.getReason())
                 .workDate(attendanceEdit.getOriginalWorkDate())
                 .originalAttendance(AttendanceSimpleForEditResponse.ofOriginal(attendanceEdit))
                 .requestedAttendance(AttendanceSimpleForEditResponse.ofRequested(attendanceEdit))
