@@ -37,7 +37,7 @@ public class EstimatedPayroll {
                 .staffId(staff.getId())
                 .staffName(staff.getName())
                 .bankCode(staff.getBankCode())
-                .account(staff.getAccount())
+                .account(staff.getAccountNumber())
                 .month(month)
                 .withholdingType(staff.getWithholdingType())
                 .totalTime(payrollAmount.getTotalTime())

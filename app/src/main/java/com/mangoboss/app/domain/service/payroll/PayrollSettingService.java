@@ -31,7 +31,7 @@ public class PayrollSettingService {
     private String finAcno;
     private final Clock clock;
 
-    private void validateAccount(final BankCode bankCode, final String accountNumber) {
+    public void validateAccount(final BankCode bankCode, final String accountNumber) {
         DepositorAccountNumberResponse response = nhDevelopersClient.getVerifyAccountHolder(bankCode.getCode(), accountNumber);
         if (response == null) {
             throw new CustomException(CustomErrorInfo.INVALID_ACCOUNT);

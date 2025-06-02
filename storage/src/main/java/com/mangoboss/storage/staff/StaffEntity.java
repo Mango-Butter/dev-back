@@ -41,7 +41,7 @@ public class StaffEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private BankCode bankCode;
 
-    private String account;
+    private String accountNumber;
 
     @Column(nullable = false)
     private String name;
@@ -71,9 +71,9 @@ public class StaffEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateAccount(final BankCode bankCode, final String account) {
+    public void updateAccount(final BankCode bankCode, final String accountNumber) {
         this.bankCode = bankCode;
-        this.account = account;
+        this.accountNumber = accountNumber;
     }
 
     public void updateHourlyWage(final Integer hourlyWage) {
@@ -82,5 +82,10 @@ public class StaffEntity extends BaseTimeEntity {
 
     public void updateWithholdingType(final WithholdingType withholdingType) {
         this.withholdingType = withholdingType;
+    }
+
+    public void registerAccount(final BankCode bankCode, final String accountNumber) {
+        this.bankCode = bankCode;
+        this.accountNumber = accountNumber;
     }
 }
