@@ -109,7 +109,7 @@ public enum CustomErrorInfo {
     CANNOT_MODIFY_PAST_SCHEDULE(409, "과거 스케줄은 수정이 불가합니다.", 409008),
     ATTENDANCE_DATE_MUST_BE_PAST(409, "근태는 과거에 대해서만 수동 추가할 수 있습니다.", 409009),
     INCOMPLETE_ATTENDANCE(409, "근태가 아직 완료되지 않았습니다.", 409010),
-    PAYROLL_TRANSFER_ALREADY_STARTED(409, "이미 자동송금이 시작되었습니다.", 409011),
+    PAYROLL_TRANSFER_ALREADY_STARTED(409, "자동송금이 진행되어 수정할 수 없습니다.", 409011),
     AUTO_TRANSFER_ENABLED(409, "자동 송금이 켜져있어 계좌를 삭제할 수 없습니다.", 409012),
     PAYROLL_LOOKUP_TOO_EARLY(409, "해당 월의 급여 내역은 아직 조회할 수 없습니다.", 409013),
     SUBSTITUTE_REQUESTED(409, "대타 요청 중인 스케줄은 수정할 수 없습니다.", 409014),
@@ -117,7 +117,7 @@ public enum CustomErrorInfo {
     ATTENDANCE_ALREADY_REQUESTED(409, "변경 요청 중인 근태 기록입니다. 변경 요청을 완료해주시고 수정해 주세요.", 409015),
     SCHEDULE_NOT_REQUESTED(409, "대타 요청 중인 스케줄이 아닙니다.", 409016),
     ATTENDANCE_EDIT_NOT_REQUESTED(409, "변경 요청 중인 근태기록이 아닙니다.", 409017),
-
+    ACCOUNT_HAS_PENDING_TRANSFER(409, "해당 계좌로 송금이 예정되어 있어 삭제할 수 없습니다.", 409018),
 
 
     // 500 INTERNAL_SERVER_ERROR
