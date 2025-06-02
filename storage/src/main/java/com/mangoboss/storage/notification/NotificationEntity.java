@@ -42,9 +42,6 @@ public class NotificationEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private NotificationType type;
 
-    @Column(nullable = false)
-    private boolean isRead;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SendStatus sendStatus;
@@ -62,7 +59,6 @@ public class NotificationEntity extends BaseTimeEntity {
             final String imageUrl,
             final String clickUrl,
             final NotificationType type,
-            final boolean isRead,
             final SendStatus sendStatus,
             final int retryCount
     ) {
@@ -74,7 +70,6 @@ public class NotificationEntity extends BaseTimeEntity {
         this.imageUrl = imageUrl;
         this.clickUrl = clickUrl;
         this.type = type;
-        this.isRead = isRead;
         this.sendStatus = sendStatus;
         this.retryCount = retryCount;
     }
@@ -98,14 +93,9 @@ public class NotificationEntity extends BaseTimeEntity {
                 .imageUrl(imageUrl)
                 .clickUrl(clickUrl)
                 .type(type)
-                .isRead(false)
                 .sendStatus(SendStatus.PENDING)
                 .retryCount(0)
                 .build();
-    }
-
-    public void markRead() {
-        this.isRead = true;
     }
 
     public void markFailure() {

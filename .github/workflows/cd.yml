@@ -109,6 +109,7 @@ jobs:
             echo "AWS_S3_PUBLIC_BUCKET=${{ secrets.AWS_S3_PUBLIC_BUCKET }}" >> .env
             echo "AWS_S3_PRIVATE_BUCKET=${{ secrets.AWS_S3_PRIVATE_BUCKET }}" >> .env
             echo "AWS_S3_PUBLIC_BASE_URL=${{ secrets.AWS_S3_PUBLIC_BASE_URL }}" >> .env
+            echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env 
             
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin

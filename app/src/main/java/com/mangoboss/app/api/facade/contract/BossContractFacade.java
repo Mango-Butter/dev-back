@@ -3,6 +3,7 @@ package com.mangoboss.app.api.facade.contract;
 import com.mangoboss.app.common.util.*;
 import com.mangoboss.app.domain.service.contract.ContractService;
 import com.mangoboss.app.domain.service.contract.ContractTemplateService;
+import com.mangoboss.app.domain.service.notification.NotificationService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.domain.service.user.UserService;
@@ -34,6 +35,7 @@ public class BossContractFacade {
     private final StoreService storeService;
     private final StaffService staffService;
     private final UserService userService;
+    private final NotificationService notificationService;
     private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public SignatureUploadResponse uploadSignature(final Long storeId, final Long bossId, final SignatureUploadRequest request) {
@@ -50,6 +52,8 @@ public class BossContractFacade {
 
         final ContractData contractData = ContractData.of(request.contractDataInput(), boss, store, staff);
         final ContractEntity contract = contractService.createContract(request.staffId(), request.bossSignatureKey(), contractData);
+        final Long staffUserId = staff.getUser().getId();
+        notificationService.sendContractSignRequestNotification(staffUserId, store.getId());
         return ContractResponse.fromEntity(contract);
     }
 
