@@ -3,6 +3,8 @@ package com.mangoboss.app.domain.service.staff;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.StaffRepository;
+import com.mangoboss.app.dto.payroll.response.AccountRegisterResponse;
+import com.mangoboss.storage.payroll.BankCode;
 import com.mangoboss.storage.payroll.WithholdingType;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
@@ -59,5 +61,10 @@ public class StaffService {
     @Transactional
     public void updateWithholdingType(final StaffEntity staff, final WithholdingType withholdingType) {
         staff.updateWithholdingType(withholdingType);
+    }
+
+    @Transactional
+    public void registerStaffAccount(final StaffEntity staff, final BankCode bankCode, final String account) {
+        staff.registerAccount(bankCode, account);
     }
 }

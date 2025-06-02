@@ -53,7 +53,7 @@ VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
        (3, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, withholding_type,
-                   hourly_wage, bank_code, account,
+                   hourly_wage, bank_code, account_number,
                    created_at, modified_at)
 VALUES (1, 2, 1, '망알바',
         'http://k.kakaocdn.net/dn/KNfQc/btsNkI4rZDT/FqS6EhArmExoRcVX9bane1/img_110x110.jpg',
