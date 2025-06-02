@@ -16,7 +16,8 @@ public record SubstituteRequestResponse(
         SubstituteRequestState substituteRequestState,
         LocalDate workDate,
         LocalDateTime startTime,
-        LocalDateTime endTime
+        LocalDateTime endTime,
+        LocalDateTime createdAt
 ) {
     public static SubstituteRequestResponse fromEntity(
             SubstituteRequestEntity substituteRequest
@@ -30,6 +31,7 @@ public record SubstituteRequestResponse(
                 .workDate(substituteRequest.getWorkDate())
                 .startTime(substituteRequest.getStartTime())
                 .endTime(substituteRequest.getEndTime())
+                .createdAt(substituteRequest.getCreatedAt())
                 .build();
     }
 }
