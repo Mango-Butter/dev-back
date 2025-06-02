@@ -133,7 +133,7 @@ public class ScheduleService {
     }
 
     private void isUpdatable(final ScheduleEntity schedule) {
-        if (!schedule.isRequested()) {
+        if (schedule.isRequested()) {
             throw new CustomException(CustomErrorInfo.SUBSTITUTE_REQUESTED);
         }
         LocalDateTime now = LocalDateTime.now(clock);
