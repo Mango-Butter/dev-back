@@ -93,14 +93,14 @@ public class AttendanceService {
         }
     }
 
-    private void validateUpdatable(final AttendanceEntity attendance) {
+    public void validateUpdatable(final AttendanceEntity attendance) {
         if (attendance.isRequested()) {
             throw new CustomException(CustomErrorInfo.ATTENDANCE_ALREADY_REQUESTED);
         }
     }
 
-    private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime, final Integer overtimeLimit) {
-        final LocalDateTime limitTime = scheduledEndTime.plusMinutes(overtimeLimit);
+    private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
+        final LocalDateTime limitTime = scheduledEndTime.plusMinutes(CLOCK_ALLOWED_MINUTES);
         if (clockOutTime.isBefore(scheduledEndTime)) {
             return ClockOutStatus.EARLY_LEAVE;
         }
@@ -163,7 +163,7 @@ public class AttendanceService {
             return attendance.update(null, null, ClockInStatus.ABSENT, ClockOutStatus.ABSENT);
         }
         validateClockedOut(attendance);
-        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime, overtimeLimit);
+        final ClockOutStatus clockOutStatus = determineClockOutStatus(schedule.getEndTime(), clockOutTime);
         return attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus);
     }
 

@@ -24,7 +24,7 @@ public class SubstituteRequestService {
 
     @Transactional
     public void createSubstituteRequest(final ScheduleEntity schedule, final String reason, final StaffEntity requester, final StaffEntity target) {
-        isAlreadyRequested(schedule.getId());
+        validateNotRequested(schedule);
         schedule.requested();
         SubstituteRequestEntity substituteRequest = SubstituteRequestEntity.create(
                 reason,
@@ -35,9 +35,15 @@ public class SubstituteRequestService {
         substituteRequestRepository.save(substituteRequest);
     }
 
-    private void isAlreadyRequested(final Long scheduleId) {
-        if (substituteRequestRepository.existsByRequestScheduleId(scheduleId)) {
+    private void validateNotRequested(final ScheduleEntity schedule) {
+        if (schedule.isRequested()) {
             throw new CustomException(CustomErrorInfo.SCHEDULE_ALREADY_REQUESTED);
+        }
+    }
+
+    private void validateRequested(final ScheduleEntity schedule) {
+        if (!schedule.isRequested()) {
+            throw new CustomException(CustomErrorInfo.SCHEDULE_NOT_REQUESTED);
         }
     }
 
@@ -56,6 +62,7 @@ public class SubstituteRequestService {
     @Transactional
     public void approveSubstitution(final SubstituteRequestEntity substituteRequest, final StaffEntity target) {
         ScheduleEntity schedule = scheduleRepository.getById(substituteRequest.getRequestScheduleId());
+        validateRequested(schedule);
         schedule.substituted(target);
         substituteRequest.approved();
     }
@@ -64,6 +71,7 @@ public class SubstituteRequestService {
     public void rejectSubstitution(final Long substitutionId) {
         SubstituteRequestEntity substituteRequest = substituteRequestRepository.getById(substitutionId);
         ScheduleEntity schedule = scheduleRepository.getById(substituteRequest.getRequestScheduleId());
+        validateRequested(schedule);
         schedule.rejected();
         substituteRequest.rejected();
     }

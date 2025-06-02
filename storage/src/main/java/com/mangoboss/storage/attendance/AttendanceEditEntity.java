@@ -24,6 +24,9 @@ public class AttendanceEditEntity extends BaseTimeEntity {
     private Long attendanceId;
 
     @Column(nullable = false)
+    private Long storeId;
+
+    @Column(nullable = false)
     private Long staffId;
 
     @Column(nullable = false)
@@ -56,6 +59,7 @@ public class AttendanceEditEntity extends BaseTimeEntity {
     @Builder
     private AttendanceEditEntity(
             final Long attendanceId,
+            final Long storeId,
             final Long staffId,
             final String staffName,
             final LocalDateTime requestedClockInTime,
@@ -68,6 +72,7 @@ public class AttendanceEditEntity extends BaseTimeEntity {
             final LocalDateTime originalClockOutTime,
             final ClockInStatus originalClockInStatus) {
         this.attendanceId = attendanceId;
+        this.storeId = storeId;
         this.staffId = staffId;
         this.staffName = staffName;
         this.requestedClockInTime = requestedClockInTime;
@@ -90,6 +95,7 @@ public class AttendanceEditEntity extends BaseTimeEntity {
         StaffEntity staff = original.getSchedule().getStaff();
         return AttendanceEditEntity.builder()
                 .attendanceId(original.getId())
+                .storeId(staff.getStore().getId())
                 .staffId(staff.getId())
                 .staffName(staff.getName())
                 .requestedClockInTime(requestedClockInTime)
@@ -102,5 +108,13 @@ public class AttendanceEditEntity extends BaseTimeEntity {
                 .originalClockOutTime(original.getClockOutTime())
                 .originalClockInStatus(original.getClockInStatus())
                 .build();
+    }
+
+    public void approved() {
+        this.attendanceEditState = AttendanceEditState.APPROVED;
+    }
+
+    public void rejected() {
+        this.attendanceEditState = AttendanceEditState.REJECTED;
     }
 }
