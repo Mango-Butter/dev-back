@@ -14,7 +14,6 @@ public record NotificationResponse(
         String imageUrl,
         String clickUrl,
         NotificationType type,
-        boolean isRead,
         LocalDateTime createdAt
 ) {
     public static NotificationResponse fromEntity(final NotificationEntity entity) {
@@ -25,7 +24,6 @@ public record NotificationResponse(
                 .imageUrl(entity.getImageUrl())
                 .clickUrl(entity.getClickUrl())
                 .type(entity.getType())
-                .isRead(entity.isRead())
                 .createdAt(entity.getCreatedAt())
                 .build();
     }

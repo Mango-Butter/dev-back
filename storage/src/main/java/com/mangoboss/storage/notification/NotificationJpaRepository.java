@@ -24,7 +24,7 @@ public interface NotificationJpaRepository extends JpaRepository<NotificationEnt
 
     @Modifying
     @Query("UPDATE NotificationEntity n SET n.sendStatus = :status WHERE n.id IN :ids")
-    void updateSendStatus(List<Long> ids, @Param("status") SendStatus status);
+    void updateSendStatus(@Param("ids") List<Long> ids, @Param("status") SendStatus status);
 
     List<NotificationEntity> findByUserIdAndStoreIdOrderByCreatedAtDesc(Long userId, Long storeId);
 
