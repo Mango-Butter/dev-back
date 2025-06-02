@@ -118,7 +118,7 @@ class ScheduleServiceTest {
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
         when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).plusDays(2));
-        when(schedule.isUpdatable()).thenReturn(true);
+        when(schedule.isRequested()).thenReturn(true);
 
         //when
         scheduleService.deleteScheduleById(scheduleId);
@@ -134,7 +134,7 @@ class ScheduleServiceTest {
         ScheduleEntity schedule = mock(ScheduleEntity.class);
         when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
         when(schedule.getStartTime()).thenReturn(LocalDateTime.now(fixedClock).minusMinutes(1));
-        when(schedule.isUpdatable()).thenReturn(true);
+        when(schedule.isRequested()).thenReturn(true);
 
         //then
         assertThatThrownBy(() -> scheduleService.deleteScheduleById(scheduleId))

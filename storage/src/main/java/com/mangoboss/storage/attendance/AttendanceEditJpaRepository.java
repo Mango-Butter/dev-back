@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AttendanceEditJpaRepository extends JpaRepository<AttendanceEditEntity, Long> {
     List<AttendanceEditEntity> findAllByStaffId(Long staffId);
+
+    List<AttendanceEditEntity> findAllByStoreId(Long storeId);
 }

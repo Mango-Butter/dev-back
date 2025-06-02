@@ -90,8 +90,8 @@ public class ScheduleEntity extends BaseTimeEntity {
                 LocalDateTime.of(workDate, endTime) : LocalDateTime.of(workDate.plusDays(1), endTime);
     }
 
-    public Boolean isUpdatable() {
-        return !substitutionState.equals(SubstitutionState.REQUESTED);
+    public Boolean isRequested() {
+        return substitutionState.equals(SubstitutionState.REQUESTED);
     }
 
     public void requested() {

@@ -91,7 +91,8 @@ public enum CustomErrorInfo {
     PAYROLL_NOT_FOUND(404, "해당하는 급여정보를 찾을 수 없습니다.", 404016),
     PAYSLIP_NOT_FOUND(404, "해당하는 급여명세서 정보를 찾을 수 없습니다.", 404017),
     PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
-    SUBSTITUTE_REQUEST_NOT_FOUND(404, "대타 요청을 찾을 수 없습니다.", 404019),
+    SUBSTITUTE_REQUEST_NOT_FOUND(404, "해당 대타 요청을 찾을 수 없습니다.", 404019),
+    ATTENDANCE_EDIT_NOT_FOUND(404, "해당 근태 기록 변경 요청을 찾을 수 없습니다.", 404020),
 
 
     // 405 Method Not Allowed
@@ -114,6 +115,9 @@ public enum CustomErrorInfo {
     SUBSTITUTE_REQUESTED(409, "대타 요청 중인 스케줄은 수정할 수 없습니다.", 409014),
     SCHEDULE_ALREADY_REQUESTED(409, "대타 요청 중인 스케줄입니다. 대타 요청을 완료해주시고 수정해 주세요.", 409015),
     ATTENDANCE_ALREADY_REQUESTED(409, "변경 요청 중인 근태 기록입니다. 변경 요청을 완료해주시고 수정해 주세요.", 409015),
+    SCHEDULE_NOT_REQUESTED(409, "대타 요청 중인 스케줄이 아닙니다.", 409016),
+    ATTENDANCE_EDIT_NOT_REQUESTED(409, "변경 요청 중인 근태기록이 아닙니다.", 409017),
+
 
 
     // 500 INTERNAL_SERVER_ERROR

@@ -99,10 +99,6 @@ public class AttendanceEntity extends BaseTimeEntity {
         return (int) (totalMinutes / deductionUnit) * deductionUnit;
     }
 
-    public void requested() {
-        this.attendanceState = AttendanceState.REQUESTED;
-    }
-
     public boolean isCompleted() {
         return this.clockInStatus != null
                 && this.clockOutStatus != null;
@@ -110,5 +106,17 @@ public class AttendanceEntity extends BaseTimeEntity {
 
     public boolean isRequested() {
         return this.attendanceState.equals(AttendanceState.REQUESTED);
+    }
+
+    public void requested() {
+        this.attendanceState = AttendanceState.REQUESTED;
+    }
+
+    public void edited() {
+        this.attendanceState = AttendanceState.EDITED;
+    }
+
+    public void none() {
+        this.attendanceState = AttendanceState.NONE;
     }
 }

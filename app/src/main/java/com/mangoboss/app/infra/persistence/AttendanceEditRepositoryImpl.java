@@ -1,5 +1,7 @@
 package com.mangoboss.app.infra.persistence;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.AttendanceEditRepository;
 import com.mangoboss.storage.attendance.AttendanceEditEntity;
 import com.mangoboss.storage.attendance.AttendanceEditJpaRepository;
@@ -19,7 +21,18 @@ public class AttendanceEditRepositoryImpl implements AttendanceEditRepository {
     }
 
     @Override
-    public List<AttendanceEditEntity> findAllByStaffId(Long staffId) {
+    public List<AttendanceEditEntity> findAllByStaffId(final Long staffId) {
         return attendanceEditJpaRepository.findAllByStaffId(staffId);
+    }
+
+    @Override
+    public List<AttendanceEditEntity> findAllByStoreId(final Long storeId) {
+        return attendanceEditJpaRepository.findAllByStoreId(storeId);
+    }
+
+    @Override
+    public AttendanceEditEntity getById(final Long attendanceEditId) {
+        return attendanceEditJpaRepository.findById(attendanceEditId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_EDIT_NOT_FOUND));
     }
 }

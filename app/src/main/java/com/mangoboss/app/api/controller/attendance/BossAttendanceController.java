@@ -6,10 +6,12 @@ import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
 import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
+import com.mangoboss.app.dto.attendance.response.AttendanceEditResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -58,5 +60,28 @@ public class BossAttendanceController {
                                                                                            @RequestParam LocalDate end) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(bossAttendanceFacade.getAttendancesByStaffAndDateRange(storeId, staffId, userId, start, end));
+    }
+
+    @GetMapping("/attendance-edits")
+    public ListWrapperResponse<AttendanceEditResponse> getAttendanceEdits(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                     @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return ListWrapperResponse.of(bossAttendanceFacade.getAttendanceEdits(storeId, userId));
+    }
+
+    @PostMapping("/attendance-edits/{editId}/approve")
+    public void approveAttendanceEdit(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                          @PathVariable Long storeId,
+                                                                          @PathVariable Long editId) {
+        final Long userId = userDetails.getUserId();
+        bossAttendanceFacade.approveAttendanceEdit(storeId, editId, userId);
+    }
+
+    @PostMapping("/attendance-edits/{editId}/reject")
+    public void rejectAttendanceEdit(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @PathVariable Long storeId,
+                                      @PathVariable Long editId) {
+        final Long userId = userDetails.getUserId();
+        bossAttendanceFacade.rejectAttendanceEdit(storeId, editId, userId);
     }
 }

@@ -6,7 +6,6 @@ import com.mangoboss.app.domain.repository.RegularGroupRepository;
 import com.mangoboss.app.domain.repository.ScheduleRepository;
 import com.mangoboss.storage.schedule.RegularGroupEntity;
 import com.mangoboss.storage.schedule.ScheduleEntity;
-import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -134,7 +133,7 @@ public class ScheduleService {
     }
 
     private void isUpdatable(final ScheduleEntity schedule) {
-        if (!schedule.isUpdatable()) {
+        if (!schedule.isRequested()) {
             throw new CustomException(CustomErrorInfo.SUBSTITUTE_REQUESTED);
         }
         LocalDateTime now = LocalDateTime.now(clock);

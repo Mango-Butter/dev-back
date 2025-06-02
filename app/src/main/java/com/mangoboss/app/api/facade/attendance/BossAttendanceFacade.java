@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.attendance;
 
+import com.mangoboss.app.domain.service.attendance.AttendanceEditService;
 import com.mangoboss.app.domain.service.attendance.AttendanceService;
 import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
@@ -7,6 +8,8 @@ import com.mangoboss.app.domain.service.store.StoreService;
 import com.mangoboss.app.dto.attendance.request.AttendanceManualAddRequest;
 import com.mangoboss.app.dto.attendance.request.AttendanceUpdateRequest;
 import com.mangoboss.app.dto.attendance.response.AttendanceDetailResponse;
+import com.mangoboss.app.dto.attendance.response.AttendanceEditResponse;
+import com.mangoboss.storage.attendance.AttendanceEditEntity;
 import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.schedule.ScheduleEntity;
@@ -24,11 +27,12 @@ public class BossAttendanceFacade {
     private final StoreService storeService;
     private final StaffService staffService;
     private final AttendanceService attendanceService;
+    private final AttendanceEditService attendanceEditService;
     private final ScheduleService scheduleService;
 
     public AttendanceDetailResponse getAttendanceDetail(final Long storeId, final Long bossId, final Long scheduleId) {
         storeService.isBossOfStore(storeId, bossId);
-        final AttendanceEntity attendance = attendanceService.getScheduleWithAttendance(scheduleId);
+        AttendanceEntity attendance = attendanceService.getScheduleWithAttendance(scheduleId);
         return AttendanceDetailResponse.fromEntity(attendance);
     }
 
@@ -37,19 +41,19 @@ public class BossAttendanceFacade {
         attendanceService.validateWorkDateForManualAttendance(request.workDate());
         scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
 
-        final StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, request.staffId());
-        final AttendanceEntity attendance = attendanceService.createManualAttendanceAndSchedule(request.toSchedule(staff));
+        StaffEntity staff = staffService.validateStaffBelongsToStore(storeId, request.staffId());
+        AttendanceEntity attendance = attendanceService.createManualAttendanceAndSchedule(request.toSchedule(staff));
         return AttendanceDetailResponse.fromEntity(attendance);
     }
 
     public AttendanceDetailResponse updateAttendance(final Long storeId, final Long bossId, final Long scheduleId, final AttendanceUpdateRequest request) {
-        final StoreEntity store = storeService.isBossOfStore(storeId, bossId);
+        StoreEntity store = storeService.isBossOfStore(storeId, bossId);
         if (!request.clockInStatus().equals(ClockInStatus.ABSENT)) {
             scheduleService.validateTime(request.clockInTime(), request.clockOutTime());
         }
 
-        final ScheduleEntity schedule = scheduleService.getScheduleById(scheduleId);
-        final AttendanceEntity attendance = attendanceService.updateAttendance(
+        ScheduleEntity schedule = scheduleService.getScheduleById(scheduleId);
+        AttendanceEntity attendance = attendanceService.updateAttendance(
                 schedule,
                 store.getOvertimeLimit(),
                 request.toClockInDateTime(schedule.getWorkDate()),
@@ -67,7 +71,25 @@ public class BossAttendanceFacade {
                                                                             final LocalDate start, final LocalDate end) {
         storeService.isBossOfStore(storeId, bossId);
         staffService.validateStaffBelongsToStore(storeId, staffId);
-        final List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(staffId, start, end);
+        List<AttendanceEntity> attendances = attendanceService.getAttendancesByStaffAndDateRange(staffId, start, end);
         return attendances.stream().map(AttendanceDetailResponse::fromEntity).toList();
+    }
+
+    public List<AttendanceEditResponse> getAttendanceEdits(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        List<AttendanceEditEntity> attendanceEdits = attendanceEditService.getAttendanceByStoreId(storeId);
+        return attendanceEdits.stream()
+                .map(AttendanceEditResponse::fromEntity)
+                .toList();
+    }
+
+    public void approveAttendanceEdit(final Long storeId, final Long editId, final Long bossId) {
+        StoreEntity store = storeService.isBossOfStore(storeId, bossId);
+        attendanceEditService.approveAttendanceEdit(editId);
+    }
+
+    public void rejectAttendanceEdit(final Long storeId, final Long editId, final Long bossId) {
+        StoreEntity store = storeService.isBossOfStore(storeId, bossId);
+        attendanceEditService.rejectAttendanceEdit(editId);
     }
 }
