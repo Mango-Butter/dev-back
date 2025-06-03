@@ -14,5 +14,8 @@ public record StoreUpdateRequest(
         StoreType storeType,
 
         @NotNull
+        GpsRequest gps,
+
+        @NotNull
         Integer overtimeLimit
 ) {}

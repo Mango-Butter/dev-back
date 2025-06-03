@@ -58,7 +58,7 @@ public class BossStoreFacade {
 
 	public void updateStoreInfo(final Long storeId, final Long userId, final StoreUpdateRequest request) {
 		storeService.isBossOfStore(storeId, userId);
-		storeService.updateStoreInfo(storeId, request.address(), request.storeType(), request.overtimeLimit());
+		storeService.updateStoreInfo(storeId, request.address(), request.storeType(), request.gps().latitude(), request.gps().longitude(), request.overtimeLimit());
 	}
 
 	public StoreInviteCodeResponse reissueInviteCode(final Long storeId, final Long userId) {

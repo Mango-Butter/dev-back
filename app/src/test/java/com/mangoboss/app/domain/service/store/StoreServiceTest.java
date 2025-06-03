@@ -37,17 +37,21 @@ class StoreServiceTest {
         StoreEntity store = mock(StoreEntity.class);
         String address = "서울시 강남구";
         StoreType storeType = mock(StoreType.class);
+        Double gpsLatitude = 37.1234;
+        Double gpsLongitude = 127.5678;
         Integer overtimeLimit = 10;
 
         when(storeRepository.getById(storeId)).thenReturn(store);
 
         // when
-        storeService.updateStoreInfo(storeId, address, storeType, overtimeLimit);
+        storeService.updateStoreInfo(storeId, address, storeType, gpsLatitude, gpsLongitude, overtimeLimit);
 
         // then
         verify(store).updateInfo(
                 address,
                 storeType,
+                gpsLatitude,
+                gpsLongitude,
                 overtimeLimit
         );
     }

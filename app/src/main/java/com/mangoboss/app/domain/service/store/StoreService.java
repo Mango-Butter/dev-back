@@ -98,9 +98,10 @@ public class StoreService {
         return storeRepository.findAllByBossId(bossId);
     }
 
-    public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType, final Integer overtimeLimit) {
+    public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType,
+                                final Double gpsLatitude, final Double gpsLongitude, final Integer overtimeLimit) {
         final StoreEntity store = getStoreById(storeId);
-        store.updateInfo(address, storeType, overtimeLimit);
+        store.updateInfo(address, storeType, gpsLatitude, gpsLongitude, overtimeLimit);
     }
 
     public String reissueInviteCode(final Long storeId) {

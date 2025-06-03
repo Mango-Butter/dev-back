@@ -102,9 +102,11 @@ public class StoreEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateInfo(final String address, final StoreType storeType, final Integer overtimeLimit) {
+    public void updateInfo(final String address, final StoreType storeType, final Double gpsLatitude, final Double gpsLongitude, final Integer overtimeLimit) {
         this.address = address;
         this.storeType = storeType;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
         this.overtimeLimit = overtimeLimit;
     }
 
