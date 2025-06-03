@@ -1,59 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>기본 근로계약서</title>
     <style>
         @page {
             size: A4;
-            margin: 10mm 20mm 30mm 20mm;
+            margin: 15mm 25mm 15mm 25mm;
         }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            font-size: 13px;
+            font-size: 11px;
             line-height: 1.6;
             color: #000;
             margin: 0;
+            padding: 0;
         }
 
         h1 {
             text-align: center;
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 40px 0 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .header {
+            font-size: 13px;
+            margin-bottom: 40px;
         }
 
         .section {
-            margin-bottom: 16px;
+            margin-bottom: 32px;
         }
 
         .info-row {
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
         .bold {
-            font-weight: bold;
+            font-weight: 600;
         }
 
         table.schedule {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
-            font-size: 12px;
+            font-size: 11px;
+            margin: 15px 0;
         }
 
-        table.schedule th,
-        table.schedule td {
-            border: 1px solid #000;
-            padding: 6px;
+        table.schedule th {
+            background-color: #f1f1f1;
+            font-weight: 600;
+            border: 1px solid #999;
+            padding: 5px;
             text-align: center;
+        }
+
+        table.schedule td {
+            border: 1px solid #999;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .store-info div {
+            margin-bottom: 6px;
+        }
+
+        .info-label {
+            display: inline-block;
+            font-weight: 600;
+            min-width: 90px;
         }
 
         .signature-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
-            position: relative;
+            margin-top: 70px;
+            gap: 30px;
         }
 
         .signature-box {
@@ -62,50 +88,55 @@
         }
 
         .signature-label {
-            margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
         }
 
         .signature-img-container {
-            width: 160px;
-            height: auto;
+            width: 180px;
+            height: 80px;
             margin: 0 auto;
             border-bottom: 1px solid #000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
 
         .signature-img-container img {
-            display: block;
-            width: 100%;
-            height: auto;
+            max-height: 100%;
+            object-fit: contain;
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 60px;
             text-align: center;
             font-size: 12px;
+            color: #444;
+            line-height: 1.5;
         }
 
         .no-wrap {
             white-space: nowrap;
         }
+
     </style>
 </head>
 <body>
 
-<h1>기본 근로계약서</h1>
+<h1>근로계약서</h1>
 
-<div class="section">
-    <div class="info-row"><span class="bold">${storeName}</span> (이하 "사업주"라 함)과 <span class="bold">${staffName}</span> (이하 "근로자"라 함)은 다음과 같이 근로계약을 체결한다.</div>
+<div class="header">
+    <div class="info-row"><span class="bold">${storeName}</span> (이하 "사업주"라 함)과 <span class="bold">${staffName}</span>
+        (이하 "근로자"라 함)은 다음과 같이 근로계약을 체결한다.
+    </div>
 </div>
 
 <div class="section">
-    <div class="info-row">1. 근로계약기간: ${contractStart} ~ ${contractEnd}</div>
-    <div class="info-row">2. 근무 장소: ${storeAddress}</div>
-    <div class="info-row">3. 업무: ${duty}</div>
-</div>
-
-<div class="section">
-    <div class="info-row">4. 근무 시간:</div>
+    <div class="info-row"><b>1. 근로계약기간</b>: ${contractStart} ~ ${contractEnd}</div>
+    <div class="info-row"><b>2. 근무 장소</b>: ${storeAddress}</div>
+    <div class="info-row"><b>3. 업무</b>: ${duty}</div>
+    <div class="info-row"><b>4. 근무 시간</b>:</div>
     <table class="schedule">
         <thead>
         <tr>
@@ -118,10 +149,7 @@
         ${workSchedules}
         </tbody>
     </table>
-</div>
-
-<div class="section">
-    <div class="info-row">5. 시급: ${hourlyWage} 원</div>
+    <div class="info-row"><b>5. 시급</b>: ${hourlyWage} 원</div>
 </div>
 
 <div class="section">
@@ -134,26 +162,26 @@
     이 계약에 정함이 없는 사항은 근로기준법령에 의함
 </div>
 
-<div class="section">
-    <div class="info-row">매장명: ${storeName}</div>
-    <div class="info-row">사업자번호: ${businessNumber}</div>
-    <div class="info-row">매장 주소: ${storeAddress}</div>
-    <div class="info-row">대표자명: ${bossName} </div>
-    <div class="info-row">근로자 성명: ${staffName}</div>
-    <div class="info-row">연락처: ${staffPhone}</div>
+<div class="section store-info">
+    <div><span class="info-label">매장명</span>: ${storeName}</div>
+    <div><span class="info-label">사업자번호</span>: ${businessNumber}</div>
+    <div><span class="info-label">매장 주소</span>: ${storeAddress}</div>
+    <div><span class="info-label">대표자명</span>: ${bossName}</div>
+    <div><span class="info-label">근로자 성명</span>: ${staffName}</div>
+    <div><span class="info-label">연락처</span>: ${staffPhone}</div>
 </div>
 
 <div class="signature-section">
     <div class="signature-box">
         <div class="signature-label">사장님 서명</div>
         <div class="signature-img-container">
-            <img src="${bossSignature}" alt="사장님 서명" />
+            <img src="${bossSignature}" alt="사장님 서명"/>
         </div>
     </div>
     <div class="signature-box">
         <div class="signature-label">근로자 서명</div>
         <div class="signature-img-container">
-            <img src="${staffSignature}" alt="근로자 서명" />
+            <img src="${staffSignature}" alt="근로자 서명"/>
         </div>
     </div>
 </div>

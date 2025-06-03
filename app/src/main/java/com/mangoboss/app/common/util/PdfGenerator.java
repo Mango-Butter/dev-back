@@ -17,32 +17,33 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PdfGenerator {
 
-    @Value("${pdf.font-path}")
-    private String fontPath; // 폰트 경로
+    @Value("${pdf.font-paths}")
+    private String fontPaths; // 폰트 경로
 
     public byte[] generatePdfFromHtml(final String htmlContent) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             ConverterProperties properties = new ConverterProperties();
             FontProvider fontProvider = new FontProvider();
 
-            ClassPathResource fontResource = new ClassPathResource(fontPath);
-            log.info("[PDF] fontPath: {}", fontPath);
-            log.info("[PDF] fontResource.exists(): {}", fontResource.exists());
+            for (String path : getFontPaths()) {
+                ClassPathResource fontResource = new ClassPathResource(path);
+                File tempFontFile = File.createTempFile("temp-font", ".ttf");
+                tempFontFile.deleteOnExit();
 
-            File tempFontFile = File.createTempFile("temp-font", ".ttf");
-            tempFontFile.deleteOnExit();
-            try (InputStream is = fontResource.getInputStream();
-                 FileOutputStream fos = new FileOutputStream(tempFontFile)) {
-                fos.write(is.readAllBytes());
+                try (InputStream is = fontResource.getInputStream();
+                     FileOutputStream fos = new FileOutputStream(tempFontFile)) {
+                    fos.write(is.readAllBytes());
+                    fontProvider.addFont(tempFontFile.getAbsolutePath());
+                }
             }
-
-            fontProvider.addFont(tempFontFile.getAbsolutePath());
             properties.setFontProvider(fontProvider);
             properties.setCharset("UTF-8");
 
@@ -55,5 +56,10 @@ public class PdfGenerator {
             log.error("[PDF] PDF 생성 실패", e);
             throw new CustomException(CustomErrorInfo.PDF_GENERATION_FAILED);
         }
+    }
+    private List<String> getFontPaths() {
+        return Arrays.stream(fontPaths.split(","))
+                .map(String::trim)
+                .toList();
     }
 }

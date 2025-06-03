@@ -70,7 +70,7 @@ cloud:
       kms-key-id: ${AWS_KMS_KEY_ID}
 
 pdf:
-  font-path: fonts/NotoSansKR-Regular.ttf
+  font-paths: templates/fonts/NotoSansKR-Regular.ttf,templates/fonts/NotoSansKR-Bold.ttf
 
 contract:
   template-path: templates/contract-template.html
