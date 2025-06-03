@@ -1,6 +1,6 @@
 package com.mangoboss.app.dto.store.response;
 
-import ch.qos.logback.classic.util.StatusViaSLF4JLoggerFactory;
+import com.mangoboss.app.dto.staff.response.StaffSimpleResponse;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.AttendanceMethod;
 import com.mangoboss.storage.store.StoreEntity;
@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record StaffStoreInfoResponse(
-        Long staffId,
+        StaffSimpleResponse staff,
         Long storeId,
         String storeName,
         String address,
@@ -17,7 +17,7 @@ public record StaffStoreInfoResponse(
 ) {
     public static StaffStoreInfoResponse of(final StaffEntity staff, final StoreEntity store) {
         return StaffStoreInfoResponse.builder()
-                .staffId(staff.getId())
+                .staff(StaffSimpleResponse.fromEntity(staff))
                 .storeId(store.getId())
                 .storeName(store.getName())
                 .address(store.getAddress())
