@@ -6,6 +6,7 @@ import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.store.request.StaffJoinRequest;
 import com.mangoboss.app.dto.store.response.StaffJoinResponse;
 import com.mangoboss.app.dto.store.response.StaffStoreInfoResponse;
+import com.mangoboss.app.dto.store.response.StaffStoreItemResponse;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import com.mangoboss.storage.user.UserEntity;
@@ -30,10 +31,10 @@ public class StaffStoreFacade {
         return StaffJoinResponse.fromEntity(store);
     }
 
-    public List<StaffStoreInfoResponse> getMyStores(final Long userId) {
+    public List<StaffStoreItemResponse> getMyStores(final Long userId) {
         final List<StoreEntity> stores = storeService.getStoresByUserId(userId);
         return stores.stream()
-                .map(StaffStoreInfoResponse::fromEntity)
+                .map(StaffStoreItemResponse::of)
                 .toList();
     }
 
@@ -41,6 +42,6 @@ public class StaffStoreFacade {
         final StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         staffService.validateStaffBelongsToStore(storeId, staff.getId());
         final StoreEntity store = storeService.getStoreById(storeId);
-        return StaffStoreInfoResponse.fromEntity(store);
+        return StaffStoreInfoResponse.of(staff, store);
     }
 }

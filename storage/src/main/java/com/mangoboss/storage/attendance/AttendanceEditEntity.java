@@ -36,6 +36,7 @@ public class AttendanceEditEntity extends BaseTimeEntity {
 
     private LocalDateTime requestedClockOutTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClockInStatus requestedClockInStatus;
 
@@ -53,6 +54,7 @@ public class AttendanceEditEntity extends BaseTimeEntity {
 
     private LocalDateTime originalClockOutTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClockInStatus originalClockInStatus;
 
