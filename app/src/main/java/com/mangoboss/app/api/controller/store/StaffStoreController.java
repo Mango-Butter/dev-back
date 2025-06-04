@@ -6,7 +6,6 @@ import com.mangoboss.app.dto.ListWrapperResponse;
 import com.mangoboss.app.dto.store.request.StaffJoinRequest;
 import com.mangoboss.app.dto.store.response.StaffJoinResponse;
 import com.mangoboss.app.dto.store.response.StaffStoreInfoResponse;
-import com.mangoboss.app.dto.store.response.StaffStoreItemResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,15 +28,8 @@ public class StaffStoreController {
     }
 
     @GetMapping
-    public ListWrapperResponse<StaffStoreItemResponse> getMyStores(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ListWrapperResponse<StaffStoreInfoResponse> getMyStores(@AuthenticationPrincipal CustomUserDetails userDetails) {
         final Long userId = userDetails.getUserId();
         return ListWrapperResponse.of(staffStoreFacade.getMyStores(userId));
-    }
-
-    @GetMapping("/{storeId}/store-info")
-    public StaffStoreInfoResponse getStoreInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @PathVariable final Long storeId) {
-        final Long userId = userDetails.getUserId();
-        return staffStoreFacade.getStoreInfo(storeId, userId);
     }
 }

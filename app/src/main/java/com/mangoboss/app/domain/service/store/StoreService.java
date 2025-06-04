@@ -30,17 +30,14 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final ExternalBusinessApiClient externalBusinessApiClient;
 
-    @Transactional(readOnly = true)
     public StoreEntity isBossOfStore(final Long storeId, final Long userId) {
         return storeRepository.getByIdAndBossId(storeId, userId);
     }
 
-    @Transactional(readOnly = true)
     public boolean isDuplicatedBusinessNumber(final String businessNumber) {
         return storeRepository.existsByBusinessNumber(businessNumber);
     }
 
-    @Transactional(readOnly = true)
     public void validateBusinessNumber(final String businessNumber) {
         if (!externalBusinessApiClient.checkBusinessNumberValid(businessNumber)) {
             throw new CustomException(CustomErrorInfo.INVALID_BUSINESS_NUMBER);
@@ -51,16 +48,15 @@ public class StoreService {
         }
     }
 
-    @Transactional(readOnly = true)
     public StoreEntity getStoreByInviteCode(final String inviteCode) {
         return storeRepository.getByInviteCode(inviteCode);
     }
 
-    @Transactional(readOnly = true)
     public StoreEntity getStoreById(final Long storeId) {
         return storeRepository.getById(storeId);
     }
 
+    @Transactional
     public StoreEntity createStore(final StoreCreateRequest request, final UserEntity boss) {
         validateBusinessNumber(request.businessNumber());
         final String inviteCode = generateInviteCode();
@@ -93,17 +89,18 @@ public class StoreService {
         return sb.toString();
     }
 
-    @Transactional(readOnly = true)
     public List<StoreEntity> getStoresByBossId(final Long bossId) {
         return storeRepository.findAllByBossId(bossId);
     }
 
+    @Transactional
     public void updateStoreInfo(final Long storeId, final String address, final StoreType storeType,
                                 final Double gpsLatitude, final Double gpsLongitude, final Integer overtimeLimit) {
         final StoreEntity store = getStoreById(storeId);
         store.updateInfo(address, storeType, gpsLatitude, gpsLongitude, overtimeLimit);
     }
 
+    @Transactional
     public String reissueInviteCode(final Long storeId) {
         final StoreEntity store = storeRepository.getById(storeId);
         final String newInviteCode = generateInviteCode();
@@ -111,6 +108,7 @@ public class StoreService {
         return newInviteCode;
     }
 
+    @Transactional
     public String regenerateQrCode(final Long storeId) {
         final StoreEntity store = getStoreById(storeId);
         final String newQrCode = generateQrCode();
@@ -118,18 +116,15 @@ public class StoreService {
         return newQrCode;
     }
 
+    @Transactional
     public StoreEntity updateGpsSettings(final Long storeId, final String address, final Double latitude, final Double longitude, final Integer gpsRangeMeters) {
         final StoreEntity store = getStoreById(storeId);
         return store.updateGpsSettings(address, latitude, longitude, gpsRangeMeters);
     }
 
+    @Transactional
     public StoreEntity updateAttendanceSettings(final Long storeId, final AttendanceMethod method) {
         final StoreEntity store = getStoreById(storeId);
         return store.updateAttendanceMethod(method);
-    }
-
-    @Transactional(readOnly = true)
-    public List<StoreEntity> getStoresByUserId(final Long userId) {
-        return storeRepository.findAllByUserId(userId);
     }
 }

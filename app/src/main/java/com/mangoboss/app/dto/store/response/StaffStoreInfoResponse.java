@@ -15,7 +15,8 @@ public record StaffStoreInfoResponse(
         String storeType,
         AttendanceMethod attendanceMethod
 ) {
-    public static StaffStoreInfoResponse of(final StaffEntity staff, final StoreEntity store) {
+    public static StaffStoreInfoResponse of(final StaffEntity staff) {
+        StoreEntity store = staff.getStore();
         return StaffStoreInfoResponse.builder()
                 .staff(StaffSimpleResponse.fromEntity(staff))
                 .storeId(store.getId())

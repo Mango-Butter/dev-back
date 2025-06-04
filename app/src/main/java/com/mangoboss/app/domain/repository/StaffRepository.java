@@ -16,4 +16,6 @@ public interface StaffRepository {
     StaffEntity getByUserIdAndStoreId(Long userId, Long storeId);
 
     StaffEntity getById(Long id);
+
+    List<StaffEntity> findAllByUserId(Long userId);
 }

@@ -16,18 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StaffService {
     private final StaffRepository staffRepository;
 
+    @Transactional
     public StaffEntity createStaff(final UserEntity user, final StoreEntity store) {
         isAlreadyJoin(user, store);
         final StaffEntity staff = StaffEntity.create(user, store);
         return staffRepository.save(staff);
     }
 
-    @Transactional(readOnly = true)
     public StaffEntity validateStaffBelongsToStore(final Long storeId, final Long staffId) {
         return staffRepository.getByIdAndStoreId(staffId, storeId);
     }
@@ -38,17 +38,14 @@ public class StaffService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<StaffEntity> getStaffsForStore(final Long storeId) {
         return staffRepository.findAllByStoreId(storeId);
     }
 
-    @Transactional(readOnly = true)
     public StaffEntity getVerifiedStaff(final Long userId, final Long storeId) {
         return staffRepository.getByUserIdAndStoreId(userId, storeId);
     }
 
-    @Transactional(readOnly = true)
     public StaffEntity getStaffById(final Long staffId) {
         return staffRepository.getById(staffId);
     }
@@ -71,5 +68,9 @@ public class StaffService {
     @Transactional
     public void deleteAccount(final StaffEntity staff) {
         staff.deleteAccount();
+    }
+
+    public List<StaffEntity> getStaffsByUserId(final Long userId) {
+        return staffRepository.findAllByUserId(userId);
     }
 }
