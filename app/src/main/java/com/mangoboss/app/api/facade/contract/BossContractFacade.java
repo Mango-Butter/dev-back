@@ -20,6 +20,7 @@ import com.mangoboss.storage.contract.ContractTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class BossContractFacade {
         return SignatureUploadResponse.of(signatureKey);
     }
 
+    @Transactional
     public ContractResponse createContract(final Long storeId, final Long bossId, final ContractCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
         final UserEntity boss = userService.getUserById(bossId);
@@ -53,7 +55,7 @@ public class BossContractFacade {
         final ContractData contractData = ContractData.of(request.contractDataInput(), boss, store, staff);
         final ContractEntity contract = contractService.createContract(request.staffId(), request.bossSignatureKey(), contractData);
         final Long staffUserId = staff.getUser().getId();
-        notificationService.sendContractSignRequestNotification(staffUserId, store.getId());
+        notificationService.saveContractSignNotification(staffUserId, store.getId());
         return ContractResponse.fromEntity(contract);
     }
 

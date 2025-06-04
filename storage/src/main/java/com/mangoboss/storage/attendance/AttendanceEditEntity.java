@@ -112,11 +112,13 @@ public class AttendanceEditEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void approved() {
+    public AttendanceEditEntity approved() {
         this.attendanceEditState = AttendanceEditState.APPROVED;
+        return this;
     }
 
-    public void rejected() {
+    public AttendanceEditEntity rejected() {
         this.attendanceEditState = AttendanceEditState.REJECTED;
+        return this;
     }
 }

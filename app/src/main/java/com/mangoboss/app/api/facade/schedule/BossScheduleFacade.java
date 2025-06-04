@@ -1,5 +1,6 @@
 package com.mangoboss.app.api.facade.schedule;
 
+import com.mangoboss.app.domain.service.notification.NotificationService;
 import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.schedule.SubstituteRequestService;
 import com.mangoboss.app.domain.service.staff.StaffService;
@@ -11,6 +12,7 @@ import com.mangoboss.storage.schedule.SubstituteRequestEntity;
 import com.mangoboss.storage.staff.StaffEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class BossScheduleFacade {
     private final SubstituteRequestService substituteRequestService;
     private final StaffService staffService;
     private final StoreService storeService;
+    private final NotificationService notificationService;
 
     public void createSchedule(final Long storeId, final Long bossId, final ScheduleCreateRequest request) {
         storeService.isBossOfStore(storeId, bossId);
@@ -50,15 +53,21 @@ public class BossScheduleFacade {
                 .toList();
     }
 
+    @Transactional
     public void approveSubstituteRequest(final Long storeId, final Long bossId, final Long substitutionId) {
         storeService.isBossOfStore(storeId, bossId);
         SubstituteRequestEntity substituteRequest = substituteRequestService.getSubstituteRequestById(substitutionId);
         StaffEntity target = staffService.validateStaffBelongsToStore(storeId, substituteRequest.getTargetStaffId());
         substituteRequestService.approveSubstitution(substituteRequest, target);
+
+        notificationService.saveSubstituteApproveNotificationForBoth(substituteRequest);
     }
 
+    @Transactional
     public void rejectSubstituteRequest(final Long storeId, final Long bossId, final Long substitutionId) {
         storeService.isBossOfStore(storeId, bossId);
-        substituteRequestService.rejectSubstitution(substitutionId);
+        SubstituteRequestEntity substituteRequest = substituteRequestService.rejectSubstitution(substitutionId);
+
+        notificationService.saveSubstituteRejectNotificationForBoth(substituteRequest);
     }
 }

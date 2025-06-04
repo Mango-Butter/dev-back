@@ -93,11 +93,13 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void approved() {
+    public SubstituteRequestEntity approved() {
         this.state = SubstituteRequestState.APPROVED;
+        return this;
     }
 
-    public void rejected() {
+    public SubstituteRequestEntity rejected() {
         this.state = SubstituteRequestState.REJECTED;
+        return this;
     }
 }
