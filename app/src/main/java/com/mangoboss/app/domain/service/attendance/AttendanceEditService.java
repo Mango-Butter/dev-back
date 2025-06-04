@@ -55,7 +55,7 @@ public class AttendanceEditService {
     }
 
     @Transactional
-    public void approveAttendanceEdit(final Long attendanceEditId) {
+    public AttendanceEditEntity approveAttendanceEdit(final Long attendanceEditId) {
         AttendanceEditEntity attendanceEdit = attendanceEditRepository.getById(attendanceEditId);
         AttendanceEntity attendance = attendanceRepository.getById(attendanceEdit.getAttendanceId());
         validateRequested(attendance);
@@ -67,7 +67,7 @@ public class AttendanceEditService {
                 clockOutTime
         );
         attendance.update(clockInTime, clockOutTime, clockInStatus, clockOutStatus).edited();
-        attendanceEdit.approved();
+        return attendanceEdit.approved();
     }
 
     private ClockOutStatus determineClockOutStatus(final LocalDateTime scheduledEndTime, final LocalDateTime clockOutTime) {
@@ -83,11 +83,11 @@ public class AttendanceEditService {
     }
 
     @Transactional
-    public void rejectAttendanceEdit(final Long attendanceEditId) {
+    public AttendanceEditEntity rejectAttendanceEdit(final Long attendanceEditId) {
         AttendanceEditEntity attendanceEdit = attendanceEditRepository.getById(attendanceEditId);
         AttendanceEntity attendance = attendanceRepository.getById(attendanceEdit.getAttendanceId());
         validateRequested(attendance);
         attendance.none();
-        attendanceEdit.rejected();
+        return attendanceEdit.rejected();
     }
 }

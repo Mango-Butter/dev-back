@@ -68,11 +68,11 @@ public class SubstituteRequestService {
     }
 
     @Transactional
-    public void rejectSubstitution(final Long substitutionId) {
+    public SubstituteRequestEntity rejectSubstitution(final Long substitutionId) {
         SubstituteRequestEntity substituteRequest = substituteRequestRepository.getById(substitutionId);
         ScheduleEntity schedule = scheduleRepository.getById(substituteRequest.getRequestScheduleId());
         validateRequested(schedule);
         schedule.rejected();
-        substituteRequest.rejected();
+        return substituteRequest.rejected();
     }
 }

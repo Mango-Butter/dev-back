@@ -2,6 +2,7 @@ package com.mangoboss.app.api.facade.attendance;
 
 import com.mangoboss.app.domain.service.attendance.AttendanceEditService;
 import com.mangoboss.app.domain.service.attendance.AttendanceService;
+import com.mangoboss.app.domain.service.notification.NotificationService;
 import com.mangoboss.app.domain.service.schedule.ScheduleService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.store.StoreService;
@@ -17,6 +18,7 @@ import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +31,7 @@ public class BossAttendanceFacade {
     private final AttendanceService attendanceService;
     private final AttendanceEditService attendanceEditService;
     private final ScheduleService scheduleService;
+    private final NotificationService notificationService;
 
     public AttendanceDetailResponse getAttendanceDetail(final Long storeId, final Long bossId, final Long scheduleId) {
         storeService.isBossOfStore(storeId, bossId);
@@ -83,13 +86,17 @@ public class BossAttendanceFacade {
                 .toList();
     }
 
+    @Transactional
     public void approveAttendanceEdit(final Long storeId, final Long editId, final Long bossId) {
         StoreEntity store = storeService.isBossOfStore(storeId, bossId);
-        attendanceEditService.approveAttendanceEdit(editId);
+        AttendanceEditEntity attendanceEdit = attendanceEditService.approveAttendanceEdit(editId);
+        notificationService.saveAttendanceEditApproveNotification(attendanceEdit);
     }
 
+    @Transactional
     public void rejectAttendanceEdit(final Long storeId, final Long editId, final Long bossId) {
         StoreEntity store = storeService.isBossOfStore(storeId, bossId);
-        attendanceEditService.rejectAttendanceEdit(editId);
+        AttendanceEditEntity attendanceEdit = attendanceEditService.rejectAttendanceEdit(editId);
+        notificationService.saveAttendanceEditRejectNotification(attendanceEdit);
     }
 }
