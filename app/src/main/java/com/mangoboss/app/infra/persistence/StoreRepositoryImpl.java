@@ -11,7 +11,6 @@ import com.mangoboss.storage.store.StoreJpaRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -61,10 +60,4 @@ public class StoreRepositoryImpl implements StoreRepository {
         return storeJpaRepository.findByIdAndBossId(id, bossId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.NOT_STORE_BOSS));
     }
-
-    @Override
-    public List<StoreEntity> findAllByUserId(final Long userId) {
-        return storeJpaRepository.findAllByUserId(userId);
-    }
-
 }

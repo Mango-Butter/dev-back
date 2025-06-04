@@ -13,4 +13,6 @@ public interface StaffJpaRepository extends JpaRepository<StaffEntity, Long> {
     List<StaffEntity> findAllByStoreId(Long storeId);
 
     Optional<StaffEntity> findByUserIdAndStoreId(Long userId, Long storeId);
+
+    List<StaffEntity> findAllByUserId(Long userId);
 }

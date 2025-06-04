@@ -47,4 +47,9 @@ public class StaffRepositoryImpl implements StaffRepository {
         return staffJpaRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.STAFF_NOT_FOUND));
     }
+
+    @Override
+    public List<StaffEntity> findAllByUserId(final Long userId) {
+        return staffJpaRepository.findAllByUserId(userId);
+    }
 }

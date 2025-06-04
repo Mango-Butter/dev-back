@@ -19,9 +19,4 @@ public interface StoreJpaRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findAllByBossId(Long bossId);
 
     Optional<StoreEntity> findByIdAndBossId(Long id, Long bossId);
-
-    @Query("""
-        SELECT st.store FROM StaffEntity st WHERE st.user.id = :userId
-    """)
-    List<StoreEntity> findAllByUserId(@Param("userId") Long userId);
 }
