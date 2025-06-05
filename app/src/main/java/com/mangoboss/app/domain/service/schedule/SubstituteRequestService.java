@@ -75,4 +75,8 @@ public class SubstituteRequestService {
         schedule.rejected();
         return substituteRequest.rejected();
     }
+
+    public List<SubstituteRequestEntity> getRecentIncompleteRequestsByStoreId(final Long storeId) {
+        return substituteRequestRepository.findRecentIncompleteRequestsByStoreId(storeId);
+    }
 }

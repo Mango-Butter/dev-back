@@ -107,4 +107,12 @@ public class BossStoreController {
         final Long userId = userDetails.getUserId();
         return bossStoreFacade.updateGpsSettings(storeId, userId, request);
     }
+
+    @GetMapping("/{storeId}/requests")
+    public StoreRequestedResponse getRequests(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossStoreFacade.getRequestsForStore(storeId, userId);
+    }
 }

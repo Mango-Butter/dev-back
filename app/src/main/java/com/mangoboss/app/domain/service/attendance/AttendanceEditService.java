@@ -90,4 +90,8 @@ public class AttendanceEditService {
         attendance.none();
         return attendanceEdit.rejected();
     }
+
+    public List<AttendanceEditEntity> getRecentIncompleteEditsByStoreId(final Long storeId) {
+        return attendanceEditRepository.findRecentIncompleteEditsByStoreId(storeId);
+    }
 }

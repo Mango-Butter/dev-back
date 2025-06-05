@@ -11,4 +11,6 @@ public interface SubstituteRequestJpaRepository extends JpaRepository<Substitute
     Boolean existsByRequestScheduleId(Long requestScheduleId);
 
     List<SubstituteRequestEntity> findAllByStoreId(Long storeId);
+
+    List<SubstituteRequestEntity> findAllByStoreIdAndRequestStateOrderByCreatedAtDesc(Long storeId, SubstituteRequestState requestState);
 }

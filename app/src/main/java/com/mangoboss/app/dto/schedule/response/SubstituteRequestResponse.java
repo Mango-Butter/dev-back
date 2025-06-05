@@ -27,7 +27,7 @@ public record SubstituteRequestResponse(
                 .requesterName(substituteRequest.getRequesterStaffName())
                 .targetName(substituteRequest.getTargetStaffName())
                 .reason(substituteRequest.getReason())
-                .substituteRequestState(substituteRequest.getState())
+                .substituteRequestState(substituteRequest.getRequestState())
                 .workDate(substituteRequest.getWorkDate())
                 .startTime(substituteRequest.getStartTime())
                 .endTime(substituteRequest.getEndTime())

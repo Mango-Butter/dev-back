@@ -5,6 +5,7 @@ import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.AttendanceEditRepository;
 import com.mangoboss.storage.attendance.AttendanceEditEntity;
 import com.mangoboss.storage.attendance.AttendanceEditJpaRepository;
+import com.mangoboss.storage.attendance.AttendanceEditState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,10 @@ public class AttendanceEditRepositoryImpl implements AttendanceEditRepository {
     public AttendanceEditEntity getById(final Long attendanceEditId) {
         return attendanceEditJpaRepository.findById(attendanceEditId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.ATTENDANCE_EDIT_NOT_FOUND));
+    }
+
+    @Override
+    public List<AttendanceEditEntity> findRecentIncompleteEditsByStoreId(final Long storeId) {
+        return attendanceEditJpaRepository.findAllByStoreIdAndAttendanceEditStateOrderByCreatedAtDesc(storeId, AttendanceEditState.PENDING);
     }
 }

@@ -23,7 +23,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SubstituteRequestState state;
+    private SubstituteRequestState requestState;
 
     @Column(nullable = false)
     private String reason;
@@ -56,11 +56,11 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
     private String targetStaffName;
 
     @Builder
-    private SubstituteRequestEntity(final SubstituteRequestState state, final String reason, final Long requesterStaffId,
+    private SubstituteRequestEntity(final SubstituteRequestState requestState, final String reason, final Long requesterStaffId,
                                     final Long requestScheduleId, final Long targetStaffId, final Long storeId,
                                     final LocalDate workDate, final LocalDateTime startTime, final LocalDateTime endTime,
                                     final String requesterName, final String targetName) {
-        this.state = state;
+        this.requestState = requestState;
         this.reason = reason;
         this.requesterStaffId = requesterStaffId;
         this.requestScheduleId = requestScheduleId;
@@ -79,7 +79,7 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
             final StaffEntity targetStaff,
             final ScheduleEntity schedule) {
         return SubstituteRequestEntity.builder()
-                .state(SubstituteRequestState.PENDING)
+                .requestState(SubstituteRequestState.PENDING)
                 .reason(reason)
                 .storeId(schedule.getStoreId())
                 .requesterStaffId(requesterStaff.getId())
@@ -94,12 +94,12 @@ public class SubstituteRequestEntity extends BaseTimeEntity {
     }
 
     public SubstituteRequestEntity approved() {
-        this.state = SubstituteRequestState.APPROVED;
+        this.requestState = SubstituteRequestState.APPROVED;
         return this;
     }
 
     public SubstituteRequestEntity rejected() {
-        this.state = SubstituteRequestState.REJECTED;
+        this.requestState = SubstituteRequestState.REJECTED;
         return this;
     }
 }
