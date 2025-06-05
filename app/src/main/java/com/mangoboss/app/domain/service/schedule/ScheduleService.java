@@ -166,7 +166,7 @@ public class ScheduleService {
     }
 
     public Boolean isSubstituteCandidate(final Long staffId, final ScheduleEntity schedule) {
-        return scheduleRepository.existsOverlappingSchedule(
+        return !scheduleRepository.existsOverlappingSchedule(
                 staffId,
                 schedule.getWorkDate(),
                 schedule.getStartTime(),
