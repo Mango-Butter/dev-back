@@ -8,4 +8,6 @@ public interface AttendanceEditJpaRepository extends JpaRepository<AttendanceEdi
     List<AttendanceEditEntity> findAllByStaffId(Long staffId);
 
     List<AttendanceEditEntity> findAllByStoreId(Long storeId);
+
+    List<AttendanceEditEntity> findAllByStoreIdAndAttendanceEditStateOrderByCreatedAtDesc(Long storeId, AttendanceEditState requestState);
 }

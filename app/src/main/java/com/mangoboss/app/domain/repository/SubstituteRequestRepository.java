@@ -14,4 +14,6 @@ public interface SubstituteRequestRepository {
     List<SubstituteRequestEntity> findAllByStoreId(Long storeId);
 
     SubstituteRequestEntity getById(Long bossId);
+
+    List<SubstituteRequestEntity> findRecentIncompleteRequestsByStoreId(Long storeId);
 }

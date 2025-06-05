@@ -73,7 +73,7 @@ public enum CustomErrorInfo {
 
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
-    KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보 없음", 404002),
+    KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보가 없습니다.", 404002),
     INVITE_CODE_NOT_FOUND(404, "초대코드가 잘못되었습니다.", 404003),
     STAFF_NOT_FOUND(404, "해당하는 알바생이 없습니다.", 404004),
     STORE_NOT_FOUND(404, "해당하는 매장이 없습니다.", 404005),
@@ -93,7 +93,6 @@ public enum CustomErrorInfo {
     PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
     SUBSTITUTE_REQUEST_NOT_FOUND(404, "해당 대타 요청을 찾을 수 없습니다.", 404019),
     ATTENDANCE_EDIT_NOT_FOUND(404, "해당 근태 기록 변경 요청을 찾을 수 없습니다.", 404020),
-
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
@@ -119,7 +118,6 @@ public enum CustomErrorInfo {
     ATTENDANCE_EDIT_NOT_REQUESTED(409, "변경 요청 중인 근태기록이 아닙니다.", 409017),
     ACCOUNT_HAS_PENDING_TRANSFER(409, "해당 계좌로 송금이 예정되어 있어 삭제할 수 없습니다.", 409018),
 
-
     // 500 INTERNAL_SERVER_ERROR
     BUSINESS_API_FAILED(500, "사업자 진위 확인에 실패했습니다.", 500001),
     SIGNATURE_UPLOAD_FAILED(500, "서명 이미지 업로드에 실패했습니다.", 500002),
@@ -135,7 +133,8 @@ public enum CustomErrorInfo {
     UNMAPPED_DEDUCTION_UNIT_EXCEPTION(500, "서버 내부 데이터에 알 수 없는 상태 코드가 포함되어 있어 처리할 수 없습니다.", 500012),
     FILE_UPLOAD_FAILED(500, "파일 업로드에 실패했습니다.", 500013),
     FILE_DELETE_FAILED(500, "파일 삭제에 실패했습니다.", 500014),
-    DIGEST_FAILURE(500, "SHA-256 해시 생성에 실패했습니다", 500015);
+    DIGEST_FAILURE(500, "SHA-256 해시 생성에 실패했습니다.", 500015),
+    INVALID_TYPE(500, "타입이 유효하지 않습니다.", 500015);
 
     private final int statusCode;
     private final String message;

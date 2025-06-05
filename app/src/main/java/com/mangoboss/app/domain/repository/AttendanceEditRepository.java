@@ -12,4 +12,6 @@ public interface AttendanceEditRepository {
     List<AttendanceEditEntity> findAllByStoreId(Long storeId);
 
     AttendanceEditEntity getById(Long attendanceEditId);
+
+    List<AttendanceEditEntity> findRecentIncompleteEditsByStoreId(Long storeId);
 }
