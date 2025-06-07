@@ -46,7 +46,7 @@ public class BossStoreController {
     public BossStoreInfoResponse getStoreInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
                                               @PathVariable final Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.getStoreInfo(userId, storeId);
+        return bossStoreFacade.getStoreInfo(storeId, userId);
     }
 
     @PutMapping("/{storeId}/store-info")
@@ -54,14 +54,14 @@ public class BossStoreController {
                                 @PathVariable final Long storeId,
                                 @RequestBody @Valid StoreUpdateRequest request) {
         final Long userId = userDetails.getUserId();
-        bossStoreFacade.updateStoreInfo(userId, storeId, request);
+        bossStoreFacade.updateStoreInfo(storeId, userId, request);
     }
 
     @PostMapping("/{storeId}/reissue-invite-code")
     public StoreInviteCodeResponse reissueInviteCode(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                      @PathVariable final Long storeId) {
         final Long userId = userDetails.getUserId();
-        return bossStoreFacade.reissueInviteCode(userId, storeId);
+        return bossStoreFacade.reissueInviteCode(storeId, userId);
     }
 
     @GetMapping("/{storeId}/attendance-settings")

@@ -12,7 +12,7 @@ public record BossStoreInfoResponse(
         StoreType storeType,
         String address,
         String inviteCode,
-        Integer overTimeLimit
+        Integer overtimeLimit
 ) {
     public static BossStoreInfoResponse fromEntity(final StoreEntity store) {
         return BossStoreInfoResponse.builder()
@@ -22,7 +22,7 @@ public record BossStoreInfoResponse(
                 .storeType(store.getStoreType())
                 .address(store.getAddress())
                 .inviteCode(store.getInviteCode())
-                .overTimeLimit(store.getOvertimeLimit())
+                .overtimeLimit(store.getOvertimeLimit())
                 .build();
     }
 }
