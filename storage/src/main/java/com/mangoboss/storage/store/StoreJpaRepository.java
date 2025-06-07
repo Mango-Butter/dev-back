@@ -20,4 +20,8 @@ public interface StoreJpaRepository extends JpaRepository<StoreEntity, Long> {
     Optional<StoreEntity> findByIdAndBossId(Long id, Long bossId);
 
     Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    Long countByStoreTypeAndCreatedAtBetween(StoreType storeType, LocalDateTime start, LocalDateTime end);
+
+    Long countByBossId(Long bossId);
 }

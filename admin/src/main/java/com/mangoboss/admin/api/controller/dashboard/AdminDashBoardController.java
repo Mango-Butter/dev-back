@@ -1,7 +1,9 @@
 package com.mangoboss.admin.api.controller.dashboard;
 
 import com.mangoboss.admin.api.facade.AdminDashBoardFacade;
+import com.mangoboss.admin.dto.ListWrapperResponse;
 import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
+import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +25,11 @@ public class AdminDashBoardController {
     public UserStatisticsResponse getUserStatisticsByPeriod(@RequestParam("startDate") LocalDate startDate,
                                                             @RequestParam("endDate") LocalDate endDate) {
         return adminDashBoardFacade.getUserStatisticsByPeriod(startDate, endDate);
+    }
+
+    @GetMapping("/statistics/industry/period")
+    public ListWrapperResponse<StoreTypeStatisticsResponse> getStoreTypeStatisticsByPeriod(@RequestParam("startDate") LocalDate startDate,
+                                                                                          @RequestParam("endDate") LocalDate endDate) {
+        return ListWrapperResponse.of(adminDashBoardFacade.getStoreTypeStatisticsByPeriod(startDate, endDate));
     }
 }
