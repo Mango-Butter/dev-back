@@ -40,7 +40,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             authorization-grant-type: authorization_code
-            redirect-uri: ${KAKAO_REDIRECT_URI}
+            redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:5173/auth/login/kakao}
             scope:
               - profile_nickname
               - account_email
@@ -86,8 +86,8 @@ external:
     access-token: ${NH_ACCESS_TOKEN}
     iscd: ${NH_ISCD}
     fintech-apsno: ${NH_FINTECH_APSNO}
-    api-svc-cd: ${NH_API_SVC_CD}
-    api-svc-cd-received : ${NH_API_SVC_CD_RECEIVED}
+    api-svc-cd: ${NH_API_SVC_CD:DrawingTransferA}
+    api-svc-cd-received : ${NH_API_SVC_CD_RECEIVED:ReceivedTransferA}
     fin-acno: ${NH_FIN_ACNO}
     mangoboss-account: ${NH_MANGOBOSS_ACCOUNT}
     mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE}

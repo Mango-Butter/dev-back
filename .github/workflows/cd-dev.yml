@@ -1,6 +1,9 @@
 name: CD Pipeline
 
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
     inputs:
       module:
@@ -14,8 +17,35 @@ on:
           - batch
 
 jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app_changed: ${{ steps.filter.outputs.app }}
+      admin_changed: ${{ steps.filter.outputs.admin }}
+      batch_changed: ${{ steps.filter.outputs.batch }}
+      storage_changed: ${{ steps.filter.outputs.storage }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            app:
+              - 'app/**'
+            admin:
+              - 'admin/**'
+            batch:
+              - 'batch/**'
+            storage:
+              - 'storage/**'
+
   deploy-app:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app' }}
+    needs: detect_changes
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'app' || 
+      needs.detect_changes.outputs.app_changed == 'true' || 
+      needs.detect_changes.outputs.storage_changed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -118,7 +148,11 @@ jobs:
             docker compose up -d
 
   deploy-batch:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'batch' }}
+    needs: detect_changes
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'batch' || 
+      needs.detect_changes.outputs.batch_changed == 'true' || 
+      needs.detect_changes.outputs.storage_changed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -212,7 +246,11 @@ jobs:
             docker compose up -d
 
   deploy-admin:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'admin' }}
+    needs: detect_changes
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.module == 'admin' || 
+      needs.detect_changes.outputs.admin_changed == 'true' || 
+      needs.detect_changes.outputs.storage_changed == 'true'
     runs-on: ubuntu-latest
 
     steps:

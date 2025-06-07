@@ -66,5 +66,5 @@ firebase:
   key-path: firebase/firebase-admin-sdk.json
 
 notification:
-  max-retry: ${NOTIFICATION_MAX_RETRY:3}
+  max-retry: ${MAX_RETRY:3}
   notification-batch-size: ${NOTIFICATION_BATCH_SIZE:400}
