@@ -4,6 +4,7 @@ import com.mangoboss.storage.user.Role;
 import com.mangoboss.storage.user.UserEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -16,4 +17,6 @@ public interface UserRepository {
     Long countByRoleAndCreatedAtBetween(Role role, LocalDateTime start, LocalDateTime end);
 
     Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    List<UserEntity> findByRole(Role role);
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -43,5 +44,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Long countByCreatedAtBetween(final LocalDateTime start, final LocalDateTime end) {
         return userJpaRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public List<UserEntity> findByRole(final Role role) {
+        return userJpaRepository.findAllByRole(role);
     }
 }
