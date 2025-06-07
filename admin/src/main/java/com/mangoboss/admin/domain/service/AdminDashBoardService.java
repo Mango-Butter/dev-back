@@ -4,6 +4,7 @@ import com.mangoboss.admin.domain.repository.StaffRepository;
 import com.mangoboss.admin.domain.repository.StoreRepository;
 import com.mangoboss.admin.domain.repository.UserRepository;
 import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
+import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
 import com.mangoboss.storage.store.StoreType;
 import com.mangoboss.storage.user.Role;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +36,17 @@ public class AdminDashBoardService {
         final Long storeTypeCount = (long) StoreType.values().length;
 
         return UserStatisticsResponse.of(bossCount, storeCount, totalUserCount, staffCount, storeTypeCount);
+    }
+
+    public List<StoreTypeStatisticsResponse> getStoreTypeStatisticsByPeriod(final LocalDate startDate, final LocalDate endDate) {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.plusDays(1).atStartOfDay();
+
+        List<StoreTypeStatisticsResponse> storeTypeStatisticsList = new ArrayList<>();
+        for (StoreType type : StoreType.values()) {
+            Long storeCount = storeRepository.countByStoreTypeAndCreatedAtBetween(type, start, end);
+            storeTypeStatisticsList.add(StoreTypeStatisticsResponse.of(type, storeCount));
+        }
+        return storeTypeStatisticsList;
     }
 }
