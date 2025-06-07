@@ -1,0 +1,37 @@
+package com.mangoboss.admin.domain.service;
+
+import com.mangoboss.admin.domain.repository.StaffRepository;
+import com.mangoboss.admin.domain.repository.StoreRepository;
+import com.mangoboss.admin.domain.repository.UserRepository;
+import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
+import com.mangoboss.storage.store.StoreType;
+import com.mangoboss.storage.user.Role;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class AdminDashBoardService {
+
+    private final StoreRepository storeRepository;
+    private final StaffRepository staffRepository;
+    private final UserRepository userRepository;
+
+    public UserStatisticsResponse getUserStatisticsByPeriod(final LocalDate startDate, final LocalDate endDate) {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.plusDays(1).atStartOfDay();
+
+        final Long bossCount = userRepository.countByRoleAndCreatedAtBetween(Role.BOSS, start, end);
+        final Long storeCount = storeRepository.countByCreatedAtBetween(start, end);
+        final Long totalUserCount = userRepository.countByCreatedAtBetween(start, end);
+        final Long staffCount = staffRepository.countByCreatedAtBetween(start, end);
+        final Long storeTypeCount = (long) StoreType.values().length;
+
+        return UserStatisticsResponse.of(bossCount, storeCount, totalUserCount, staffCount, storeTypeCount);
+    }
+}
