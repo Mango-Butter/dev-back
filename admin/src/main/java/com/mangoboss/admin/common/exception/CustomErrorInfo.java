@@ -28,6 +28,7 @@ public enum CustomErrorInfo {
     // 404 Not Found
     USER_NOT_FOUND(404, "사용자를 찾을 수 없습니다.", 404001),
     KAKAO_USER_INFO_NOT_FOUND(404, "카카오 사용자 정보가 없습니다.", 404002),
+    FAQ_NOT_FOUND(404, "FAQ를 찾을 수 없습니다.", 404003),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
