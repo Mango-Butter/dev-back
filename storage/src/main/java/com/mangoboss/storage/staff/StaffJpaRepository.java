@@ -2,6 +2,7 @@ package com.mangoboss.storage.staff;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,6 @@ public interface StaffJpaRepository extends JpaRepository<StaffEntity, Long> {
     Optional<StaffEntity> findByUserIdAndStoreId(Long userId, Long storeId);
 
     List<StaffEntity> findAllByUserId(Long userId);
+
+    Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }
