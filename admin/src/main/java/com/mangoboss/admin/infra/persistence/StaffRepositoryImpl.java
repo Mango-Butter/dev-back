@@ -17,4 +17,9 @@ public class StaffRepositoryImpl implements StaffRepository {
     public Long countByCreatedAtBetween(final LocalDateTime start, final LocalDateTime end) {
         return staffJpaRepository.countByCreatedAtBetween(start, end);
     }
+
+    @Override
+    public Long countByUserId(final Long userId) {
+        return staffJpaRepository.countByBossId(userId);
+    }
 }

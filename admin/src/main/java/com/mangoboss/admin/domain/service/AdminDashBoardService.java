@@ -4,6 +4,7 @@ import com.mangoboss.admin.domain.repository.StaffRepository;
 import com.mangoboss.admin.domain.repository.StoreRepository;
 import com.mangoboss.admin.domain.repository.UserRepository;
 import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
+import com.mangoboss.admin.dto.dashboard.BossStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
 import com.mangoboss.storage.store.StoreType;
 import com.mangoboss.storage.user.Role;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +50,15 @@ public class AdminDashBoardService {
             storeTypeStatisticsList.add(StoreTypeStatisticsResponse.of(type, storeCount));
         }
         return storeTypeStatisticsList;
+    }
+
+    public List<BossStatisticsResponse> getBossStatistics() {
+        return userRepository.findByRole(Role.BOSS).stream()
+                .map(boss -> {
+                    final Long userId = boss.getId();
+                    final Long storeCount = storeRepository.countByBossId(userId);
+                    final Long staffCount = staffRepository.countByUserId(userId);
+                    return BossStatisticsResponse.of(boss.getName(), storeCount, staffCount);
+                }).collect(Collectors.toList());
     }
 }
