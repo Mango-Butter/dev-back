@@ -97,6 +97,7 @@ public enum CustomErrorInfo {
     SUBSCRIPTION_NOT_FOUND(404, "구독 정보를 찾을 수 없습니다.", 404022),
     PAYROLL_SETTING_NOT_FOUND(404, "해당 매장의 급여 설정을 찾을 수 없습니다.", 404023),
     BILLING_CARD_NOT_REGISTERED(404, "결제수단이 등록되어 있지 않습니다.", 404024),
+    FAQ_NOT_FOUND(404, "FAQ를 찾을 수 없습니다.", 404025),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),
