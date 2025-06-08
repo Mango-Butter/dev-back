@@ -2,10 +2,7 @@ package com.mangoboss.app.api.controller.auth;
 
 import com.mangoboss.app.dto.auth.response.JwtResponse;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mangoboss.app.api.facade.auth.AuthFacade;
 import com.mangoboss.app.dto.auth.requeset.LoginRequest;
@@ -29,4 +26,8 @@ public class AuthController {
         return authFacade.socialLogin(loginRequest);
     }
 
+    @PostMapping("/logout")
+    public void logout(@RequestHeader("X-Refresh-Token") String refreshToken) {
+        authFacade.logout(refreshToken);
+    }
 }
