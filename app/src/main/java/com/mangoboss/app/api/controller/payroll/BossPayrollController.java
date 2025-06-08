@@ -5,6 +5,7 @@ import com.mangoboss.app.api.facade.payroll.BossPayrollFacade;
 
 import com.mangoboss.app.common.security.CustomUserDetails;
 import com.mangoboss.app.dto.ListWrapperResponse;
+import com.mangoboss.app.dto.payroll.response.TransferSummaryResponse;
 import com.mangoboss.app.dto.payroll.request.AccountRegisterRequest;
 import com.mangoboss.app.dto.payroll.request.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
@@ -106,5 +107,12 @@ public class BossPayrollController {
             @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
         final Long userId = userDetails.getUserId();
         return bossPayrollFacade.getEstimatedPayrollForStaff(storeId, staffId, userId, yearMonth);
+    }
+
+    @GetMapping("/summary")
+    public TransferSummaryResponse getPayrollSummary(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                     @PathVariable Long storeId) {
+        final Long userId = userDetails.getUserId();
+        return bossPayrollFacade.getPayrollSummary(storeId, userId);
     }
 }
