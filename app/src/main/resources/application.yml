@@ -25,3 +25,9 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.stat: DEBUG
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: true
+  auth:
+    token: ${SENTRY_AUTH_TOKEN}
