@@ -24,6 +24,14 @@ public class SubscriptionFacade {
 
     public SubscriptionResponse getSubscription(Long bossId) {
         final var subscription = subscriptionService.getSubscription(bossId);
+        if (subscription == null) {
+            return SubscriptionResponse.builder()
+                    .planType(null)
+                    .startedAt(null)
+                    .expiredAt(null)
+                    .nextPaymentDate(null)
+                    .build();
+        }
         return SubscriptionResponse.fromEntity(subscription);
     }
 
