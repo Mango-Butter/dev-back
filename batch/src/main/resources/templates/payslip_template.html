@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>급여명세서</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm 30mm 10mm 30mm;
+        }
+
+        @media print {
+          body {
+            background: white;
+            padding: 0;
+          }
+
+          .payslip-container {
+            box-shadow: none;
+            margin: 0;
+            border-radius: 0;
+            width: 100%;
+            padding: 0 10mm 0 10mm;
+            box-sizing: border-box;
+          }
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11px;
+            background-color: #f9f9f9;
+            padding: 40px;
+        }
+
+        .payslip-container {
+            background: #fff;
+            max-width: 700px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+            /*border:; !* ✅ 외곽선 없음 *!*/
+        }
+
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 0.5px solid #e5e5e5; /* 아래쪽 선 */
+        }
+
+        th {
+            background-color: #fafafa;
+            font-weight: 600;
+            text-align: left;
+            color: #444;
+        }
+
+        td:last-child, th:last-child {
+            text-align: right;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .section-title {
+            margin: 30px 0 8px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section-title + table {
+            margin-top: 8px; /* 지급 내역 표 위쪽 간격 */
+        }
+    </style>
+</head>
+<body>
+<div class="payslip-container">
+    <h2>급여명세서</h2>
+
+    <div class="section-title">사업자 및 근로자 정보</div>
+    <table>
+        <tr>
+            <th>사업자명</th>
+            <td>${storeName}</td>
+        </tr>
+        <tr>
+            <th>사업자등록번호</th>
+            <td>${businessNumber}</td>
+        </tr>
+        <tr>
+            <th>근로자 이름</th>
+            <td>${staffName}</td>
+        </tr>
+        <tr>
+            <th>지급일</th>
+            <td>${transferDate}</td>
+        </tr>
+        <tr>
+            <th>근무기간</th>
+            <td>${workPeriod}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">지급 내역</div>
+    <table>
+        <tr>
+            <th>항목</th>
+            <th>금액 (원)</th>
+        </tr>
+        <tr>
+            <td>기본급</td>
+            <td>${baseAmount}</td>
+        </tr>
+        <tr>
+            <td>주휴수당</td>
+            <td>${weeklyAllowance}</td>
+        </tr>
+        <tr>
+            <td>교통비</td>
+            <td>${totalCommutingAllowance}</td>
+        </tr>
+        <tr>
+            <td class="highlight">총 지급액</td>
+            <td class="highlight">${totalAmount}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">공제 내역</div>
+    <table>
+        <tr>
+            <th>공제 항목</th>
+            <th>금액 (원)</th>
+        </tr>
+        <tr>
+            <td>${withholdingType}</td>
+            <td>${withholdingTax}</td>
+        </tr>
+        <tr>
+            <td class="highlight">총 공제액</td>
+            <td class="highlight">${withholdingTax}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">지급 정보</div>
+    <table>
+        <tr>
+            <th>실지급액</th>
+            <td class="highlight">${netAmount}</td>
+        </tr>
+        <tr>
+            <th>지급 방법</th>
+            <td>${withdrawalBankName} ${withdrawalAccount}<br>(예금주: ${bossName})</td>
+        </tr>
+        <tr>
+            <th>근로자 계좌</th>
+            <td>${depositBankName} ${depositAccount}<br>(예금주: ${staffName})</td>
+        </tr>
+        <tr>
+            <th>발행일</th>
+            <td>${now}</td>
+        </tr>
+        <tr>
+            <th>발행 주체</th>
+            <td>망고보스 (대표 망사장)</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

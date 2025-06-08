@@ -1,3 +1,23 @@
 spring:
   application:
     name: admin
+
+  profiles:
+    default: ${SPRING_PROFILES_ACTIVE:dev}
+    group:
+      test: h2-test
+      dev: mysql-dev
+      prod: mysql-prod
+
+  config:
+    import: "application-dev.yml,application-test.yml"
+
+server:
+  port: 8082
+
+test_env: ${TEST_ENV_VAR:test_is_fail}
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.stat: DEBUG

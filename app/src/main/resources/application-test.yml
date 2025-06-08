@@ -1,0 +1,92 @@
+spring:
+  config:
+    activate:
+      on-profile: h2-test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  sql:
+    init:
+      mode: never
+  jwt:
+    secret:
+      access-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdasdasdsadsadsa}
+      refresh-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdadsadassaasds}
+    token:
+      access-expiration-time: ${JWT_ACCESS_EXPIRATION:3600000}
+      refresh-expiration-time: ${JWT_REFRESH_EXPIRATION:604800000}
+      issuer: ${JWT_ISSUER:jwtissuerkeydefaultfortest}
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID:kakaoclientiddefaultfortest}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:8080/oauth2/callback/kakao}
+            scope:
+              - profile_nickname
+              - account_email
+              - phone_number
+            client-name: Kakao
+            provider: kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+    aes:
+      secret-key: ${AES_SECRET_KEY:defaultaeskeyfortest1234567890123456}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:dummy-access-key}
+      secret-key: ${AWS_SECRET_KEY:dummy-secret-key}
+    region:
+      static: ap-northeast-2
+    s3:
+      private-bucket: ${AWS_S3_PRIVATE_BUCKET:dummy}
+      public-bucket: ${AWS_S3_PUBLIC_BUCKET:dummy}
+      public-base-url: ${AWS_S3_PUBLIC_BASE_URL:dummy}
+      kms-key-id: ${AWS_KMS_KEY_ID:dummy}
+
+pdf:
+  font-path: fonts/NotoSansKR-Regular.ttf
+
+contract:
+  template-path: templates/contract-template.html
+
+pre-signed-url:
+  view-expiration-minutes: ${VIEW_EXPIRATION_MINUTES:10}
+  download-expiration-minutes: ${DOWNLOAD_EXPIRATION_MINUTES:10}
+  upload-expiration-minutes: ${UPLOAD_EXPIRATION_MINUTES:10}
+
+external:
+  nh:
+    base-url: ${NH_BASE_URL:https://api.nhncloud.com}
+    access-token: ${NH_ACCESS_TOKEN:dummy-access-token}
+    iscd: ${NH_ISCD:dummy-iscd}
+    fintech-apsno: ${NH_FINTECH_APSNO:dummy-fintech-apsno}
+    api-svc-cd: ${NH_API_SVC_CD:dummy-api-svc-cd}
+    api-svc-cd-received: ${NH_API_SVC_CD_RECEIVED:dummy-api-svc-cd-received}
+    fin-acno: ${NH_FIN_ACNO:dummy-fin-acno}
+    mangoboss-account: ${NH_MANGOBOSS_ACCOUNT:dummy-mangoboss-account}
+    mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE:dummy-mangoboss-bankcode}
+
+frontend-url: ${FRONTEND_URL:https://your-frontend-url.com}

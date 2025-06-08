@@ -10,9 +10,18 @@ spring:
       prod: mysql-prod
 
   config:
-    import: "application-db.yml" #"application-db.yaml,application-redis.yml"? ?? ???? ??
+    import: "application-dev.yml,application-test.yml"
 
 server:
   port: 8080
 
 test_env: ${TEST_ENV_VAR:test_is_fail}
+
+external:
+  business-api:
+    key: ${BUSINESS_API_KEY:bussinessapikeytest}
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.stat: DEBUG

@@ -1,0 +1,52 @@
+spring:
+  config:
+    activate:
+      on-profile: h2-test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  sql:
+    init:
+      mode: never
+  jwt:
+    secret:
+      access-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdasdasdsadsadsa}
+      refresh-secret-key: ${JWT_SECRET:jwtsecretkeydefaultfortestasdadsadassaasds}
+    token:
+      access-expiration-time: ${JWT_ACCESS_EXPIRATION:3600000}
+      refresh-expiration-time: ${JWT_REFRESH_EXPIRATION:604800000}
+      issuer: ${JWT_ISSUER:jwtissuerkeydefaultfortest}
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID:kakaoclientiddefaultfortest}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:8080/oauth2/callback/kakao}
+            scope:
+              - profile_nickname
+              - account_email
+              - phone_number
+            client-name: Kakao
+            provider: kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
