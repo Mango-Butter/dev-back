@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface SubscriptionRepository {
     void save(SubscriptionEntity subscription);
-    List<SubscriptionEntity> findByNextPaymentDateAndIsActive(LocalDate nextPaymentDate, boolean isActive, Pageable pageable);
+    List<SubscriptionEntity> findByNextPaymentDate(LocalDate nextPaymentDate, Pageable pageable);
 }

@@ -2,7 +2,8 @@ package com.mangoboss.app.api.controller.billing;
 
 import com.mangoboss.app.api.facade.billing.BillingFacade;
 import com.mangoboss.app.common.security.CustomUserDetails;
-import com.mangoboss.app.dto.billing.BillingRegisterRequest;
+import com.mangoboss.app.dto.billing.request.BillingRegisterRequest;
+import com.mangoboss.app.dto.billing.response.BillingCardInfoResponse;
 import com.mangoboss.app.dto.subscription.response.BillingCustomerKeyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,5 +31,11 @@ public class BillingController {
     public BillingCustomerKeyResponse getCustomerKey(@AuthenticationPrincipal CustomUserDetails userDetails) {
         final Long userId = userDetails.getUserId();
         return billingFacade.getOrCreateCustomerKey(userId);
+    }
+
+    @GetMapping
+    public BillingCardInfoResponse getBillingCardInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        final Long userId = userDetails.getUserId();
+        return billingFacade.getBillingCardInfo(userId);
     }
 }

@@ -27,7 +27,7 @@ public class AutoBillingService {
         LocalDate today = LocalDate.now(clock);
 
         List<SubscriptionEntity> subscriptions =
-                subscriptionRepository.findByNextPaymentDateAndIsActive(today, true, PageRequest.of(0, BATCH_SIZE));
+                subscriptionRepository.findByNextPaymentDate(today, PageRequest.of(0, BATCH_SIZE));
 
         subscriptions.forEach(subscription -> {
             try {

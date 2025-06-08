@@ -26,16 +26,12 @@ public class BillingEntity extends BaseTimeEntity {
     @Column(columnDefinition = "json")
     private String cardData;
 
-    @Column(nullable = false)
-    private boolean isActive;
-
     @Builder
-    private BillingEntity(Long bossId, String customerKey, String billingKey, String cardData, boolean isActive) {
+    private BillingEntity(Long bossId, String customerKey, String billingKey, String cardData) {
         this.bossId = bossId;
         this.customerKey = customerKey;
         this.billingKey = billingKey;
         this.cardData = cardData;
-        this.isActive = isActive;
     }
 
     public static BillingEntity createPending(Long bossId, String customerKey) {
@@ -44,13 +40,11 @@ public class BillingEntity extends BaseTimeEntity {
                 .customerKey(customerKey)
                 .billingKey(null)
                 .cardData(null)
-                .isActive(false)
                 .build();
     }
 
     public void registerBillingKey(String billingKey, String cardData) {
         this.billingKey = billingKey;
         this.cardData = cardData;
-        this.isActive = true;
     }
 }

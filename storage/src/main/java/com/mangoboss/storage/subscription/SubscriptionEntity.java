@@ -33,23 +33,14 @@ public class SubscriptionEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate nextPaymentDate;
 
-    @Column(nullable = false)
-    private boolean isActive;
-
-    @Column(nullable = false)
-    private boolean autoRenewal;
-
     @Builder
     private SubscriptionEntity(Long bossId, PlanType planType, LocalDate startedAt,
-                               LocalDate expiredAt, LocalDate nextPaymentDate,
-                               boolean isActive, boolean autoRenewal) {
+                               LocalDate expiredAt, LocalDate nextPaymentDate) {
         this.bossId = bossId;
         this.planType = planType;
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.nextPaymentDate = nextPaymentDate;
-        this.isActive = isActive;
-        this.autoRenewal = autoRenewal;
     }
 
     public static SubscriptionEntity create(Long bossId, PlanType planType) {
@@ -60,8 +51,6 @@ public class SubscriptionEntity extends BaseTimeEntity {
                 .startedAt(now)
                 .expiredAt(now)
                 .nextPaymentDate(now)
-                .isActive(true)
-                .autoRenewal(true)
                 .build();
     }
 

@@ -11,9 +11,7 @@ public record SubscriptionResponse(
         PlanType planType,
         LocalDate startedAt,
         LocalDate expiredAt,
-        LocalDate nextPaymentDate,
-        boolean isActive,
-        boolean autoRenewal
+        LocalDate nextPaymentDate
 ) {
     public static SubscriptionResponse fromEntity(final SubscriptionEntity subscription) {
         return SubscriptionResponse.builder()
@@ -21,8 +19,6 @@ public record SubscriptionResponse(
                 .startedAt(subscription.getStartedAt())
                 .expiredAt(subscription.getExpiredAt())
                 .nextPaymentDate(subscription.getNextPaymentDate())
-                .isActive(subscription.isActive())
-                .autoRenewal(subscription.isAutoRenewal())
                 .build();
     }
 }
