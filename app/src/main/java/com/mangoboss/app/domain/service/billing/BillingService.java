@@ -26,15 +26,15 @@ public class BillingService {
     private final BillingRepository billingRepository;
 
     @Transactional
-    public BillingCustomerKeyResponse getOrCreateCustomerKey(Long userId) {
-        Optional<BillingEntity> existing = billingRepository.findByBossId(userId);
+    public BillingCustomerKeyResponse getOrCreateCustomerKey(Long bossId) {
+        Optional<BillingEntity> existing = billingRepository.findByBossId(bossId);
         if (existing.isPresent()) {
             return BillingCustomerKeyResponse.of(existing.get().getCustomerKey());
         }
 
-        String customerKey = generateCustomerKey(userId);
+        String customerKey = generateCustomerKey(bossId);
 
-        BillingEntity billing = BillingEntity.createPending(userId, customerKey);
+        BillingEntity billing = BillingEntity.createPending(bossId, customerKey);
         billingRepository.save(billing);
 
         return BillingCustomerKeyResponse.of(customerKey);
@@ -59,8 +59,14 @@ public class BillingService {
     public void deleteBillingKey(Long bossId) {
         BillingEntity billing = billingRepository.findByBossId(bossId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.BILLING_NOT_FOUND));
+        billingRepository.delete(billing);
+    }
 
-        billing.deleteBillingKey();
+    @Transactional(readOnly = true)
+    public void validateBillingExists(Long bossId) {
+        if (!billingRepository.existsByBossId(bossId)) {
+            throw new CustomException(CustomErrorInfo.BILLING_NOT_FOUND);
+        }
     }
 
     private String generateCustomerKey(Long bossId) {

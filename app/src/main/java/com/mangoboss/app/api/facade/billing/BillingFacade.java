@@ -16,7 +16,7 @@ public class BillingFacade {
         billingService.issueBillingKey(bossId, request.customerKey(), request.authKey());
     }
 
-    public BillingCustomerKeyResponse getOrCreateCustomerKey(Long userId) {
-        return billingService.getOrCreateCustomerKey(userId);
+    public BillingCustomerKeyResponse getOrCreateCustomerKey(Long bossId) {
+        return billingService.getOrCreateCustomerKey(bossId);
     }
 }

@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface BillingJpaRepository extends JpaRepository<BillingEntity, Long> {
     Optional<BillingEntity> findByBossId(Long bossId);
+    boolean existsByBossId(Long bossId);
 }

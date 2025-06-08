@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface SubscriptionJpaRepository extends JpaRepository<SubscriptionEntity, Long> {
     List<SubscriptionEntity> findByNextPaymentDateAndIsActive(LocalDate nextPaymentDate, boolean isActive, Pageable pageable);
+
     Optional<SubscriptionEntity> findByBossId(Long bossId);
+
     boolean existsByBossId(Long bossId);
 }
