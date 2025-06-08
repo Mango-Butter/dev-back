@@ -74,11 +74,15 @@ public class BillingService {
     }
 
     public BillingCardInfoResponse getBillingCardInfo(Long bossId) {
-        BillingEntity billing = billingRepository.findByBossId(bossId)
-                .orElseThrow(() -> new CustomException(CustomErrorInfo.BILLING_NOT_FOUND));
+        BillingEntity billing = billingRepository.findByBossId(bossId).orElse(null);
 
-        if (billing.getBillingKey() == null || billing.getCardData() == null) {
-            throw new CustomException(CustomErrorInfo.BILLING_CARD_NOT_REGISTERED);
+        if (billing == null || billing.getBillingKey() == null || billing.getCardData() == null) {
+            return BillingCardInfoResponse.builder()
+                    .cardCompany(null)
+                    .cardNumber(null)
+                    .cardType(null)
+                    .ownerType(null)
+                    .build();
         }
 
         Map<String, Object> cardMap = JsonConverter.fromJson(
