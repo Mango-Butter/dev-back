@@ -19,6 +19,7 @@ public class AuthFacade {
 	private final AuthService authService;
 
 	public JwtResponse reissueAccessToken(final RefreshTokenRequest refreshTokenRequest) {
+		authService.validateNotBlacklisted(refreshTokenRequest.refreshToken());
 		final String refreshToken = refreshTokenRequest.refreshToken();
 		final Long userId = authService.validateAndExtractIdFromRefreshToken(refreshToken);
 		final UserEntity user = userService.getUserById(userId);
@@ -29,5 +30,9 @@ public class AuthFacade {
 		final KakaoUserInfo kakaoUserInfo = authService.socialLogin(loginRequest);
 		final UserEntity user = userService.getOrCreateUser(kakaoUserInfo);
 		return authService.generateToken(user);
+	}
+
+	public void logout(final String refreshToken) {
+		authService.logout(refreshToken);
 	}
 }

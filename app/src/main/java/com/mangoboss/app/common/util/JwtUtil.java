@@ -106,4 +106,22 @@ public class JwtUtil {
             return e.getClaims();
         }
     }
+
+    public long getRefreshTokenRemainingExpiration(final String refreshToken) {
+        Claims claims = parseClaims(refreshToken, false);
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
+    }
+
+    private Claims parseClaims(final String token, final boolean isAccessToken) {
+        try {
+            SecretKey secret = isAccessToken ? accessSecret : refreshSecret;
+            return Jwts.parserBuilder()
+                    .setSigningKey(secret)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();  // 만료된 토큰일 경우에도 claims 추출 가능
+        }
+    }
 }
