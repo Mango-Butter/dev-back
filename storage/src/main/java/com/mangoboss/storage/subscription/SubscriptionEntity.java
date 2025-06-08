@@ -69,14 +69,4 @@ public class SubscriptionEntity extends BaseTimeEntity {
         this.nextPaymentDate = this.nextPaymentDate.plusMonths(1);
         this.expiredAt = this.expiredAt.plusMonths(1);
     }
-
-    public void reactivate(LocalDate newExpiredAt, LocalDate newNextPaymentDate) {
-        this.isActive = true;
-        this.expiredAt = newExpiredAt;
-        this.nextPaymentDate = newNextPaymentDate;
-    }
-
-    public void updatePlan(PlanType planType) {
-        this.planType = planType;
-    }
 }

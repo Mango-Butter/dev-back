@@ -23,4 +23,14 @@ public class BillingRepositoryImpl implements BillingRepository {
     public Optional<BillingEntity> findByBossId(Long bossId) {
         return billingJpaRepository.findByBossId(bossId);
     }
+
+    @Override
+    public boolean existsByBossId(Long bossId) {
+        return billingJpaRepository.existsByBossId(bossId);
+    }
+
+    @Override
+    public void delete(BillingEntity billingEntity) {
+        billingJpaRepository.delete(billingEntity);
+    }
 }

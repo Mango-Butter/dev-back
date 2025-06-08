@@ -53,10 +53,4 @@ public class BillingEntity extends BaseTimeEntity {
         this.cardData = cardData;
         this.isActive = true;
     }
-
-    public void deleteBillingKey() {
-        this.billingKey = null;
-        this.cardData = null;
-        this.isActive = false;
-    }
 }
