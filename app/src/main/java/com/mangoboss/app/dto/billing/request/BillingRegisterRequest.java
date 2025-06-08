@@ -1,4 +1,4 @@
-package com.mangoboss.app.dto.billing;
+package com.mangoboss.app.dto.billing.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

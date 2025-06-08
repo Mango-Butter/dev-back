@@ -64,15 +64,14 @@ public class AdminDashBoardService {
     }
 
     public SubscriptionStatisticsResponse getSubscriptionStatistics() {
+        Long totalCount = subscriptionRepository.countTotalSubscriptions();
         Long activeCount = subscriptionRepository.countActiveSubscriptions();
+        Long inactiveCount = totalCount - activeCount;
 
         List<PlanTypeCountProjection> rawPlanCounts = subscriptionRepository.countActiveSubscriptionsByPlanType();
-        List<SubscriptionStatisticsResponse.PlanTypeCount> planTypeCounts = rawPlanCounts.stream()
-                .map(row -> new SubscriptionStatisticsResponse.PlanTypeCount(
-                        row.getPlanType(),
-                        row.getCount()
-                )).toList();
+        List<SubscriptionStatisticsResponse.PlanTypeCount> planTypeCounts =
+                SubscriptionStatisticsResponse.convert(rawPlanCounts);
 
-        return new SubscriptionStatisticsResponse(activeCount, planTypeCounts);
+        return SubscriptionStatisticsResponse.of(totalCount, activeCount, inactiveCount, planTypeCounts);
     }
 }

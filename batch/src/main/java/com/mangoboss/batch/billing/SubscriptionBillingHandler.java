@@ -38,6 +38,11 @@ public class SubscriptionBillingHandler {
     public void billingWithRetry(SubscriptionEntity subscription) {
 
         BillingEntity billing = billingRepository.findByBossId(subscription.getBossId());
+        if (billing == null || billing.getBillingKey() == null || billing.getCustomerKey() == null) {
+            log.warn("[Billing Skip] bossId={}, 이유: Billing 정보 없음", subscription.getBossId());
+            return;
+        }
+
         UserEntity boss = userRepository.findById(subscription.getBossId());
         String orderId = UUID.randomUUID().toString();
 

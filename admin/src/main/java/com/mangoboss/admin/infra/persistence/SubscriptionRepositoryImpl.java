@@ -6,6 +6,7 @@ import com.mangoboss.storage.subscription.SubscriptionJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -14,12 +15,19 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     private final SubscriptionJpaRepository subscriptionJpaRepository;
 
     @Override
+    public Long countTotalSubscriptions() {
+        return subscriptionJpaRepository.countTotalSubscriptions();
+    }
+
+
+    @Override
     public Long countActiveSubscriptions() {
-        return subscriptionJpaRepository.countByIsActiveTrue();
+        return subscriptionJpaRepository.countActiveSubscriptions(LocalDate.now());
     }
 
     @Override
     public List<PlanTypeCountProjection> countActiveSubscriptionsByPlanType() {
-        return subscriptionJpaRepository.countActiveSubscriptionsByPlanType();
+        return subscriptionJpaRepository.countActiveSubscriptionsByPlanType(LocalDate.now());
     }
+
 }

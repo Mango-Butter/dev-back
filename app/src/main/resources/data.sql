@@ -17,7 +17,10 @@ VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111'
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (6, 'test6@ajou.ac.kr', '정알바', null, '010-7712-2367', '66666666', '1997-09-01',
         'http://k.kakaocdn.net/dn/bD4Rih/btsNXAxY4w1/XuxLt8jAsnIA5ZaHVjkE0k/img_110x110.jpg',
-        'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+        'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (999, 'test999@ajou.ac.kr', '이관수', null, '010-1231-2231', '999', '1990-06-09',
+        'http://k.kakaocdn.net/dn/bD4Rih/btsNXAxY4w1/XuxLt8jAsnIA5ZaHVjkE0k/img_110x110.jpg',
+        'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO store (store_id, boss_id, name, address, business_number, store_type, invite_code,
                    attendance_method, gps_range_meters, gps_latitude, gps_longitude, qr_code, overtime_limit,
