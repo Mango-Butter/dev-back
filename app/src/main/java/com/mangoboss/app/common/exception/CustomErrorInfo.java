@@ -93,6 +93,9 @@ public enum CustomErrorInfo {
     PAYSLIP_PDF_NOT_FOUND(404, "급여명세서가 생성되지 못했습니다.", 404018),
     SUBSTITUTE_REQUEST_NOT_FOUND(404, "해당 대타 요청을 찾을 수 없습니다.", 404019),
     ATTENDANCE_EDIT_NOT_FOUND(404, "해당 근태 기록 변경 요청을 찾을 수 없습니다.", 404020),
+    BILLING_NOT_FOUND(404, "결제 수단 정보가 존재하지 않습니다.", 404021),
+    SUBSCRIPTION_NOT_FOUND(404, "구독 정보를 찾을 수 없습니다.", 404022),
+    PAYROLL_SETTING_NOT_FOUND(404, "해당 매장의 급여 설정을 찾을 수 없습니다.", 404023),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(405, "HTTP 메서드가 잘못되었습니다.", 405001),

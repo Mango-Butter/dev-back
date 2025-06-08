@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class PayrollRepositoryImpl implements PayrollRepository {
     }
 
     @Override
-    public List<PayrollEntity> getAllByStoreIdAndMonth(final Long storeId, final LocalDate month){
+    public List<PayrollEntity> findAllByStoreIdAndMonth(final Long storeId, final LocalDate month){
         return payrollJpaRepository.getAllByStoreIdAndMonth(storeId, month);
     }
 

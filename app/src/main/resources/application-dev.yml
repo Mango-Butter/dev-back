@@ -13,8 +13,11 @@ spring:
     password: ${MYSQL_PASSWORD}
   data:
     redis:
-       host: ${REDIS_HOST:localhost}
-       port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      client-type: lettuce
+      lettuce:
+        ssl: ${REDIS_SSL:false}
 
   jpa:
     hibernate:
@@ -91,5 +94,8 @@ external:
     fin-acno: ${NH_FIN_ACNO}
     mangoboss-account: ${NH_MANGOBOSS_ACCOUNT}
     mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE}
+  toss:
+    payment:
+      secret-key: ${TOSS_PAYMENT_SECRET_KEY}
 
 frontend-url: ${FRONTEND_URL}

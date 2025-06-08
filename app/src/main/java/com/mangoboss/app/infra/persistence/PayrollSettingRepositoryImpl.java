@@ -21,6 +21,6 @@ public class PayrollSettingRepositoryImpl implements PayrollSettingRepository {
     @Override
     public PayrollSettingEntity getByStoreId(Long id) {
         return payrollSettingJpaRepository.findById(id)
-                .orElseThrow(() -> new CustomException(CustomErrorInfo.TRANSFER_DATE_EXCEEDED_EXCEPTION));
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.PAYROLL_SETTING_NOT_FOUND));
     }
 }

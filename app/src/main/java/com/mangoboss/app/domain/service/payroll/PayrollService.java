@@ -163,8 +163,8 @@ public class PayrollService {
         payrollRepository.deleteAllByStoreIdAndMonth(storeId, targetMonth);
     }
 
-    public List<PayrollEntity> getPayroll(final Long storeId, final LocalDate month) {
-        return payrollRepository.getAllByStoreIdAndMonth(storeId, month);
+    public List<PayrollEntity> getPayrolls(final Long storeId, final LocalDate month) {
+        return payrollRepository.findAllByStoreIdAndMonth(storeId, month);
     }
 
     public List<PayrollEntity> getTransferredPayrollsByMonth(final Long storeId, final YearMonth yearMonth) {

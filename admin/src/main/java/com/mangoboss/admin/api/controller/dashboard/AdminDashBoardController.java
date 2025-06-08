@@ -2,6 +2,7 @@ package com.mangoboss.admin.api.controller.dashboard;
 
 import com.mangoboss.admin.api.facade.AdminDashBoardFacade;
 import com.mangoboss.admin.dto.ListWrapperResponse;
+import com.mangoboss.admin.dto.dashboard.SubscriptionStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.BossStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
@@ -39,5 +40,10 @@ public class AdminDashBoardController {
     public ListWrapperResponse<BossStatisticsResponse> getBossStatistics() {
         List<BossStatisticsResponse> result = adminDashBoardFacade.getBossStatistics();
         return ListWrapperResponse.of(result);
+    }
+
+    @GetMapping("/statistics/subscription")
+    public SubscriptionStatisticsResponse getSubscriptionStatistics() {
+        return adminDashBoardFacade.getSubscriptionStatistics();
     }
 }
