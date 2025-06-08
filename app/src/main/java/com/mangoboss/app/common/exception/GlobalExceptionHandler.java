@@ -6,7 +6,7 @@ import static com.mangoboss.app.common.exception.CustomErrorInfo.METHOD_NOT_ALLO
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import org.checkerframework.checker.units.qual.C;
+import io.sentry.Sentry;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -148,6 +148,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<CustomErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
         String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+        Sentry.captureException(ex);
         log.error("Exception at {}: {}", path, ex.getMessage(), ex);
         CustomErrorResponse customErrorResponse = new CustomErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

@@ -32,4 +32,9 @@ public class TestController {
     public JwtResponse getAccessToken(@PathVariable Long userId) {
         return authService.generateToken(userService.getUserById(userId));
     }
+
+    @GetMapping("/test/error")
+    public String getError() {
+        throw new RuntimeException("Test error");
+    }
 }
