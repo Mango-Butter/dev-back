@@ -12,10 +12,7 @@ import com.mangoboss.app.dto.payroll.request.ConfirmEstimatedPayrollRequest;
 import com.mangoboss.app.dto.payroll.request.PayrollSettingRequest;
 import com.mangoboss.app.dto.payroll.response.*;
 import com.mangoboss.app.dto.s3.response.DownloadPreSignedUrlResponse;
-import com.mangoboss.storage.payroll.BankCode;
-import com.mangoboss.storage.payroll.PayrollEntity;
-import com.mangoboss.storage.payroll.PayrollSettingEntity;
-import com.mangoboss.storage.payroll.TransferAccountEntity;
+import com.mangoboss.storage.payroll.*;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.store.StoreEntity;
 import lombok.RequiredArgsConstructor;
@@ -96,8 +93,8 @@ public class BossPayrollFacade {
         storeService.isBossOfStore(storeId, bossId);
         LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
 
-        payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
-        List<PayrollEntity> confirmedPayroll = payrollService.getPayroll(storeId, targetMonth);
+//        payrollSettingService.validateAutoTransferAndGetPayrollSetting(storeId);
+        List<PayrollEntity> confirmedPayroll = payrollService.getPayrolls(storeId, targetMonth);
         return confirmedPayroll.stream()
                 .map(payroll -> PayrollWithStaffResponse.ofForPayroll(
                         staffService.getStaffById(payroll.getStaffId()),
@@ -158,6 +155,24 @@ public class BossPayrollFacade {
                 yearMonth.atDay(1)
         );
         return PayrollResponse.ofForNoPayroll(estimatedPayroll);
+    }
+
+    public TransferSummaryResponse getPayrollSummary(final Long storeId, final Long bossId) {
+        storeService.isBossOfStore(storeId, bossId);
+        PayrollSettingEntity payrollSetting = payrollSettingService.getPayrollSettingByStoreId(storeId);
+        LocalDate targetMonth = LocalDate.now(clock).withDayOfMonth(1).minusMonths(1);
+        LocalDate today = LocalDate.now(clock);
+        List<PayrollEntity> payrolls = payrollService.getPayrolls(storeId, targetMonth);
+        if (payrolls.isEmpty()) {
+            return TransferSummaryResponse.of(TransferSummaryStateForResponse.NOT_YET, today.withDayOfMonth(payrollSetting.getTransferDate()));
+        }
+        boolean allPending = payrolls.stream().allMatch(p ->
+                p.getTransferState().equals(TransferState.PENDING)
+        );
+        if (allPending){
+            return TransferSummaryResponse.of(TransferSummaryStateForResponse.PENDING, payrolls.get(0).getTransferDate());
+        }
+        return TransferSummaryResponse.of(TransferSummaryStateForResponse.COMPLETED, payrolls.get(0).getTransferDate());
     }
 }
 
