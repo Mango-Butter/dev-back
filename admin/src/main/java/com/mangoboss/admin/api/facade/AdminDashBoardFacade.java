@@ -1,6 +1,7 @@
 package com.mangoboss.admin.api.facade;
 
 import com.mangoboss.admin.domain.service.AdminDashBoardService;
+import com.mangoboss.admin.dto.dashboard.SubscriptionStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.BossStatisticsResponse;
 import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
@@ -26,5 +27,9 @@ public class AdminDashBoardFacade {
 
     public List<BossStatisticsResponse> getBossStatistics() {
         return adminDashBoardService.getBossStatistics();
+    }
+
+    public SubscriptionStatisticsResponse getSubscriptionStatistics() {
+        return adminDashBoardService.getSubscriptionStatistics();
     }
 }

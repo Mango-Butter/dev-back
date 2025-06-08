@@ -2,11 +2,11 @@ package com.mangoboss.admin.domain.service;
 
 import com.mangoboss.admin.domain.repository.StaffRepository;
 import com.mangoboss.admin.domain.repository.StoreRepository;
+import com.mangoboss.admin.domain.repository.SubscriptionRepository;
 import com.mangoboss.admin.domain.repository.UserRepository;
-import com.mangoboss.admin.dto.dashboard.UserStatisticsResponse;
-import com.mangoboss.admin.dto.dashboard.BossStatisticsResponse;
-import com.mangoboss.admin.dto.dashboard.StoreTypeStatisticsResponse;
+import com.mangoboss.admin.dto.dashboard.*;
 import com.mangoboss.storage.store.StoreType;
+import com.mangoboss.storage.subscription.PlanTypeCountProjection;
 import com.mangoboss.storage.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ public class AdminDashBoardService {
     private final StoreRepository storeRepository;
     private final StaffRepository staffRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     public UserStatisticsResponse getUserStatisticsByPeriod(final LocalDate startDate, final LocalDate endDate) {
         LocalDateTime start = startDate.atStartOfDay();
@@ -60,5 +61,18 @@ public class AdminDashBoardService {
                     final Long staffCount = staffRepository.countByUserId(userId);
                     return BossStatisticsResponse.of(boss.getName(), storeCount, staffCount);
                 }).collect(Collectors.toList());
+    }
+
+    public SubscriptionStatisticsResponse getSubscriptionStatistics() {
+        Long activeCount = subscriptionRepository.countActiveSubscriptions();
+
+        List<PlanTypeCountProjection> rawPlanCounts = subscriptionRepository.countActiveSubscriptionsByPlanType();
+        List<SubscriptionStatisticsResponse.PlanTypeCount> planTypeCounts = rawPlanCounts.stream()
+                .map(row -> new SubscriptionStatisticsResponse.PlanTypeCount(
+                        row.getPlanType(),
+                        row.getCount()
+                )).toList();
+
+        return new SubscriptionStatisticsResponse(activeCount, planTypeCounts);
     }
 }
