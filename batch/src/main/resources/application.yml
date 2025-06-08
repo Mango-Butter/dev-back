@@ -28,16 +28,20 @@ external:
     iscd: ${NH_ISCD}
     fintech-apsno: ${NH_FINTECH_APSNO}
     api-svc-cd: ${NH_API_SVC_CD}
-    api-svc-cd-received : ${NH_API_SVC_CD_RECEIVED}
+    api-svc-cd-received: ${NH_API_SVC_CD_RECEIVED}
     fin-acno: ${NH_FIN_ACNO}
     mangoboss-account: ${NH_MANGOBOSS_ACCOUNT}
     mangoboss-bankcode: ${NH_MANGOBOSS_BANKCODE}
+  toss:
+    payment:
+      secret-key: ${TOSS_PAYMENT_SECRET_KEY}
 
 cron:
   clock-out: ${CRON_CLOCK_OUT}
   payroll: ${CRON_PAYROLL}
   payslip: ${CRON_PAYSLIP}
   notification: ${CRON_NOTIFICATION}
+  billing: ${CRON_BILLING}
 
 transfer:
   max-retry: ${MAX_RETRY}
