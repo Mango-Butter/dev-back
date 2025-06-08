@@ -1,8 +1,11 @@
 package com.mangoboss.app.domain.service.billing;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mangoboss.app.common.exception.CustomErrorInfo;
 import com.mangoboss.app.common.exception.CustomException;
+import com.mangoboss.app.common.util.CardIssuerResolver;
 import com.mangoboss.app.common.util.JsonConverter;
+import com.mangoboss.app.dto.billing.response.BillingCardInfoResponse;
 import com.mangoboss.app.dto.subscription.response.BillingCustomerKeyResponse;
 import com.mangoboss.app.external.tosspayment.TossPaymentClient;
 import com.mangoboss.storage.billing.BillingEntity;
@@ -46,6 +49,7 @@ public class BillingService {
         String billingKey = (String) billingKeyResponse.get("billingKey");
         Map<String, Object> card = (Map<String, Object>) billingKeyResponse.get("card");
         String cardDataJson = JsonConverter.toJson(card);
+        log.info("Toss BillingKey 발급 응답 전체: {}", JsonConverter.toJson(billingKeyResponse));
 
         BillingEntity billing = billingRepository.findByBossId(bossId)
                 .orElseThrow(() -> new CustomException(CustomErrorInfo.BILLING_NOT_FOUND));
@@ -67,6 +71,30 @@ public class BillingService {
         if (!billingRepository.existsByBossId(bossId)) {
             throw new CustomException(CustomErrorInfo.BILLING_NOT_FOUND);
         }
+    }
+
+    public BillingCardInfoResponse getBillingCardInfo(Long bossId) {
+        BillingEntity billing = billingRepository.findByBossId(bossId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.BILLING_NOT_FOUND));
+
+        if (billing.getBillingKey() == null || billing.getCardData() == null) {
+            throw new CustomException(CustomErrorInfo.BILLING_CARD_NOT_REGISTERED);
+        }
+
+        Map<String, Object> cardMap = JsonConverter.fromJson(
+                billing.getCardData(),
+                new TypeReference<Map<String, Object>>() {}
+        );
+
+        String issuerCode = (String) cardMap.get("issuerCode");
+        String issuerName = CardIssuerResolver.resolveIssuerName(issuerCode);
+
+        return BillingCardInfoResponse.builder()
+                .cardCompany(issuerName)
+                .cardNumber((String) cardMap.get("number"))
+                .cardType((String) cardMap.get("cardType"))
+                .ownerType((String) cardMap.get("ownerType"))
+                .build();
     }
 
     private String generateCustomerKey(Long bossId) {

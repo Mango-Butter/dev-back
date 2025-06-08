@@ -1,7 +1,8 @@
 package com.mangoboss.app.api.facade.billing;
 
 import com.mangoboss.app.domain.service.billing.BillingService;
-import com.mangoboss.app.dto.billing.BillingRegisterRequest;
+import com.mangoboss.app.dto.billing.request.BillingRegisterRequest;
+import com.mangoboss.app.dto.billing.response.BillingCardInfoResponse;
 import com.mangoboss.app.dto.subscription.response.BillingCustomerKeyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,9 @@ public class BillingFacade {
 
     public BillingCustomerKeyResponse getOrCreateCustomerKey(Long bossId) {
         return billingService.getOrCreateCustomerKey(bossId);
+    }
+
+    public BillingCardInfoResponse getBillingCardInfo(Long bossId) {
+        return billingService.getBillingCardInfo(bossId);
     }
 }

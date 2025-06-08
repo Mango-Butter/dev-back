@@ -21,7 +21,7 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     }
 
     @Override
-    public List<SubscriptionEntity> findByNextPaymentDateAndIsActive(LocalDate nextPaymentDate, boolean isActive, Pageable pageable) {
-        return subscriptionJpaRepository.findByNextPaymentDateAndIsActive(nextPaymentDate, isActive, pageable);
+    public List<SubscriptionEntity> findByNextPaymentDate(LocalDate nextPaymentDate, Pageable pageable) {
+        return subscriptionJpaRepository.findByNextPaymentDate(nextPaymentDate, pageable);
     }
 }

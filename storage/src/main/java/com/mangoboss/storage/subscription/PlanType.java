@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PlanType {
-    BASIC("망고보스 BASIC 구독", 4900),
-    PREMIUM("망고보스 PREMIUM 구독", 9900);
+    PREMIUM("망고보스 PREMIUM 구독", 19900);
 
     private final String orderName;
     private final Integer amount;
