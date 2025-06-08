@@ -1,5 +1,7 @@
 package com.mangoboss.app.domain.service.subscription;
 
+import com.mangoboss.app.common.exception.CustomErrorInfo;
+import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.SubscriptionOrderRepository;
 import com.mangoboss.app.dto.subscription.response.SubscriptionOrderResponse;
 import com.mangoboss.storage.subscription.PlanType;
@@ -22,21 +24,20 @@ public class SubscriptionService {
 
     @Transactional
     public void createOrReplaceSubscription(Long bossId, PlanType planType) {
-        if (subscriptionRepository.existsByBossId(bossId)) {
-            SubscriptionEntity existing = subscriptionRepository.findByBossId(bossId);
-            subscriptionRepository.delete(existing);
-        }
+        subscriptionRepository.findByBossId(bossId).ifPresent(subscriptionRepository::delete);
+
         SubscriptionEntity subscription = SubscriptionEntity.create(bossId, planType);
         subscriptionRepository.save(subscription);
     }
 
     public SubscriptionEntity getSubscription(Long bossId) {
-        return subscriptionRepository.findByBossId(bossId);
+        return subscriptionRepository.findByBossId(bossId).orElse(null);
     }
 
     @Transactional
     public void deleteSubscription(Long bossId) {
-        SubscriptionEntity subscription = subscriptionRepository.findByBossId(bossId);
+        SubscriptionEntity subscription = subscriptionRepository.findByBossId(bossId)
+                .orElseThrow(() -> new CustomException(CustomErrorInfo.SUBSCRIPTION_NOT_FOUND));
         subscriptionRepository.delete(subscription);
     }
 

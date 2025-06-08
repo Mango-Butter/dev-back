@@ -1,12 +1,12 @@
 package com.mangoboss.app.infra.persistence;
 
-import com.mangoboss.app.common.exception.CustomErrorInfo;
-import com.mangoboss.app.common.exception.CustomException;
 import com.mangoboss.app.domain.repository.SubscriptionRepository;
 import com.mangoboss.storage.subscription.SubscriptionEntity;
 import com.mangoboss.storage.subscription.SubscriptionJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,9 +19,8 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     }
 
     @Override
-    public SubscriptionEntity findByBossId(Long bossId) {
-        return subscriptionJpaRepository.findByBossId(bossId)
-                .orElseThrow(() -> new CustomException(CustomErrorInfo.SUBSCRIPTION_NOT_FOUND));
+    public Optional<SubscriptionEntity> findByBossId(Long bossId) {
+        return subscriptionJpaRepository.findByBossId(bossId);
     }
 
     @Override
