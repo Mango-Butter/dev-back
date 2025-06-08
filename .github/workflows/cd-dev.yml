@@ -242,6 +242,8 @@ jobs:
             echo "AWS_KMS_KEY_ID=${{ secrets.AWS_KMS_KEY_ID }}" >> .env
             echo "NOTIFICATION_MAX_RETRY=${{ secrets.NOTIFICATION_MAX_RETRY }}" >> .env
             echo "TOSS_PAYMENT_SECRET_KEY=${{ secrets.TOSS_PAYMENT_SECRET_KEY }}" >> .env 
+            echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+            echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
