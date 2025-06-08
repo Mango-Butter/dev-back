@@ -140,6 +140,7 @@ jobs:
             echo "AWS_S3_PRIVATE_BUCKET=${{ secrets.AWS_S3_PRIVATE_BUCKET }}" >> .env
             echo "AWS_S3_PUBLIC_BASE_URL=${{ secrets.AWS_S3_PUBLIC_BASE_URL }}" >> .env
             echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env 
+            echo "TOSS_PAYMENT_SECRET_KEY=${{ secrets.TOSS_PAYMENT_SECRET_KEY }}" >> .env 
             
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -231,6 +232,7 @@ jobs:
             echo "CRON_PAYROLL=${{ secrets.CRON_PAYROLL }}" >> .env
             echo "CRON_PAYSLIP=${{ secrets.CRON_PAYSLIP }}" >> .env
             echo "CRON_NOTIFICATION=${{ secrets.CRON_NOTIFICATION }}" >> .env
+            echo "CRON_BILLING=${{ secrets.CRON_BILLING }}" >> .env
             echo "PAYROLL_BATCH_SIZE=${{ secrets.PAYROLL_BATCH_SIZE }}" >> .env
             echo "PAYSLIP_BATCH_SIZE=${{ secrets.PAYSLIP_BATCH_SIZE }}" >> .env
             echo "NOTIFICATION_BATCH_SIZE=${{ secrets.NOTIFICATION_BATCH_SIZE }}" >> .env
@@ -239,6 +241,7 @@ jobs:
             echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
             echo "AWS_KMS_KEY_ID=${{ secrets.AWS_KMS_KEY_ID }}" >> .env
             echo "NOTIFICATION_MAX_RETRY=${{ secrets.NOTIFICATION_MAX_RETRY }}" >> .env
+            echo "TOSS_PAYMENT_SECRET_KEY=${{ secrets.TOSS_PAYMENT_SECRET_KEY }}" >> .env 
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose down -v
