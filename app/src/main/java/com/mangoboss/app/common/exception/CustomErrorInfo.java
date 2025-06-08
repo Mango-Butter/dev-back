@@ -57,6 +57,7 @@ public enum CustomErrorInfo {
     INVALID_TOKEN(401, "유효하지 않은 토큰입니다.", 401003),
     EXPIRED_TOKEN(401, "토큰이 만료되었습니다.", 401004),
     UNSUPPORTED_TOKEN(401, "지원되지 않는 토큰입니다.", 401005),
+    INVALID_REFRESH_TOKEN(401, "블랙리스트에 등록된 리프레시 토큰입니다.", 401006),
 
     // 403 FORBIDDEN
     NOT_STORE_BOSS(403, "이 매장의 사장이 아닙니다.", 403001),
