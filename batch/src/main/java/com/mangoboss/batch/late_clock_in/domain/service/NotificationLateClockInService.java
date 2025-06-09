@@ -26,7 +26,7 @@ public class NotificationLateClockInService {
         String clickUrl = frontendUrl + path;
         List<String> tokens = deviceTokenRepository.findActiveTokensByUserId(userId);
         if (tokens.isEmpty()) {
-            final NotificationEntity notification = NotificationEntity.create(userId, storeId, title, content, null, clickUrl, type, null);
+            final NotificationEntity notification = NotificationEntity.createWithMetaId(userId, storeId, title, content, null, clickUrl, type, null, scheduleId);
             return List.of(notification);
         }
         return tokens.stream()
