@@ -42,6 +42,7 @@ cron:
   payslip: ${CRON_PAYSLIP}
   notification: ${CRON_NOTIFICATION}
   billing: ${CRON_BILLING}
+  clock-in : ${CRON_CLOCK_IN}
 
 transfer:
   max-retry: ${MAX_RETRY}
@@ -72,3 +73,5 @@ firebase:
 notification:
   max-retry: ${MAX_RETRY:3}
   notification-batch-size: ${NOTIFICATION_BATCH_SIZE:400}
+
+frontend-url: ${FRONTEND_URL}

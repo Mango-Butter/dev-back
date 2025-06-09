@@ -1,7 +1,7 @@
 package com.mangoboss.batch.transfer.domain.service;
 
 import com.mangoboss.batch.common.exception.CustomErrorInfo;
-import com.mangoboss.batch.transfer.domain.repository.PayslipRepository;
+import com.mangoboss.batch.common.repository.PayslipRepository;
 import com.mangoboss.storage.payroll.PayrollEntity;
 import com.mangoboss.storage.payroll.PayslipEntity;
 import com.mangoboss.storage.payroll.PayslipState;

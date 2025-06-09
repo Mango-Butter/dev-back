@@ -235,6 +235,8 @@ jobs:
             echo "CRON_PAYSLIP=${{ secrets.CRON_PAYSLIP }}" >> .env
             echo "CRON_NOTIFICATION=${{ secrets.CRON_NOTIFICATION }}" >> .env
             echo "CRON_BILLING=${{ secrets.CRON_BILLING }}" >> .env
+            echo "CRON_CLOCK_IN=${{ secrets.CRON_CLOCK_IN }}" >> .env
+            echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
             echo "PAYROLL_BATCH_SIZE=${{ secrets.PAYROLL_BATCH_SIZE }}" >> .env
             echo "PAYSLIP_BATCH_SIZE=${{ secrets.PAYSLIP_BATCH_SIZE }}" >> .env
             echo "NOTIFICATION_BATCH_SIZE=${{ secrets.NOTIFICATION_BATCH_SIZE }}" >> .env
