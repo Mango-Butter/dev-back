@@ -39,9 +39,12 @@ public class StaffWorkReportFacade {
     }
 
     public List<WorkReportResponse> getWorkReportsByDate(final Long storeId, final Long userId, final LocalDate date) {
-        StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        staffService.getVerifiedStaff(userId, storeId);
         return workReportService.findStaffWorkReports(storeId, date).stream()
-                .map(workReport -> WorkReportResponse.fromEntity(workReport, staff))
+                .map(workReport -> {
+                    StaffEntity staff = staffService.getStaffById(workReport.getStaffId());
+                    return WorkReportResponse.fromEntity(workReport, staff);
+                })
                 .toList();
     }
 
