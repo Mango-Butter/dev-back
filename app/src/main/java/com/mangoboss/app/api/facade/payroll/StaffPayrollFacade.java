@@ -27,7 +27,7 @@ public class StaffPayrollFacade {
 
     public PayrollResponse getPayrollDetail(final Long storeId, final Long userId, final YearMonth yearMonth) {
         StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
-        payrollService.validateMonthIsBeforeCurrent(yearMonth);
+//        payrollService.validateMonthIsBeforeCurrent(yearMonth);
         PayrollEntity payroll = payrollService.getPayrollForStaffAndMonth(staff.getId(), yearMonth);
         if (payroll != null) {
             return PayrollResponse.ofForPayroll(payroll, payslipService.getPayslipByPayrollId(payroll.getId()));
