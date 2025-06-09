@@ -1,6 +1,6 @@
 package com.mangoboss.storage.schedule;
 
-import com.mangoboss.storage.schedule.projection.ScheduleForLateClockInProjection;
+import com.mangoboss.storage.schedule.projection.ScheduleForNotificationProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -26,11 +26,18 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
 
     List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
 
-    @Query("SELECT s FROM ScheduleEntity s " +
-            "LEFT JOIN s.attendance a " +
-            "WHERE s.endTime <= :standardTime " +
-            "AND (a.clockOutStatus is NULL OR a is NULL) ")
-    List<ScheduleEntity> findAllSchedulesWithoutClockOut(LocalDateTime standardTime);
+    @Query(
+            """
+                    SELECT s AS schedule, f.name AS staffName, st.boss.id AS bossId, st.id AS storeId
+                    FROM ScheduleEntity s
+                    JOIN StaffEntity f ON s.staff.id = f.id
+                    JOIN StoreEntity st ON f.store.id = st.id
+                    LEFT JOIN s.attendance a
+                    WHERE s.endTime <= :standardTime
+                    AND (a.clockOutStatus is NULL OR a is NULL)
+                    """
+    )
+    List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockOut(LocalDateTime standardTime);
 
     Boolean existsByRegularGroupId(Long regularGroupId);
 
@@ -58,5 +65,5 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
                         AND n.metaId = s.id
                   )
             """)
-    List<ScheduleForLateClockInProjection> findLateSchedulesWithoutAlarm(LocalDateTime standardTime);
+    List<ScheduleForNotificationProjection> findLateSchedulesWithoutAlarm(LocalDateTime standardTime);
 }
