@@ -17,7 +17,7 @@ VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111'
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (6, 'test6@ajou.ac.kr', '정알바', null, '010-7712-2367', '66666666', '1997-09-01',
         'http://k.kakaocdn.net/dn/bD4Rih/btsNXAxY4w1/XuxLt8jAsnIA5ZaHVjkE0k/img_110x110.jpg',
-        'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO store (store_id, boss_id, name, address, business_number, store_type, invite_code,
                    attendance_method, gps_range_meters, gps_latitude, gps_longitude, qr_code, overtime_limit,
@@ -25,7 +25,7 @@ INSERT INTO store (store_id, boss_id, name, address, business_number, store_type
 VALUES (1, 1, '망고쥬스', '경기도 수원시 영통구 월드컵로 206', '1248210324', 'CAFE', 'ABC123', 'QR', 10, 37.2843727, 127.0443767,
         '123456ABCDEF', 30, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 1, '망고코코넛', '경기 수원시 팔달구 아주로 37', '1248210324', 'CAFE', '3A4C78', 'QR', 15, 37.2822024, 127.0463244,
-        'JUADEFSE2392', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        'JUADEFSE2392', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO transfer_account (transfer_id, bank_code, account_number, account_holder, fin_account,
                               created_at, modified_at)
@@ -34,7 +34,7 @@ VALUES (1, 'NH', '3020000012816', '망고보스', '00820100029430000000000027417
 INSERT INTO payroll_setting (payroll_setting_id, auto_transfer_enabled, deduction_unit, commuting_allowance,
                              transfer_date, transfer_account_id, store_id)
 VALUES (1, false, 10, 3000, 20, 1, 1),
-       (2, false, 10, 0, null, null, 2),
+       (2, false, 10, 0, null, null, 2);
 
 INSERT INTO required_document (store_id, document_type, is_required, created_at, modified_at)
 VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -44,7 +44,7 @@ VALUES (1, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
        (2, 'RESIDENT_REGISTRATION', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 'BANK_ACCOUNT', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 'ID_CARD', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       (2, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 'HEALTH_CERTIFICATE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO staff (staff_id, user_id, store_id, name, profile_image_url, withholding_type,
                    hourly_wage, bank_code, account_number,
