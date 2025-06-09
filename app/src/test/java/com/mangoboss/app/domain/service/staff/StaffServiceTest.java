@@ -33,10 +33,11 @@ class StaffServiceTest {
         UserEntity user = mock(UserEntity.class);
         StoreEntity store = mock(StoreEntity.class);
         StaffEntity staff = mock(StaffEntity.class);
+        UserEntity boss = mock(UserEntity.class);
         when(staffRepository.save(any(StaffEntity.class))).thenReturn(staff);
 
         //when
-        StaffEntity result = staffService.createStaff(user,store);
+        StaffEntity result = staffService.createStaff(user,store,boss);
 
         //then
         assertThat(result).isEqualTo(staff);
@@ -47,11 +48,12 @@ class StaffServiceTest {
         //given
         UserEntity user = mock(UserEntity.class);
         StoreEntity store = mock(StoreEntity.class);
+        UserEntity boss = mock(UserEntity.class);
         when(staffRepository.existsByUserIdAndStoreId(any(Long.class), any(Long.class))).thenReturn(true);
 
         //when
         //then
-        Assertions.assertThatThrownBy(()-> staffService.createStaff(user,store))
+        Assertions.assertThatThrownBy(()-> staffService.createStaff(user,store,boss))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomErrorInfo.ALREADY_JOIN_STAFF.getMessage());
     }

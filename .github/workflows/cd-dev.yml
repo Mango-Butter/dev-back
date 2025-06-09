@@ -143,6 +143,7 @@ jobs:
             echo "TOSS_PAYMENT_SECRET_KEY=${{ secrets.TOSS_PAYMENT_SECRET_KEY }}" >> .env 
             echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
             echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
+            echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env
             
             
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
