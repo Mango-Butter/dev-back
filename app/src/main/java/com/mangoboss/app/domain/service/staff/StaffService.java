@@ -19,13 +19,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StaffService {
+    private static final int PLAN_LIMIT_STAFF_NUM = 5;
     private final StaffRepository staffRepository;
 
     @Transactional
-    public StaffEntity createStaff(final UserEntity user, final StoreEntity store) {
+    public StaffEntity createStaff(final UserEntity user, final StoreEntity store, final UserEntity boss) {
         isAlreadyJoin(user, store);
+        if (boss.getSubscription() == null && getStaffsNum(store.getId()) >= PLAN_LIMIT_STAFF_NUM) {
+            throw new CustomException(CustomErrorInfo.PLAN_LIMIT_EXCEEDED);
+        }
         final StaffEntity staff = StaffEntity.create(user, store);
         return staffRepository.save(staff);
+    }
+
+    private Integer getStaffsNum(final Long storeId) {
+        return getStaffsForStore(storeId).size();
     }
 
     public StaffEntity validateStaffBelongsToStore(final Long storeId, final Long staffId) {
