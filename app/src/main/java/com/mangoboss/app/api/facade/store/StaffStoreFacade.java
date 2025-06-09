@@ -26,7 +26,7 @@ public class StaffStoreFacade {
     public StaffJoinResponse joinStaff(final Long userId, final StaffJoinRequest request) {
         final UserEntity user = userService.getUserById(userId);
         final StoreEntity store = storeService.getStoreByInviteCode(request.inviteCode());
-        staffService.createStaff(user, store);
+        staffService.createStaff(user, store, store.getBoss());
         return StaffJoinResponse.fromEntity(store);
     }
 
