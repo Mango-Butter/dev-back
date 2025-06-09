@@ -1,9 +1,8 @@
 package com.mangoboss.batch.common.persistence;
 
 import com.mangoboss.batch.common.repository.ScheduleRepository;
-import com.mangoboss.storage.schedule.ScheduleEntity;
 import com.mangoboss.storage.schedule.ScheduleJpaRepository;
-import com.mangoboss.storage.schedule.projection.ScheduleForLateClockInProjection;
+import com.mangoboss.storage.schedule.projection.ScheduleForNotificationProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +17,13 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     private final Clock clock;
 
     @Override
-    public List<ScheduleEntity> findAllSchedulesWithoutClockOut() {
+    public List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockOut() {
         LocalDateTime oneHourAgo = LocalDateTime.now(clock).minusHours(1);
         return scheduleJpaRepository.findAllSchedulesWithoutClockOut(oneHourAgo);
     }
 
     @Override
-    public List<ScheduleForLateClockInProjection> findAllSchedulesWithoutClockIn() {
+    public List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockIn() {
         LocalDateTime temMinuteAgo = LocalDateTime.now(clock).minusMinutes(10);
         return scheduleJpaRepository.findLateSchedulesWithoutAlarm(temMinuteAgo);
     }

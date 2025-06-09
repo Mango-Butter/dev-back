@@ -6,11 +6,11 @@ import com.mangoboss.storage.attendance.AttendanceEntity;
 import com.mangoboss.storage.attendance.ClockInStatus;
 import com.mangoboss.storage.attendance.ClockOutStatus;
 import com.mangoboss.storage.schedule.ScheduleEntity;
+import com.mangoboss.storage.schedule.projection.ScheduleForNotificationProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,12 +20,13 @@ import java.util.List;
 public class AutoClockOutService {
     private final AttendanceRepository attendanceRepository;
     private final ScheduleRepository scheduleRepository;
-    private final Clock clock;
+    private final NotificationAutoClockOutService notificationAutoClockOutService;
 
     @Transactional
     public void autoClockOut() {
-        List<ScheduleEntity> schedules = scheduleRepository.findAllSchedulesWithoutClockOut();
-        List<AttendanceEntity> attendances = schedules.stream().map(schedule -> {
+        List<ScheduleForNotificationProjection> schedules = scheduleRepository.findAllSchedulesWithoutClockOut();
+        List<AttendanceEntity> attendances = schedules.stream().map(projection -> {
+            ScheduleEntity schedule = projection.getSchedule();
             if (schedule.getAttendance() == null) {
                 return recordAbsentAttendance(schedule);
             }
@@ -40,5 +41,9 @@ public class AutoClockOutService {
 
     private AttendanceEntity recordNormalClockOutAttendance(final AttendanceEntity attendance, final LocalDateTime clockOutTime) {
         return attendance.recordClockOut(clockOutTime, ClockOutStatus.NORMAL);
+    }
+
+    private void notifyAbsentClockOut(final List<ScheduleForNotificationProjection> projections) {
+        notificationAutoClockOutService.saveNotifications(projections);
     }
 }
