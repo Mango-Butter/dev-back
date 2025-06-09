@@ -4,7 +4,7 @@ VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111'
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
         'BOSS', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 'test2@ajou.ac.kr', '망알바', null, '010-2312-1111', '22222222', '2006-05-11',
-        'http://k.kakaocdn.net/dn/KNfQc/btsNkI4rZDT/FqS6EhArmExoRcVX9bane1/img_110x110.jpg',
+        'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (3, 'test3@ajou.ac.kr', '고알바', null, '010-4972-4844', '33333333', '2004-07-22',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
@@ -16,7 +16,7 @@ VALUES (1, 'test1@ajou.ac.kr', '망고보스', null, '010-1234-5678', '11111111'
         'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (6, 'test6@ajou.ac.kr', '정알바', null, '010-7712-2367', '66666666', '1997-09-01',
-        'http://k.kakaocdn.net/dn/bD4Rih/btsNXAxY4w1/XuxLt8jAsnIA5ZaHVjkE0k/img_110x110.jpg',
+        'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
         'STAFF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO store (store_id, boss_id, name, address, business_number, store_type, invite_code,

@@ -110,8 +110,8 @@ public class BossPayrollFacade {
 
     public List<PayrollWithStaffResponse> getPayrollsByMonth(final Long storeId, final Long bossId, final YearMonth yearMonth) {
         storeService.isBossOfStore(storeId, bossId);
-        payrollSettingService.isTransferDateBefore(storeId, yearMonth);
-        payrollService.validateMonthIsBeforeCurrent(yearMonth);
+//        payrollSettingService.isTransferDateBefore(storeId, yearMonth);
+//        payrollService.validateMonthIsBeforeCurrent(yearMonth);
 
         List<StaffEntity> staffs = staffService.getStaffsForStore(storeId);
         List<PayrollEntity> payrolls = payrollService.getTransferredPayrollsByMonth(storeId, yearMonth);
