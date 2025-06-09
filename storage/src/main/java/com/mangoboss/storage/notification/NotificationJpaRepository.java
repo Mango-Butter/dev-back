@@ -11,10 +11,11 @@ import java.util.List;
 public interface NotificationJpaRepository extends JpaRepository<NotificationEntity, Long> {
 
     @Query("""
-                SELECT n FROM NotificationEntity n
-                WHERE
-                  n.sendStatus IN :sendStatuses
-                  AND n.retryCount < :maxRetry
+            SELECT n FROM NotificationEntity n
+            WHERE
+              n.sendStatus IN :sendStatuses
+              AND n.retryCount < :maxRetry
+              AND n.targetToken IS NOT NULL
             """)
     List<NotificationEntity> findSendableNotifications(
             @Param("sendStatuses") List<SendStatus> sendStatuses,
