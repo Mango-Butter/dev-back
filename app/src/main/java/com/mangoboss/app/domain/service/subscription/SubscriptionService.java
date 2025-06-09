@@ -8,6 +8,7 @@ import com.mangoboss.storage.subscription.PlanType;
 import com.mangoboss.storage.subscription.SubscriptionEntity;
 import com.mangoboss.app.domain.repository.SubscriptionRepository;
 import com.mangoboss.storage.subscription.SubscriptionOrderEntity;
+import com.mangoboss.storage.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,12 @@ public class SubscriptionService {
     private final SubscriptionOrderRepository subscriptionOrderRepository;
 
     @Transactional
-    public void createOrReplaceSubscription(Long bossId, PlanType planType) {
-        subscriptionRepository.findByBossId(bossId).ifPresent(subscriptionRepository::delete);
+    public void createOrReplaceSubscription(UserEntity boss, PlanType planType) {
+        subscriptionRepository.findByBossId(boss.getId()).ifPresent(subscriptionRepository::delete);
 
-        SubscriptionEntity subscription = SubscriptionEntity.create(bossId, planType);
+        SubscriptionEntity subscription = SubscriptionEntity.create(boss.getId(), planType);
         subscriptionRepository.save(subscription);
+        boss.addSubscription(subscription);
     }
 
     public SubscriptionEntity getSubscription(Long bossId) {

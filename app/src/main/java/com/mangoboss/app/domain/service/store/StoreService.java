@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class StoreService {
     private static final String CHAR_POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int PLAN_LIMIT_STORE_NUM = 2;
     private static final int INVITE_CODE_LENGTH = 6;
     private static final int QR_CODE_LENGTH = 12;
 
@@ -58,11 +59,18 @@ public class StoreService {
 
     @Transactional
     public StoreEntity createStore(final StoreCreateRequest request, final UserEntity boss) {
+        if (boss.getSubscription() == null && getStoresNum(boss.getId()) >= PLAN_LIMIT_STORE_NUM){
+            throw new CustomException(CustomErrorInfo.PLAN_LIMIT_EXCEEDED);
+        }
         validateBusinessNumber(request.businessNumber());
         final String inviteCode = generateInviteCode();
         final String attendanceQrCode = generateQrCode();
         final StoreEntity store = request.toEntity(boss, inviteCode, attendanceQrCode);
         return storeRepository.save(store);
+    }
+
+    private Integer getStoresNum(final Long bossId) {
+        return storeRepository.findAllByBossId(bossId).size();
     }
 
     private String generateInviteCode() {
