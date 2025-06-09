@@ -48,7 +48,6 @@ public class BossStoreFacade {
 	@Transactional
 	public StoreCreateResponse createStore(final Long userId, final StoreCreateRequest request) {
 		final UserEntity boss = userService.getUserById(userId);
-		storeService.validateBusinessNumber(request.businessNumber());
 		final StoreEntity saved = storeService.createStore(request, boss);
 		payrollSettingService.initPayrollSettingForStore(saved);
 		requiredDocumentService.initRequiredDocuments(saved);

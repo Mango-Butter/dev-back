@@ -68,6 +68,7 @@ public enum CustomErrorInfo {
     DOCUMENT_NOT_BELONG_TO_STAFF(403, "이 서류는 해당 알바생의 서류가 아닙니다.", 403006),
     FORBIDDEN_TASK_LOG_DELETE(403, "해당 업무 완료 기록을 삭제할 권한이 없습니다.", 403007),
     WORK_REPORT_ACCESS_DENIED(403, "보고사항 접근 권한이 없습니다.", 403008),
+    PLAN_LIMIT_EXCEEDED(403, "무료 요금제는 매장 2개, 알바생 5명 까지만 가능합니다.",403009),
 
     // 422 Unprocessable Entity
     CONTRACT_PDF_TAMPERED(422, "계약서 PDF의 무결성이 손상되었습니다.", 422001),

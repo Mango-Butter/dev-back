@@ -14,8 +14,8 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     private final SubscriptionJpaRepository subscriptionJpaRepository;
 
     @Override
-    public void save(SubscriptionEntity subscriptionEntity) {
-        subscriptionJpaRepository.save(subscriptionEntity);
+    public SubscriptionEntity save(SubscriptionEntity subscriptionEntity) {
+        return subscriptionJpaRepository.save(subscriptionEntity);
     }
 
     @Override

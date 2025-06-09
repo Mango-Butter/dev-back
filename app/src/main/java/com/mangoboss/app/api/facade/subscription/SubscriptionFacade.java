@@ -2,9 +2,11 @@ package com.mangoboss.app.api.facade.subscription;
 
 import com.mangoboss.app.domain.service.billing.BillingService;
 import com.mangoboss.app.domain.service.subscription.SubscriptionService;
+import com.mangoboss.app.domain.service.user.UserService;
 import com.mangoboss.app.dto.subscription.request.SubscriptionCreateRequest;
 import com.mangoboss.app.dto.subscription.response.SubscriptionOrderResponse;
 import com.mangoboss.app.dto.subscription.response.SubscriptionResponse;
+import com.mangoboss.storage.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,12 @@ public class SubscriptionFacade {
 
     private final SubscriptionService subscriptionService;
     private final BillingService billingService;
+    private final UserService userService;
 
     public void createOrReplaceSubscription(Long bossId, SubscriptionCreateRequest request) {
         billingService.validateBillingExists(bossId);
-        subscriptionService.createOrReplaceSubscription(bossId, request.planType());
+        UserEntity boss = userService.getUserById(bossId);
+        subscriptionService.createOrReplaceSubscription(boss, request.planType());
     }
 
     public SubscriptionResponse getSubscription(Long bossId) {
