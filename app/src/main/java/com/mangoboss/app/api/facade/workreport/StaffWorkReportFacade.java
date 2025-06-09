@@ -1,6 +1,7 @@
 package com.mangoboss.app.api.facade.workreport;
 
 import com.mangoboss.app.common.util.S3PreSignedUrlManager;
+import com.mangoboss.app.domain.service.notification.NotificationService;
 import com.mangoboss.app.domain.service.staff.StaffService;
 import com.mangoboss.app.domain.service.workreport.WorkReportService;
 import com.mangoboss.app.dto.s3.response.UploadPreSignedUrlResponse;
@@ -9,6 +10,7 @@ import com.mangoboss.app.dto.workreport.response.WorkReportResponse;
 import com.mangoboss.storage.metadata.S3FileType;
 import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.workreport.WorkReportEntity;
+import com.mangoboss.storage.workreport.WorkReportTargetType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +23,18 @@ public class StaffWorkReportFacade {
 
     private final WorkReportService workReportService;
     private final StaffService staffService;
+    private final NotificationService notificationService;
     private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public WorkReportResponse createWorkReport(final Long storeId, final Long userId, final WorkReportCreateRequest request) {
         StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
         final WorkReportEntity entity = workReportService.createWorkReport(storeId, staff.getId(), request.content(), request.reportImageUrl(), request.targetType());
+
+        if (request.targetType() == WorkReportTargetType.TO_BOSS) {
+            final Long bossUserId = staff.getStore().getBoss().getId();
+            notificationService.saveWorkReportNotificationToBoss(bossUserId, storeId, staff.getUser().getName());
+        }
+
         return WorkReportResponse.fromEntity(entity, staff);
     }
 

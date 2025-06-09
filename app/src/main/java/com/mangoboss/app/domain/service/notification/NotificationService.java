@@ -28,11 +28,15 @@ public class NotificationService {
                                   final String content, final NotificationType type, final String path) {
         final String clickUrl = frontendUrl + path;
         final List<String> tokens = deviceTokenRepository.findActiveTokensByUserId(userId);
-        for (String token : tokens) {
-            final NotificationEntity notification = NotificationEntity.create(
-                    userId, storeId, title, content, null, clickUrl, type, token
-            );
+
+        if (tokens.isEmpty()) {
+            final NotificationEntity notification = NotificationEntity.create(userId, storeId, title, content, null, clickUrl, type, null);
             notificationRepository.save(notification);
+        } else {
+            for (String token : tokens) {
+                final NotificationEntity notification = NotificationEntity.create(userId, storeId, title, content, null, clickUrl, type, token);
+                notificationRepository.save(notification);
+            }
         }
     }
 
@@ -158,5 +162,18 @@ public class NotificationService {
 
     public List<NotificationEntity> getNotificationsByUserAndStore(final Long userId, final Long storeId) {
         return notificationRepository.findByUserIdAndStoreIdOrderByCreatedAtDesc(userId, storeId);
+    }
+
+    @Transactional
+    public void saveWorkReportNotificationToBoss(final Long bossUserId, final Long storeId, final String staffName) {
+        String content = String.format("%s님이 보고사항을 작성했어요.", staffName);
+        saveNotification(
+                bossUserId,
+                storeId,
+                "보고사항 작성",
+                content,
+                NotificationType.WORK_REPORT,
+                "/boss/task?type=report"
+        );
     }
 }

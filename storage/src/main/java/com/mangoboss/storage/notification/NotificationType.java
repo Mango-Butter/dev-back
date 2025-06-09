@@ -1,5 +1,5 @@
 package com.mangoboss.storage.notification;
 
 public enum NotificationType {
-    CONTRACT, SUBSTITUTE, SCHEDULE
+    CONTRACT, SUBSTITUTE, SCHEDULE, WORK_REPORT
 }

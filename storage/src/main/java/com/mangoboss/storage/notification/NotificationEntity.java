@@ -23,7 +23,7 @@ public class NotificationEntity extends BaseTimeEntity {
 
     private Long storeId;
 
-    @Column(nullable = false, length = 5000)
+    @Column(length = 5000)
     private String targetToken;
 
     @Column(nullable = false)
