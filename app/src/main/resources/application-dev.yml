@@ -17,12 +17,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: {DDL_AUTO:create}
     show-sql: true
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always
+      mode: {SQL_INIT_MODE:always}
   jwt:
     secret:
       access-secret-key: ${JWT_SECRET}
