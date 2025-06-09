@@ -24,8 +24,8 @@ public class AutoClockOutService {
 
     @Transactional
     public void autoClockOut() {
-        List<ScheduleForNotificationProjection> schedules = scheduleRepository.findAllSchedulesWithoutClockOut();
-        List<AttendanceEntity> attendances = schedules.stream().map(projection -> {
+        List<ScheduleForNotificationProjection> projections = scheduleRepository.findAllSchedulesWithoutClockOut();
+        List<AttendanceEntity> attendances = projections.stream().map(projection -> {
             ScheduleEntity schedule = projection.getSchedule();
             if (schedule.getAttendance() == null) {
                 return recordAbsentAttendance(schedule);
@@ -33,6 +33,7 @@ public class AutoClockOutService {
             return recordNormalClockOutAttendance(schedule.getAttendance(), schedule.getEndTime());
         }).toList();
         attendanceRepository.saveAll(attendances);
+        notifyAbsentClockOut(projections);
     }
 
     private AttendanceEntity recordAbsentAttendance(final ScheduleEntity schedule) {
