@@ -35,7 +35,7 @@ public class NotificationEntity extends BaseTimeEntity {
     @Column(length = 2083)
     private String imageUrl;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String clickUrl;
 
     @Enumerated(EnumType.STRING)
@@ -49,6 +49,8 @@ public class NotificationEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private int retryCount;
 
+    private Long metaId;
+
     @Builder
     private NotificationEntity(
             final Long userId,
@@ -60,7 +62,8 @@ public class NotificationEntity extends BaseTimeEntity {
             final String clickUrl,
             final NotificationType type,
             final SendStatus sendStatus,
-            final int retryCount
+            final int retryCount,
+            final Long metaId
     ) {
         this.userId = userId;
         this.storeId = storeId;
@@ -72,6 +75,7 @@ public class NotificationEntity extends BaseTimeEntity {
         this.type = type;
         this.sendStatus = sendStatus;
         this.retryCount = retryCount;
+        this.metaId = metaId;
     }
 
     public static NotificationEntity create(
@@ -95,6 +99,33 @@ public class NotificationEntity extends BaseTimeEntity {
                 .type(type)
                 .sendStatus(SendStatus.PENDING)
                 .retryCount(0)
+                .metaId(null)
+                .build();
+    }
+
+    public static NotificationEntity createWithMetaId(
+            final Long userId,
+            final Long storeId,
+            final String title,
+            final String content,
+            final String imageUrl,
+            final String clickUrl,
+            final NotificationType type,
+            final String targetToken,
+            final Long metaId
+    ) {
+        return NotificationEntity.builder()
+                .userId(userId)
+                .storeId(storeId)
+                .targetToken(targetToken)
+                .title(title)
+                .content(content)
+                .imageUrl(imageUrl)
+                .clickUrl(clickUrl)
+                .type(type)
+                .sendStatus(SendStatus.PENDING)
+                .retryCount(0)
+                .metaId(metaId)
                 .build();
     }
 
