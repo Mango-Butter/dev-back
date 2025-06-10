@@ -17,8 +17,8 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     private final DocumentJpaRepository documentJpaRepository;
 
     @Override
-    public void save(DocumentEntity entity) {
-        documentJpaRepository.save(entity);
+    public DocumentEntity save(DocumentEntity entity) {
+        return documentJpaRepository.save(entity);
     }
 
     @Override
