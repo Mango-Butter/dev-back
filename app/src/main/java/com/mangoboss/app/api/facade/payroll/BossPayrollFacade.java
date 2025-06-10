@@ -164,7 +164,7 @@ public class BossPayrollFacade {
         LocalDate today = LocalDate.now(clock);
         List<PayrollEntity> payrolls = payrollService.getPayrolls(storeId, targetMonth);
         if (payrolls.isEmpty()) {
-            return TransferSummaryResponse.of(TransferSummaryStateForResponse.NOT_YET, today.withDayOfMonth(payrollSetting.getTransferDate()));
+            return TransferSummaryResponse.of(TransferSummaryStateForResponse.NOT_YET, payrollSetting.getTransferDate(),today);
         }
         boolean allPending = payrolls.stream().allMatch(p ->
                 p.getTransferState().equals(TransferState.PENDING)
