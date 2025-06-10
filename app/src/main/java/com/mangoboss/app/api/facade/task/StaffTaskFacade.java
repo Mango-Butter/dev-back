@@ -9,6 +9,7 @@ import com.mangoboss.app.dto.task.request.TaskCheckRequest;
 import com.mangoboss.app.dto.task.response.AssignedTaskResponse;
 import com.mangoboss.app.dto.task.response.TaskLogDetailResponse;
 import com.mangoboss.storage.metadata.S3FileType;
+import com.mangoboss.storage.staff.StaffEntity;
 import com.mangoboss.storage.task.TaskEntity;
 import com.mangoboss.storage.task.TaskLogEntity;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class StaffTaskFacade {
     private final S3PreSignedUrlManager s3PreSignedUrlManager;
 
     public void completeTask(final Long storeId, final Long taskId, final Long userId, final TaskCheckRequest request) {
-        staffService.getVerifiedStaff(userId, storeId);
-        taskService.completeTask(storeId, taskId, userId, request.reportImageUrl());
+        StaffEntity staff = staffService.getVerifiedStaff(userId, storeId);
+        taskService.completeTask(storeId, taskId, staff.getId(), request.reportImageUrl());
     }
 
     public void cancelCompleteTask(final Long storeId, final Long taskId, final Long userId) {
