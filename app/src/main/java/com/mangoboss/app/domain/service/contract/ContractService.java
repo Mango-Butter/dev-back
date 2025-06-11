@@ -145,20 +145,20 @@ public class ContractService {
         return contractRepository.findAllByStoreId(storeId);
     }
 
-    private byte[] generateContractPdf(final ContractData contractData, final String bossSignatureKey) {
+    public byte[] generateContractPdf(final ContractData contractData, final String bossSignatureKey) {
         final String bossSignatureBase64 = fetchSignatureBase64(bossSignatureKey);
         final String html = contractHtmlGenerator.generateHtmlWithBossSignature(contractData, bossSignatureBase64);
         return pdfGenerator.generatePdfFromHtml(html);
     }
 
-    private byte[] generateStaffSignedContractPdf(final ContractData data, final String bossSignatureKey, final String staffSignatureKey) {
+    public byte[] generateStaffSignedContractPdf(final ContractData data, final String bossSignatureKey, final String staffSignatureKey) {
         final String bossSignatureBase64 = fetchSignatureBase64(bossSignatureKey);
         final String staffSignatureBase64 = fetchSignatureBase64(staffSignatureKey);
         final String html = contractHtmlGenerator.generateHtmlWithStaffSignature(data, bossSignatureBase64, staffSignatureBase64);
         return pdfGenerator.generatePdfFromHtml(html);
     }
 
-    private String fetchSignatureBase64(final String signatureKey) {
+    public String fetchSignatureBase64(final String signatureKey) {
         return s3FileManager.fetchAsBase64(signatureKey, ContentType.PNG.getMimeType());
     }
 }
