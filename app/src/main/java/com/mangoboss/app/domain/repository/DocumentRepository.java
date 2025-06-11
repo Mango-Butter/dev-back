@@ -6,7 +6,7 @@ import com.mangoboss.storage.document.DocumentType;
 import java.util.List;
 
 public interface DocumentRepository {
-    void save(DocumentEntity entity);
+    DocumentEntity save(DocumentEntity entity);
 
     DocumentEntity getByIdAndStaffId(Long id, Long staffId);
 
