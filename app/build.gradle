@@ -3,10 +3,28 @@ plugins {
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
     id "io.sentry.jvm.gradle" version "5.7.0"
+    id 'jacoco'
+}
+jacoco {
+    toolVersion = "0.8.10"
+}
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required.set(true)
+        xml.required.set(false)
+        csv.required.set(false)
+    }
+    classDirectories.setFrom(
+            fileTree(
+                    dir: "$buildDir/classes/java/main",
+                    includes: ["com/mangoboss/app/domain/service/**"]
+            )
+    )
 }
 
 dependencies {
-    implementation project (':storage')
+    implementation project(':storage')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
