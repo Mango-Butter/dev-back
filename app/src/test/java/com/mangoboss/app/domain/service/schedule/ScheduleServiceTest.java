@@ -369,4 +369,93 @@ class ScheduleServiceTest {
         verify(regularGroup).terminate(eq(LocalDate.now(fixedClock)));
     }
 
+    @Test
+    void 직원의_특정날짜_스케줄을_조회할_수_있다() {
+        // given
+        Long staffId = 1L;
+        LocalDate date = LocalDate.of(2024, 6, 10);
+        ScheduleEntity schedule1 = mock(ScheduleEntity.class);
+        ScheduleEntity schedule2 = mock(ScheduleEntity.class);
+        List<ScheduleEntity> schedules = List.of(schedule1, schedule2);
+
+        when(scheduleRepository.findAllByStaffIdAndWorkDate(staffId, date)).thenReturn(schedules);
+
+        // when
+        List<ScheduleEntity> result = scheduleService.getSchedulesByStaffIdAndDate(staffId, date);
+
+        // then
+        assertThat(result).containsExactlyElementsOf(schedules);
+        verify(scheduleRepository).findAllByStaffIdAndWorkDate(staffId, date);
+    }
+
+    @Test
+    void 스케줄이_해당_직원에게_속하면_정상_반환된다() {
+        // given
+        Long staffId = 1L;
+        Long scheduleId = 10L;
+        StaffEntity staff = mock(StaffEntity.class);
+        when(staff.getId()).thenReturn(staffId);
+
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(schedule.getStaff()).thenReturn(staff);
+        when(scheduleRepository.getById(scheduleId)).thenReturn(schedule);
+
+        // when
+        ScheduleEntity result = scheduleService.validateScheduleBelongsToStaff(scheduleId, staffId);
+
+        // then
+        assertThat(result).isEqualTo(schedule);
+    }
+
+    @Test
+    void 스케줄이_해당_직원의_것이_아니면_예외가_발생한다() {
+        // given
+        Long inputStaffId = 1L;
+        Long actualStaffId = 2L;
+        Long scheduleId = 10L;
+
+        StaffEntity staff = mock(StaffEntity.class);
+        when(staff.getId()).thenReturn(actualStaffId);
+
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(schedule.getStaff()).thenReturn(staff);
+        when(scheduleService.getScheduleById(scheduleId)).thenReturn(schedule);
+
+        // when & then
+        assertThatThrownBy(() -> scheduleService.validateScheduleBelongsToStaff(scheduleId, inputStaffId))
+                .isInstanceOf(CustomException.class)
+                .hasMessageContaining(CustomErrorInfo.SCHEDULE_NOT_BELONG_TO_STAFF.getMessage());
+    }
+
+    @Test
+    void 대타_후보이면_true를_반환한다() {
+        // given
+        Long staffId = 1L;
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(schedule.getWorkDate()).thenReturn(fixedNow.toLocalDate());
+        when(schedule.getStartTime()).thenReturn(fixedNow);
+        when(schedule.getEndTime()).thenReturn(fixedNow);
+        when(scheduleRepository.existsOverlappingSchedule(staffId, schedule.getWorkDate(), schedule.getStartTime(), schedule.getEndTime()))
+                .thenReturn(false);
+
+        // when
+        // then
+        assertThat(scheduleService.isSubstituteCandidate(staffId, schedule)).isTrue();
+    }
+//
+    @Test
+    void 겹치는_스케줄이_있으면_false를_반환한다() {
+        // given
+        Long staffId = 1L;
+        ScheduleEntity schedule = mock(ScheduleEntity.class);
+        when(schedule.getWorkDate()).thenReturn(fixedNow.toLocalDate());
+        when(schedule.getStartTime()).thenReturn(fixedNow);
+        when(schedule.getEndTime()).thenReturn(fixedNow);
+        when(scheduleRepository.existsOverlappingSchedule(staffId, schedule.getWorkDate(), schedule.getStartTime(), schedule.getEndTime()))
+                .thenReturn(true);
+
+        // when
+        // then
+        assertThat(scheduleService.isSubstituteCandidate(staffId, schedule)).isFalse();
+    }
 }

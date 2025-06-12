@@ -156,7 +156,6 @@ public class ScheduleService {
                 .toList();
     }
 
-
     public ScheduleEntity validateScheduleBelongsToStaff(final Long scheduleId, final Long staffId) {
         ScheduleEntity schedule = getScheduleById(scheduleId);
         if (!schedule.getStaff().getId().equals(staffId)) {
