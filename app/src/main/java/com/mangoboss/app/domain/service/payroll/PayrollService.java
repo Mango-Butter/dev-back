@@ -37,7 +37,6 @@ public class PayrollService {
 
     private final PayrollRepository payrollRepository;
     private final AttendanceRepository attendanceRepository;
-    private final S3FileManager s3FileManager;
     private final Clock clock;
 
     @Transactional
@@ -175,11 +174,11 @@ public class PayrollService {
         );
     }
 
-    public boolean hasStartedTransfer(final Long storeId, final YearMonth yearMonth) {
-        LocalDate start = yearMonth.atDay(1);
-        LocalDate end = yearMonth.atEndOfMonth();
-        return payrollRepository.isTransferStarted(storeId, start, end);
-    }
+//    public boolean hasStartedTransfer(final Long storeId, final YearMonth yearMonth) {
+//        LocalDate start = yearMonth.atDay(1);
+//        LocalDate end = yearMonth.atEndOfMonth();
+//        return payrollRepository.isTransferStarted(storeId, start, end);
+//    }
 
     public PayrollEntity getStorePayrollById(final Long storeId, final Long payrollId) {
         return payrollRepository.getByIdAndStoreId(payrollId, storeId);
