@@ -17,7 +17,12 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "task_routine")
+@Table(
+        name = "task_routine",
+        indexes = {
+                @Index(name = "idx_task_routine_store", columnList = "store_id")
+        }
+)
 public class TaskRoutineEntity extends BaseTimeEntity {
 
     @Id

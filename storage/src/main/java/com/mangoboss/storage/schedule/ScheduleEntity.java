@@ -17,7 +17,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "schedule")
+@Table(
+        name = "schedule",
+        indexes = {
+                @Index(name = "idx_schedule_work_date", columnList = "store_id, work_date"),
+                @Index(name = "idx_end_time", columnList = "end_time"),
+                @Index(name = "idx_schedule_staff_workdate", columnList = "staff_id, work_date")
+        }
+)
 public class ScheduleEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,7 +110,7 @@ public class ScheduleEntity extends BaseTimeEntity {
         this.substitutionState = SubstitutionState.SUBSTITUTED;
     }
 
-    public void rejected(){
+    public void rejected() {
         this.substitutionState = SubstitutionState.NONE;
     }
 }

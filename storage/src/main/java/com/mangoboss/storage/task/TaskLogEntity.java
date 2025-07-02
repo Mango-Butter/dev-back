@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "task_log")
+@Table(
+        name = "task_log",
+        indexes = {
+                @Index(name = "idx_task_log_task", columnList = "task_id"),
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TaskLogEntity extends BaseTimeEntity {
 

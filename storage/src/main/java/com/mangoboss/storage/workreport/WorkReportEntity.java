@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "work_report")
+@Table(
+        name = "work_report",
+        indexes = {
+                @Index(name = "idx_work_report_store_created", columnList = "store_id, created_at")
+        }
+)
 public class WorkReportEntity extends BaseTimeEntity {
 
     @Id

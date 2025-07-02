@@ -12,7 +12,12 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "attendance")
+@Table(
+        name = "attendance",
+        indexes = {
+                @Index(name = "idx_attendance_schedule_id", columnList = "schedule_id"),
+        }
+)
 public class AttendanceEntity extends BaseTimeEntity {
 
     @Id

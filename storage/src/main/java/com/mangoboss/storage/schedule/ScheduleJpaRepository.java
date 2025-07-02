@@ -26,18 +26,13 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
 
     List<ScheduleEntity> findAllByStaffIdAndWorkDate(Long staffId, LocalDate date);
 
-    @Query(
-            """
-                    SELECT s AS schedule, f.name AS staffName, st.boss.id AS bossId, st.id AS storeId
-                    FROM ScheduleEntity s
-                    JOIN StaffEntity f ON s.staff.id = f.id
-                    JOIN StoreEntity st ON f.store.id = st.id
-                    LEFT JOIN s.attendance a
-                    WHERE s.endTime <= :standardTime
-                    AND (a.clockOutStatus is NULL OR a is NULL)
-                    """
-    )
-    List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockOut(LocalDateTime standardTime);
+    @Query("""
+            SELECT s FROM ScheduleEntity s
+            LEFT JOIN s.attendance a
+            WHERE s.endTime <= :standardTime
+            AND (a.clockOutStatus is NULL OR a is NULL)
+            """)
+    List<ScheduleEntity> findAllSchedulesWithoutClockOut(LocalDateTime standardTime);
 
     Boolean existsByRegularGroupId(Long regularGroupId);
 
