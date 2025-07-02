@@ -34,16 +34,16 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
     List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate end);
 
     @Query("""
-                SELECT s AS staff,
-                    SUM(CASE WHEN a.clockInStatus = 'NORMAL' THEN 1 ELSE 0 END) AS normalCount,
-                    SUM(CASE WHEN a.clockInStatus = 'LATE' THEN 1 ELSE 0 END) AS lateCount,
-                    SUM(CASE WHEN a.clockInStatus = 'ABSENT' THEN 1 ELSE 0 END) AS absentCount
-                FROM StaffEntity s
-                LEFT JOIN AttendanceEntity a
-                    ON a.schedule.staff.id = s.id
-                    AND a.schedule.workDate BETWEEN :start AND :end
-                WHERE s.store.id =:storeId
-                GROUP BY s.id
+                SELECT f AS staff,
+                       SUM(CASE WHEN a.clockInStatus = 'NORMAL' THEN 1 ELSE 0 END) AS normalCount,
+                       SUM(CASE WHEN a.clockInStatus = 'LATE' THEN 1 ELSE 0 END) AS lateCount,
+                       SUM(CASE WHEN a.clockInStatus = 'ABSENT' THEN 1 ELSE 0 END) AS absentCount
+                FROM ScheduleEntity s
+                JOIN s.staff f
+                LEFT JOIN AttendanceEntity a ON a.schedule.id = s.id
+                WHERE f.store.id = :storeId
+                  AND s.workDate BETWEEN :start AND :end
+                GROUP BY f.id
             """)
     List<StaffAttendanceCountProjection> findAttendanceCountsByStoreId(Long storeId, LocalDate start, LocalDate end);
 

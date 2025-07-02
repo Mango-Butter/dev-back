@@ -11,7 +11,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "task")
+@Table(
+        name = "task",
+        indexes = {
+                @Index(name = "idx_task_store", columnList = "store_id")
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TaskEntity extends BaseTimeEntity {

@@ -9,7 +9,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "notification")
+@Table(
+        name = "notification",
+        indexes = {
+                @Index(name = "idx_notification_type_meta", columnList = "type, meta_id"),
+                @Index(name = "idx_notification_sendstatus_retry", columnList = "send_status, retry_count"),
+                @Index(name = "idx_notification_user_store", columnList = "user_id, store_id")
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationEntity extends BaseTimeEntity {
 

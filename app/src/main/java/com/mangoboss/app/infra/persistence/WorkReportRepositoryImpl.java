@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,11 +33,15 @@ public class WorkReportRepositoryImpl implements WorkReportRepository {
 
     @Override
     public List<WorkReportEntity> findByStoreIdAndDateOrderByCreatedAtDesc(final Long storeId, final LocalDate date) {
-        return workReportJpaRepository.findByStoreIdAndDateOrderByCreatedAtDesc(storeId, date);
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = start.plusDays(1);
+        return workReportJpaRepository.findByStoreIdAndDateOrderByCreatedAtDesc(storeId, start, end);
     }
 
     @Override
     public List<WorkReportEntity> findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(final Long storeId, final LocalDate date, final WorkReportTargetType targetType) {
-        return workReportJpaRepository.findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(storeId, date, targetType);
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = start.plusDays(1);
+        return workReportJpaRepository.findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(storeId, start, end, targetType);
     }
 }
