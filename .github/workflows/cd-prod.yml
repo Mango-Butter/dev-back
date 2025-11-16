@@ -86,8 +86,11 @@ jobs:
           KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
           KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
 
-      - name: Build app Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:${IMAGE_TAG} ./app
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -95,8 +98,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Push app Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:${IMAGE_TAG}
+      - name: Build and push multi-arch app Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:${IMAGE_TAG} \
+            --push ./app
 
       - name: Checkout manifest repo
         uses: actions/checkout@v4
@@ -108,7 +114,7 @@ jobs:
       - name: Update image tag in manifest
         run: |
           cd dev-manifests/manifests/app
-          sed -i "s|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:${IMAGE_TAG}|g" app-deployment.yaml
+          sed -i "s|image:.*|image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-app:${IMAGE_TAG}|g" app-deployment.yaml
 
       - name: Commit and push manifest update
         run: |
@@ -165,8 +171,11 @@ jobs:
           DB_USERNAME: ${{ secrets.MYSQL_BATCH_USERNAME }}
           DB_PASSWORD: ${{ secrets.MYSQL_BATCH_PASSWORD }}
 
-      - name: Build batch Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:${IMAGE_TAG} ./batch
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -174,8 +183,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Push app Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:${IMAGE_TAG}
+      - name: Build and push multi-arch batch Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:${IMAGE_TAG} \
+            --push ./batch
 
       - name: Checkout manifest repo
         uses: actions/checkout@v4
@@ -187,7 +199,7 @@ jobs:
       - name: Update image tag in manifest
         run: |
           cd dev-manifests/manifests/batch
-          sed -i "s|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:${IMAGE_TAG}|g" batch-deployment.yaml
+          sed -i "s|image:.*|image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-batch:${IMAGE_TAG}|g" batch-deployment.yaml
 
       - name: Commit and push manifest update
         run: |
@@ -244,8 +256,11 @@ jobs:
           KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
           KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
 
-      - name: Build admin Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:${IMAGE_TAG} ./admin
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -253,8 +268,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Push admin Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:${IMAGE_TAG}
+      - name: Build and push multi-arch admin Docker image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:${IMAGE_TAG} \
+            --push ./admin
 
       - name: Checkout manifest repo
         uses: actions/checkout@v4
@@ -266,7 +284,7 @@ jobs:
       - name: Update image tag in manifest
         run: |
           cd dev-manifests/manifests/admin
-          sed -i "s|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:${IMAGE_TAG}|g" admin-deployment.yaml
+          sed -i "s|image:.*|image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}-admin:${IMAGE_TAG}|g" admin-deployment.yaml
 
       - name: Commit and push manifest update
         run: |
