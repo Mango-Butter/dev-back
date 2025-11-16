@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk
 LABEL authors="mangobutter"
 WORKDIR /admin
 COPY build/libs/*SNAPSHOT.jar app.jar
