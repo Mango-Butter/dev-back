@@ -20,9 +20,13 @@ public interface WorkReportJpaRepository extends JpaRepository<WorkReportEntity,
                 AND wr.createdAt < :endDateTime
                 ORDER BY wr.createdAt DESC
             """)
-    List<WorkReportEntity> findByStoreIdAndDateOrderByCreatedAtDesc(Long storeId, LocalDateTime start, LocalDateTime end);
+	List<WorkReportEntity> findByStoreIdAndDateOrderByCreatedAtDesc(
+		@Param("storeId") Long storeId,
+		@Param("startDateTime") LocalDateTime startDateTime,
+		@Param("endDateTime") LocalDateTime endDateTime
+	);
 
-    @Query("""
+	@Query("""
                 SELECT wr FROM WorkReportEntity wr
                 WHERE wr.storeId = :storeId
                 AND wr.createdAt >= :startDateTime
@@ -30,7 +34,10 @@ public interface WorkReportJpaRepository extends JpaRepository<WorkReportEntity,
                 AND wr.targetType = :targetType
                 ORDER BY wr.createdAt DESC
             """)
-    List<WorkReportEntity> findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(
-            Long storeId, LocalDateTime start, LocalDateTime end, WorkReportTargetType targetType
-    );
+	List<WorkReportEntity> findByStoreIdAndDateAndTargetTypeOrderByCreatedAtDesc(
+		@Param("storeId") Long storeId,
+		@Param("startDateTime") LocalDateTime startDateTime,
+		@Param("endDateTime") LocalDateTime endDateTime,
+		@Param("targetType") WorkReportTargetType targetType
+	);
 }
