@@ -31,5 +31,5 @@ public interface PayslipJpaRepository extends JpaRepository<PayslipEntity, Long>
             FROM PayslipEntity s
             WHERE s.id = :id AND s.payroll.staffId = :staffId
             """)
-    Optional<PayslipEntity> findByIdAndStaffId(Long id, Long staffId);
+    Optional<PayslipEntity> findByIdAndStaffId(@Param("id") Long id, @Param("staffId") Long staffId);
 }

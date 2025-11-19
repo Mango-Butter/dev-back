@@ -31,7 +31,7 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
                GROUP BY DATE(s.workDate)
                ORDER BY DATE(s.workDate)
             """)
-    List<WorkDotProjection> findWorkDotProjections(Long storeId, LocalDate start, LocalDate end);
+    List<WorkDotProjection> findWorkDotProjections(@Param("storeId") Long storeId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query("""
                 SELECT f AS staff,
@@ -45,7 +45,7 @@ public interface AttendanceJpaRepository extends JpaRepository<AttendanceEntity,
                   AND s.workDate BETWEEN :start AND :end
                 GROUP BY f.id
             """)
-    List<StaffAttendanceCountProjection> findAttendanceCountsByStoreId(Long storeId, LocalDate start, LocalDate end);
+    List<StaffAttendanceCountProjection> findAttendanceCountsByStoreId(@Param("storeId") Long storeId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query("""
                 SELECT a FROM AttendanceEntity a

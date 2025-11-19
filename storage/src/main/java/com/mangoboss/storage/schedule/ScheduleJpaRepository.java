@@ -3,6 +3,7 @@ package com.mangoboss.storage.schedule;
 import com.mangoboss.storage.schedule.projection.ScheduleForNotificationProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
             "WHERE f.store.id = :storeId " +
             "AND s.workDate = :date " +
             "ORDER BY s.startTime ASC ")
-    List<ScheduleEntity> findAllByStoreIdAndWorkDate(Long storeId, LocalDate date);
+    List<ScheduleEntity> findAllByStoreIdAndWorkDate(@Param("storeId") Long storeId, @Param("date") LocalDate date);
 
     void deleteAllByRegularGroupIdAndWorkDateAfter(Long regularGroupId, LocalDate date);
 
@@ -36,7 +37,7 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
 			AND (a.clockOutStatus is NULL OR a is NULL)
 			"""
 	)
-	List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockOut(LocalDateTime standardTime);
+	List<ScheduleForNotificationProjection> findAllSchedulesWithoutClockOut(@Param("standardTime") LocalDateTime standardTime);
 
     Boolean existsByRegularGroupId(Long regularGroupId);
 
@@ -48,7 +49,7 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
             AND s.startTime <= :endTime
             AND s.endTime >= :startTime
             """)
-    Boolean existsOverlappingSchedule(Long staffId, LocalDate workDate, LocalDateTime startTime, LocalDateTime endTime);
+    Boolean existsOverlappingSchedule(@Param("staffId") Long staffId, @Param("workDate") LocalDate workDate, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     @Query("""
                 SELECT s AS schedule, f.name AS staffName, st.boss.id AS bossId, st.id AS storeId
@@ -64,5 +65,5 @@ public interface ScheduleJpaRepository extends JpaRepository<ScheduleEntity, Lon
                         AND n.metaId = s.id
                   )
             """)
-    List<ScheduleForNotificationProjection> findLateSchedulesWithoutAlarm(LocalDateTime standardTime);
+    List<ScheduleForNotificationProjection> findLateSchedulesWithoutAlarm(@Param("standardTime") LocalDateTime standardTime);
 }
