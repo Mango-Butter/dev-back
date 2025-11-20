@@ -62,7 +62,8 @@ public class StoreService {
         if (boss.getSubscription() == null && getStoresNum(boss.getId()) >= PLAN_LIMIT_STORE_NUM){
             throw new CustomException(CustomErrorInfo.PLAN_LIMIT_EXCEEDED);
         }
-        validateBusinessNumber(request.businessNumber());
+        // 국세청_사업자등록정보 진위확인 및 상태조회 서비스(공공데이터포털 오픈API) 오류에 따른 임시 주석처리
+        // validateBusinessNumber(request.businessNumber()); 
         final String inviteCode = generateInviteCode();
         final String attendanceQrCode = generateQrCode();
         final StoreEntity store = request.toEntity(boss, inviteCode, attendanceQrCode);
